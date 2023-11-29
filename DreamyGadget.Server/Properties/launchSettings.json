@@ -23,7 +23,7 @@
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
+      "launchBrowser": false, // To open Swagger, set this to true
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7258;http://localhost:5100",
       "environmentVariables": {
