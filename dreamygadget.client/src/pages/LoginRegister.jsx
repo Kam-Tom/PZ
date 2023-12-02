@@ -7,8 +7,8 @@ function LoginRegister() {
     const ReCAPTCHA1 = useRef();
     const ReCAPTCHA2 = useRef();
 
-    function checkCaptcha() {
-        const captchaValue = ReCAPTCHA1.current.getValue();
+    function checkCaptcha(captchaRef) {
+        const captchaValue = captchaRef.current.getValue();
         if (!captchaValue) {
             console.log("nie weszlo");
             confirm("Please verify the reCAPTCHA!");
@@ -18,6 +18,12 @@ function LoginRegister() {
             alert("Form submission successful!");
         }
     }
+    //obsluga przyciskow
+    //przy sign in
+    // checkCaptcha(ReCAPTCHA1);
+
+    //przy sign up
+    // checkCaptcha(ReCAPTCHA2);
 
 
     useEffect(() => {
@@ -61,7 +67,7 @@ function LoginRegister() {
                     <input type="email" placeholder="Email" />
                     <input type="password" placeholder="Password" />
                     <button>Sign Up</button>
-                    <ReCAPTCHA ref={ReCAPTCHA1} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
+                    <ReCAPTCHA ref={ReCAPTCHA2} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
                 </form>
             </div>
             <div className="form-container sign-in">
@@ -71,7 +77,7 @@ function LoginRegister() {
                     <input type="password" placeholder="Password" />
                     <a href="#">Forget Your Password?</a>
                     <button>Sign In</button>
-                    <ReCAPTCHA ref={ReCAPTCHA2} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR"/>
+                    <ReCAPTCHA ref={ReCAPTCHA1} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR"/>
                 </form>
             </div>
             <div className="toggle-container">
