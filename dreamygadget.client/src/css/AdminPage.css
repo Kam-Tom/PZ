@@ -76,6 +76,10 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
 }
 
+.adminlist thead {
+    font-weight: bold;
+}
+
 .adminlist td {
     margin-left: 5px;
     text-overflow: ellipsis;

@@ -24,17 +24,30 @@ function AdminPage() {
             status: 'Active'
         },
     ]
+    
+    let showList = false;
 
 
     function showUsers() {
         const usersButton = document.getElementById('users');
         const usersList = document.getElementById('list');
 
+
+        if(!showList){
+            const thead = document.createElement('thead');
+                    const content = `
+                        <td>ID</td>
+                        <td>Username</td>
+                        <td>Email</td>
+                        <td>Shipping Address</td>
+                    `;
+                    thead.innerHTML = content;
+                    usersList.append(thead);
             for(let order of Orders){
             const tr = document.createElement('tr');
                     const trContent = `
-                        <td>${order.productName}</td>
                         <td>${order.productNumber}</td>
+                        <td>${order.productName}</td>
                         <td>${order.paymentStatus}</td>
                         <td class="${order.status === 'Declined' ? 'danger' : order.status === 'Pending' ? 'warning' : 'primary'}">${order.status}</td>
                     `;
@@ -65,6 +78,8 @@ function AdminPage() {
                         tr.remove()
                     }
             }
+            showList = true;
+        }
       };
     return (       
         <div className="admincontainer">

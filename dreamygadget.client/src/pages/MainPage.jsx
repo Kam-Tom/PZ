@@ -24,7 +24,6 @@ function MainPage() {
                 path="/login-register"
                 element={
                     <>
-                        <Navbar/>
                         <LoginRegister />
                     </>
                 }
