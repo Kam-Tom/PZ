@@ -12,6 +12,9 @@ function Navbar() {
                 <Link to="/login-register">
                     <ion-icon name="person-outline"></ion-icon>
                 </Link>
+                <Link to="/admin">
+                    <ion-icon name="construct-outline"></ion-icon>
+                </Link>
             </nav>
         </header>
     );

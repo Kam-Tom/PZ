@@ -98,4 +98,4 @@ function LoginRegister() {
     );
 }
 
-export default LoginRegister
+export default LoginRegister;
