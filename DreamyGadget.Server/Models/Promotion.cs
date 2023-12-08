@@ -1,21 +1,26 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models;
 
-public partial class Promotion
+public class Promotion
 {
-    public decimal Promotionid { get; set; }
+    public int Id { get; set; }
 
-    public string? Promotionname { get; set; }
+    public string Name { get; set; }
 
-    public decimal? Discountpercentage { get; set; }
 
-    public DateTime? Startdate { get; set; }
+    [Precision(3, 1)]
+    [Range(0,100)]
+    public decimal Discount { get; set; }
 
-    public DateTime? Enddate { get; set; }
+    public DateTime Start { get; set; }
 
-    public string? Description { get; set; }
+    public DateTime End { get; set; }
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public string Description { get; set; }
+
+    public virtual ICollection<Product> Products { get; set; }
 }

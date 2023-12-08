@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace Models;
 
-public partial class Review
+public class Review
 {
-    public decimal Reviewid { get; set; }
+    public int Id { get; set; }
 
-    public decimal? Userid { get; set; }
+    public int Rating { get; set; }
 
-    public decimal? Productid { get; set; }
+    public string Comment { get; set; }
 
-    public decimal? Rating { get; set; }
+    public int ProductId { get; set; }
 
-    public string? Description { get; set; }
+    public Product Product { get; set; }
 
-    public virtual Product? Product { get; set; }
+    public int UserId { get; set; }
 
-    public virtual User? User { get; set; }
+    public User User { get; set; }
 }

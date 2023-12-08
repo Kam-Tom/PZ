@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Models;
 
-public partial class Shippingmethod
+public class ShippingMethod
 {
-    public decimal Shippingmethodid { get; set; }
+    public int Id { get; set; }
 
-    public string? Methodname { get; set; }
+    public string Name { get; set; }
 
-    public decimal? Shippingcost { get; set; }
+    public decimal Cost { get; set; }
 }

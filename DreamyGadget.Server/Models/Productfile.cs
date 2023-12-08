@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Models;
 
-public partial class Productfile
+public class ProductFile
 {
-    public decimal Fileid { get; set; }
+    public int Id { get; set; }
 
-    public decimal? Productid { get; set; }
+    public string FilePath { get; set; }
 
-    public string? Filepath { get; set; }
+    public string Description { get; set; }
 
-    public string? Filedescription { get; set; }
+    public int ProductId { get; set; }
 
-    public virtual Product? Product { get; set; }
+    public virtual Product Product { get; set; }
 }

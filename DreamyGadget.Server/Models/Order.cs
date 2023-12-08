@@ -3,19 +3,33 @@ using System.Collections.Generic;
 
 namespace Models;
 
-public partial class Order
+public class Order
 {
-    public decimal Orderid { get; set; }
+    public int Id { get; set; }
 
-    public decimal? Userid { get; set; }
+    public DateTime Date { get; set; }
 
-    public DateTime? Orderdate { get; set; }
+    public StatusType Status { get; set; }
 
-    public string? Orderstatus { get; set; }
+    public int ShippingMethodId { get; set; }
 
-    public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
+    public ShippingMethod ShippingMethod { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public int UserId { get; set; }
 
-    public virtual User? User { get; set; }
+    public User User { get; set; }
+
+    public ICollection<OrderItem> OrderItems { get; set; }
+
+    //One order can have multiple payments. Example [Denied Payment, Denied Payment, Accepted Payment]
+    public ICollection<Payment> Payments { get; set; }
+
+    public enum StatusType
+    {
+        Pending,
+        Processing,
+        Shipped,
+        Delivered,
+        Canceled
+    }
 }

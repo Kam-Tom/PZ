@@ -12,337 +12,226 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Category> Categories { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
-    public virtual DbSet<Currency> Currencies { get; set; }
+    public DbSet<Order> Orders { get; set; }
 
-    public virtual DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
-    public virtual DbSet<Orderitem> Orderitems { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
-    public virtual DbSet<Payment> Payments { get; set; }
+    public DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<Product> Products { get; set; }
+    public DbSet<ProductFile> ProductFiles { get; set; }
 
-    public virtual DbSet<Productfile> Productfiles { get; set; }
+    public DbSet<ProductImage> ProductImages { get; set; }
 
-    public virtual DbSet<Productimage> Productimages { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
 
-    public virtual DbSet<Promotion> Promotions { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
-    public virtual DbSet<Review> Reviews { get; set; }
+    public DbSet<ShippingMethod> ShippingMethods { get; set; }
 
-    public virtual DbSet<Shippingmethod> Shippingmethods { get; set; }
-
-    public virtual DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("SBD_ST_PS10_4");
+        modelBuilder.HasDefaultSchema("DreamyGadget");
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Categoryid).HasName("SYS_C00523912");
+            entity.ToTable("Categories");
 
-            entity.ToTable("CATEGORIES");
+            entity.HasKey(e => e.Id).HasName("PK_Category");
 
-            entity.Property(e => e.Categoryid)
-                .HasColumnName("CATEGORYID");
-            entity.Property(e => e.Categoryname)
+            entity.Property(e => e.Name)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("CATEGORYNAME");
-            entity.Property(e => e.Parentcategoryid)
-                .HasColumnName("PARENTCATEGORYID");
+                .IsUnicode(true);
 
-            entity.HasOne(d => d.Parentcategory).WithMany(p => p.InverseParentcategory)
-                .HasForeignKey(d => d.Parentcategoryid)
-                .HasConstraintName("SYS_C00523913");
-        });
 
-        modelBuilder.Entity<Currency>(entity =>
-        {
-            entity.HasKey(e => e.Currencycode).HasName("SYS_C00523911");
-
-            entity.ToTable("CURRENCIES");
-
-            entity.Property(e => e.Currencycode)
-                .HasMaxLength(3)
-                .IsUnicode(false)
-                .HasColumnName("CURRENCYCODE");
-            entity.Property(e => e.Exchangerate)
-                .HasColumnType("DECIMAL(10,4)")
-                .HasColumnName("EXCHANGERATE");
+            entity.HasOne(d => d.ParentCategory).WithMany(p => p.Subcategories)
+                .HasForeignKey(d => d.ParentCategoryId)
+                .HasConstraintName("FK_Category_ParentCategory");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Orderid).HasName("SYS_C00523917");
+            entity.ToTable("Orders");
 
-            entity.ToTable("ORDERS");
+            entity.HasKey(e => e.Id).HasName("PK_Order");
 
-            entity.Property(e => e.Orderid)
-                .HasColumnName("ORDERID");
-            entity.Property(e => e.Orderdate)
-                .HasPrecision(6)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnName("ORDERDATE");
-            entity.Property(e => e.Orderstatus)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("ORDERSTATUS");
-            entity.Property(e => e.Userid)
-                .HasColumnName("USERID");
+            entity.Property(e => e.Date)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.Userid)
-                .HasConstraintName("FK_USER_ORDERS");
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_User_Orders");
         });
 
-        modelBuilder.Entity<Orderitem>(entity =>
+        modelBuilder.Entity<OrderItem>(entity =>
         {
-            entity.HasKey(e => e.Orderitemid).HasName("SYS_C00523919");
+            entity.HasKey(e => e.Id).HasName("PK_OrderItem");
 
-            entity.ToTable("ORDERITEMS");
+            entity.Property(e => e.Cost)
+                .HasPrecision(10,2);
 
-            entity.Property(e => e.Orderitemid)
-                .HasColumnName("ORDERITEMID");
-            entity.Property(e => e.Itemprice)
-                .HasColumnType("DECIMAL(10,2)")
-                .HasColumnName("ITEMPRICE");
-            entity.Property(e => e.Orderid)
-                .HasColumnName("ORDERID");
-            entity.Property(e => e.Productid)
-                .HasColumnName("PRODUCTID");
-            entity.Property(e => e.Quantity)
-                .HasColumnName("QUANTITY");
+            entity.ToTable("OrderItems");
 
-            entity.HasOne(d => d.Order).WithMany(p => p.Orderitems)
-                .HasForeignKey(d => d.Orderid)
-                .HasConstraintName("FK_ORDER_ITEMS_ORDERS");
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Order_OrderItems");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Orderitems)
-                .HasForeignKey(d => d.Productid)
-                .HasConstraintName("FK_ORDER_ITEMS_PRODUCTS");
+            entity.HasOne(d => d.Product).WithMany()
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Product_OrderItems");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Paymentid).HasName("SYS_C00523922");
 
-            entity.ToTable("PAYMENTS");
+            entity.HasKey(e => e.Id).HasName("PK_Payment");
 
-            entity.Property(e => e.Paymentid)
-                .HasColumnName("PAYMENTID");
-            entity.Property(e => e.Orderid)
-                .HasColumnName("ORDERID");
-            entity.Property(e => e.Paymentmethod)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("PAYMENTMETHOD");
-            entity.Property(e => e.Paymentstatus)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("PAYMENTSTATUS");
+            entity.ToTable("Payments");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.Orderid)
-                .HasConstraintName("FK_PAYMENTS_ORDERS");
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Order_Payments");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Productid).HasName("SYS_C00523916");
+            entity.HasKey(e => e.Id).HasName("PK_Product");
 
-            entity.ToTable("PRODUCTS");
+            entity.ToTable("Products");
 
-            entity.Property(e => e.Productid)
-                .HasColumnName("PRODUCTID");
-            entity.Property(e => e.Categoryid)
-                .HasColumnName("CATEGORYID");
-            entity.Property(e => e.Description)
-                .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Hidden)
-                .HasPrecision(1)
-                .HasColumnName("HIDDEN");
             entity.Property(e => e.Price)
-                .HasColumnType("DECIMAL(10,2)")
-                .HasColumnName("PRICE");
-            entity.Property(e => e.Productname)
+                .HasPrecision(10, 2);
+
+            entity.Property(e => e.Name)
                 .HasMaxLength(255)
-                .HasColumnName("PRODUCTNAME");
-            entity.Property(e => e.Stockquantity)
-                .HasColumnName("STOCKQUANTITY");
-            entity.Property(e => e.Vatrate)
-                .HasColumnType("DECIMAL(4,2)")
-                .HasColumnName("VATRATE");
+                 .IsUnicode(true);
+
+            entity.Property(e => e.Description)
+                 .IsUnicode(true);
+
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
-                .HasForeignKey(d => d.Categoryid)
-                .HasConstraintName("PRODUCTS_FK1");
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Category_Products");
 
-            entity.HasMany(d => d.Promotions).WithMany(p => p.Products)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Productpromotion",
-                    r => r.HasOne<Promotion>().WithMany()
-                        .HasForeignKey("Promotionid")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("SYS_C00523931"),
-                    l => l.HasOne<Product>().WithMany()
-                        .HasForeignKey("Productid")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("SYS_C00523930"),
-                    j =>
-                    {
-                        j.HasKey("Productid", "Promotionid").HasName("SYS_C00523929");
-                        j.ToTable("PRODUCTPROMOTIONS");
-                        j.IndexerProperty<decimal>("Productid")
-                            .HasColumnName("PRODUCTID");
-                        j.IndexerProperty<decimal>("Promotionid")
-                            .HasColumnName("PROMOTIONID");
-                    });
         });
 
-        modelBuilder.Entity<Productfile>(entity =>
+        modelBuilder.Entity<ProductFile>(entity =>
         {
-            entity.HasKey(e => e.Fileid).HasName("SYS_C00523926");
+            entity.HasKey(e => e.Id).HasName("PK_ProductFile");
 
-            entity.ToTable("PRODUCTFILES");
+            entity.ToTable("ProductFiles");
 
-            entity.Property(e => e.Fileid)
-                .HasColumnName("FILEID");
-            entity.Property(e => e.Filedescription)
+            entity.Property(e => e.Description)
+                .IsUnicode(true);
+
+            entity.Property(e => e.FilePath)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("FILEDESCRIPTION");
-            entity.Property(e => e.Filepath)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("FILEPATH");
-            entity.Property(e => e.Productid)
-                .HasColumnName("PRODUCTID");
+                .IsUnicode(false);
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Productfiles)
-                .HasForeignKey(d => d.Productid)
-                .HasConstraintName("FK_PRODUCT_FILES_PRODUCTS");
+            entity.HasOne(d => d.Product).WithMany(p => p.Files)
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Product_ProductFiles");
         });
 
-        modelBuilder.Entity<Productimage>(entity =>
+        modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.Imageid).HasName("SYS_C00523924");
+            entity.HasKey(e => e.Id).HasName("PK_ProductImage");
 
-            entity.ToTable("PRODUCTIMAGES");
+            entity.ToTable("ProductImages");
 
-            entity.Property(e => e.Imageid)
-                .HasColumnName("IMAGEID");
-            entity.Property(e => e.Imagepath)
+            entity.Property(e => e.ImagePath)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("IMAGEPATH");
-            entity.Property(e => e.Isthumbnail)
-                .HasPrecision(1)
-                .HasColumnName("ISTHUMBNAIL");
-            entity.Property(e => e.Productid)
-                .HasColumnName("PRODUCTID");
+                .IsUnicode(false);
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Productimages)
-                .HasForeignKey(d => d.Productid)
-                .HasConstraintName("FK_PRODUCT_IMAGES_PRODUCTS");
+            entity.HasOne(d => d.Product).WithMany(p => p.Images)
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Product_ProductImages");
         });
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.Promotionid).HasName("SYS_C00523928");
+            entity.HasKey(e => e.Id).HasName("PK_Promotion");
 
-            entity.ToTable("PROMOTIONS");
+            entity.ToTable("Promotions");
 
-            entity.Property(e => e.Promotionid)
-                .HasColumnName("PROMOTIONID");
+
             entity.Property(e => e.Description)
-                .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Discountpercentage)
-                .HasColumnType("DECIMAL(5,2)")
-                .HasColumnName("DISCOUNTPERCENTAGE");
-            entity.Property(e => e.Enddate)
-                .HasColumnType("DATE")
-                .HasColumnName("ENDDATE");
-            entity.Property(e => e.Promotionname)
+                .IsUnicode(true);
+
+            entity.Property(e => e.Name)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("PROMOTIONNAME");
-            entity.Property(e => e.Startdate)
-                .HasColumnType("DATE")
-                .HasColumnName("STARTDATE");
+                .IsUnicode(true);
+
+            entity.Property(e => e.Start)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.Reviewid).HasName("SYS_C00523932");
+            entity.HasKey(e => e.Id).HasName("PK_Review");
 
-            entity.ToTable("REVIEWS");
+            entity.ToTable("Reviews");
 
-            entity.Property(e => e.Reviewid)
-                .HasColumnName("REVIEWID");
-            entity.Property(e => e.Description)
-                .HasColumnName("DESCRIPTION");
-            entity.Property(e => e.Productid)
-                .HasColumnName("PRODUCTID");
-            entity.Property(e => e.Rating)
-                .HasColumnName("RATING");
-            entity.Property(e => e.Userid)
-                .HasColumnName("USERID");
+            entity.Property(e => e.Comment)
+                .HasMaxLength(4096)
+                .IsUnicode(true);
+
 
             entity.HasOne(d => d.Product).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.Productid)
-                .HasConstraintName("SYS_C00523934");
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_Product_Reviews");
 
             entity.HasOne(d => d.User).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.Userid)
-                .HasConstraintName("SYS_C00523933");
+                .HasForeignKey(d => d.Id)
+                .HasConstraintName("FK_User_Reviews");
         });
 
-        modelBuilder.Entity<Shippingmethod>(entity =>
+        modelBuilder.Entity<ShippingMethod>(entity =>
         {
-            entity.HasKey(e => e.Shippingmethodid).HasName("SYS_C00523914");
+            entity.HasKey(e => e.Id).HasName("PK_ShippingMethod");
 
-            entity.ToTable("SHIPPINGMETHODS");
+            entity.ToTable("ShippingMethods");
 
-            entity.Property(e => e.Shippingmethodid)
-                .HasColumnName("SHIPPINGMETHODID");
-            entity.Property(e => e.Methodname)
+            entity.Property(e => e.Cost)
+                .HasPrecision(10, 2);
+
+
+            entity.Property(e => e.Name)
                 .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("METHODNAME");
-            entity.Property(e => e.Shippingcost)
-                .HasColumnType("DECIMAL(10,2)")
-                .HasColumnName("SHIPPINGCOST");
+                .IsUnicode(false);
+
         });
+
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Userid).HasName("SYS_C00523915");
 
-            entity.ToTable("USERS");
+            entity.HasKey(e => e.Id).HasName("PK_User");
 
-            entity.Property(e => e.Userid)
-                .HasColumnName("USERID");
+            entity.ToTable("Users");
+
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("EMAIL");
-            entity.Property(e => e.Newslettersubscription)
-                .HasPrecision(1)
-                .HasColumnName("NEWSLETTERSUBSCRIPTION");
+                .IsUnicode(true);
+
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
-                .HasColumnName("PASSWORD");
-            entity.Property(e => e.Shippingaddress)
+                .IsUnicode(false);
+
+            entity.Property(e => e.ShippingAddress)
                 .HasMaxLength(255)
-                .HasColumnName("SHIPPINGADDRESS");
+                .IsUnicode(true);
+
             entity.Property(e => e.Username)
                 .HasMaxLength(255)
-                .HasColumnName("USERNAME");
+                .IsUnicode(true);
         });
 
         OnModelCreatingPartial(modelBuilder);

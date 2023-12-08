@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Models;
 
-public partial class Productimage
+public class ProductImage
 {
-    public decimal Imageid { get; set; }
+    public int Id { get; set; }
 
-    public decimal? Productid { get; set; }
+    public string ImagePath { get; set; }
 
-    public string? Imagepath { get; set; }
+    public bool IsThumbnail { get; set; }
 
-    public bool? Isthumbnail { get; set; }
+    public int ProductId { get; set; }
 
-    public virtual Product? Product { get; set; }
+    public Product Product { get; set; }
 }

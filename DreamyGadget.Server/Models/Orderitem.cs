@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace Models;
 
-public partial class Orderitem
+public class OrderItem
 {
-    public decimal Orderitemid { get; set; }
+    public int Id { get; set; }
 
-    public decimal? Orderid { get; set; }
+    public int Quantity { get; set; }
 
-    public decimal? Productid { get; set; }
+    public decimal Cost { get; set; }
 
-    public decimal? Quantity { get; set; }
+    public int OrderId { get; set; }
 
-    public decimal? Itemprice { get; set; }
+    public Order Order { get; set; }
 
-    public virtual Order? Order { get; set; }
+    public int ProductId { get; set; }
 
-    public virtual Product? Product { get; set; }
+    public Product Product { get; set; }
 }

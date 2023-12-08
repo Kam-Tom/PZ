@@ -1,17 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models;
 
-public partial class Payment
+public class Payment
 {
-    public decimal Paymentid { get; set; }
+    public int Id { get; set; }
 
-    public decimal? Orderid { get; set; }
 
-    public string? Paymentmethod { get; set; }
+    public MethodType Method { get; set; }
 
-    public string? Paymentstatus { get; set; }
+    public StatusType Status { get; set; }
 
-    public virtual Order? Order { get; set; }
+    public int OrderId { get; set; }
+
+    public Order Order { get; set; }
+
+    public enum MethodType
+    {
+        CreditCard,
+        DebitCard,
+        PayPal,
+        BankTransfer,
+        Cash
+    }
+    public enum StatusType
+    {
+        Pending,
+        Completed,
+        Failed,
+        Refunded,
+        Canceled
+    }
 }
