@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DreamyGadget.Server.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize(Roles = "Admin")]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {

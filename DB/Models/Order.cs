@@ -5,7 +5,7 @@ public class Order
 
     public DateTime Date { get; set; }
 
-    public StatusType Status { get; set; }
+    public OrderStatusType Status { get; set; }
 
     public int ShippingMethodId { get; set; }
 
@@ -20,7 +20,7 @@ public class Order
     //One order can have multiple payments. Example [Denied Payment, Denied Payment, Accepted Payment]
     public ICollection<Payment> Payments { get; set; }
 
-    public enum StatusType
+    public enum OrderStatusType
     {
         Pending,
         Processing,

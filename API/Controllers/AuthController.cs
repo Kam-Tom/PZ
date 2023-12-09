@@ -1,5 +1,6 @@
 ﻿using BCrypt.Net;
 using DB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerLogic.DTOs;
 using ServerLogic.Helpers;
@@ -19,7 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult Register(RegisteDto request)
+    public ActionResult<User> Register(RegisteDto request)
     {
         User user = _repo.GetByEmail(request.Email);
         if (user != null)
@@ -31,7 +32,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login(LoginDto request)
+    public ActionResult Login(LoginDto request)
     {
         User user = _repo.GetByEmail(request.Email);
         if (user == null)
@@ -44,5 +45,6 @@ public class AuthController : ControllerBase
 
         return Ok(token);
     }
+
 }
 

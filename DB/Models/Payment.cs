@@ -4,15 +4,15 @@ public class Payment
     public int Id { get; set; }
 
 
-    public MethodType Method { get; set; }
+    public PaymentMethodType Method { get; set; }
 
-    public StatusType Status { get; set; }
+    public PaymentStatusType Status { get; set; }
 
     public int OrderId { get; set; }
 
     public Order Order { get; set; }
 
-    public enum MethodType
+    public enum PaymentMethodType
     {
         CreditCard,
         DebitCard,
@@ -20,7 +20,7 @@ public class Payment
         BankTransfer,
         Cash
     }
-    public enum StatusType
+    public enum PaymentStatusType
     {
         Pending,
         Completed,
