@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Models;
-using Service;
 
 namespace DreamyGadget.Server.Controllers
 {

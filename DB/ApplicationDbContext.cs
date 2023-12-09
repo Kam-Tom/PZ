@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Microsoft.EntityFrameworkCore;
+using DB.Models;
 
-namespace Service;
+namespace DB;
 
-public partial class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) { }
 
     public DbSet<Category> Categories { get; set; }
 
@@ -221,7 +216,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(true);
 
-            entity.Property(e => e.Password)
+            entity.Property(e => e.PasswordHash)
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
@@ -234,8 +229,6 @@ public partial class ApplicationDbContext : DbContext
                 .IsUnicode(true);
         });
 
-        OnModelCreatingPartial(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

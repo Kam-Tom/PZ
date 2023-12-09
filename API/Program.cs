@@ -1,9 +1,24 @@
+using DB;
 using Microsoft.EntityFrameworkCore;
-using Service;
+using ServerLogic.Helpers;
+using ServerLogic.Interfaces;
+using ServerLogic.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
+
+builder.Services.AddSingleton<IConfiguration>(configuration);
+
+
 // Add services to the container.
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddControllers();
 

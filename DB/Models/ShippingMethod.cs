@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Models;
-
+﻿namespace DB.Models;
 public class ShippingMethod
 {
     public int Id { get; set; }

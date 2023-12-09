@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace DB.Models;
 
-namespace Models;
 
 public class User
 {
@@ -9,7 +7,7 @@ public class User
 
     public string Username { get; set; }
 
-    public string Password { get; set; }
+    public string PasswordHash { get; set; }
 
     public string Email { get; set; }
 

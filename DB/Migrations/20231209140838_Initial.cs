@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DreamyGadget.Server.Migrations
+namespace DB.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -76,7 +76,7 @@ namespace DreamyGadget.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Password = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    PasswordHash = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     ShippingAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     NewsletterSubscription = table.Column<bool>(type: "bit", nullable: false)

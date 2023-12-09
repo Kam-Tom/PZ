@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Models;
-
+namespace DB.Models;
 public class Promotion
 {
     public int Id { get; set; }
