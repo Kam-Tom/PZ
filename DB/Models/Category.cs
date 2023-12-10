@@ -1,5 +1,5 @@
-﻿namespace DB.Models;
-
+﻿#nullable disable warnings
+namespace DB.Models;
 public class Category
 {
     public int Id { get; set; }

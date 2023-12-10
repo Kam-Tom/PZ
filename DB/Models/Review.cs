@@ -1,4 +1,5 @@
-﻿namespace DB.Models;
+﻿#nullable disable warnings
+namespace DB.Models;
 public class Review
 {
     public int Id { get; set; }

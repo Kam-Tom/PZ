@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
+#nullable disable warnings
 namespace DB.Models;
 public class Promotion
 {

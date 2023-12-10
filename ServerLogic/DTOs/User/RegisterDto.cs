@@ -1,22 +1,20 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-
+﻿using System.ComponentModel.DataAnnotations;
 namespace ServerLogic.DTOs.User;
 
 public class RegisteDto
 {
     [MinLength(3)] 
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
     [MinLength(3)] 
-    public string Surname { get; set; } = string.Empty;
+    public required string Surname { get; set; }
 
     [EmailAddress(ErrorMessage = "Not a valid email")]
-    public string Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$", ErrorMessage = "Password must be between 6 and 20 characters and contain one uppercase letter, one lowercase letter, one digit and one special character.")]
-    public string Password { get; set; } = string.Empty;
+    public required string Password { get; set; }
 
     [Compare("Password")]
-    public string ConfirmPassword { get; set; } = string.Empty;
+    public required string ConfirmPassword { get; set; }
 }

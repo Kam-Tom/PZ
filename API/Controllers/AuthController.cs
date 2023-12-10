@@ -1,13 +1,10 @@
-﻿using Azure.Core;
-using DB.Models;
+﻿using DB.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using ServerLogic.DTOs.User;
 using ServerLogic.Helpers;
 using ServerLogic.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 
 
 namespace API.Controllers;
@@ -103,8 +100,8 @@ public class AuthController : ControllerBase
         var jsonToken = handler.ReadToken(oldAccessToken) as JwtSecurityToken;
 
         // Access the user's email claim from the old token
-        string userEmail = jsonToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        string userRole = jsonToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        string userEmail = jsonToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? "";
+        string userRole = jsonToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "";
 
         if(userEmail == "" || userRole == "")
             return BadRequest("Invalid Auth token");

@@ -1,7 +1,5 @@
-﻿using Azure.Core;
-using DB;
+﻿using DB;
 using DB.Models;
-using Microsoft.EntityFrameworkCore;
 using ServerLogic.DTOs.User;
 using ServerLogic.Helpers;
 using ServerLogic.Interfaces;
@@ -51,7 +49,7 @@ public class UserRepository : IUserRepository
         _ctx.SaveChanges();
     }
 
-    public User GetByEmail(string email)
+    public User? GetByEmail(string email)
     {
         return _ctx.Users.Where(u => u.Email == email).FirstOrDefault();
     }
