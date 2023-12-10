@@ -320,7 +320,6 @@ namespace DB.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RefreshTokenExpires")

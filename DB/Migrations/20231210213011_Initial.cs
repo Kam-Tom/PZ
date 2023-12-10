@@ -82,7 +82,7 @@ namespace DB.Migrations
                     NewsletterSubscription = table.Column<bool>(type: "bit", nullable: false),
                     EmailVerified = table.Column<bool>(type: "bit", nullable: false),
                     VerificationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpires = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ResetPasswordToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResetPasswordTokenExpires = table.Column<DateTime>(type: "datetime2", nullable: true)

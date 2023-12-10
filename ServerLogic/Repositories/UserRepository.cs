@@ -33,7 +33,7 @@ public class UserRepository : IUserRepository
             Username = $"{request.Name} {request.Surname}",
             ShippingAddress = "",
             EmailVerified = false,
-            VerificationToken = emailVerificationToken
+            VerificationToken = emailVerificationToken,
         };
 
         _ctx.Users.Add(user);
