@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     public ActionResult<User> Register(RegisteDto request)
     {
 
-        User user = _repo.GetByEmail(request.Email);
+        User? user = _repo.GetByEmail(request.Email);
 
         if (user != null)
             return Conflict("User already exists.");
@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public ActionResult Login(LoginDto request)
     {
-        User user = _repo.GetByEmail(request.Email);
+        User? user = _repo.GetByEmail(request.Email);
 
         if (user == null)
             return BadRequest("User not found");
@@ -73,7 +73,7 @@ public class AuthController : ControllerBase
     [HttpPost("verifyEmail")]
     public ActionResult VerifyEmail(VerifyEmailDto request)
     {
-        User user = _repo.GetByEmail(request.Email);
+        User? user = _repo.GetByEmail(request.Email);
 
         if (user == null)
             return BadRequest("User not found");
@@ -107,7 +107,7 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid Auth token");
 
 
-        User user = _repo.GetByEmail(userEmail);
+        User? user = _repo.GetByEmail(userEmail);
 
         if (user == null)
             return BadRequest("User not found");
@@ -138,7 +138,7 @@ public class AuthController : ControllerBase
     [HttpPost("forgotPassword")]
     public ActionResult ForgotPassword(string email)
     {
-        User user = _repo.GetByEmail(email);
+        User? user = _repo.GetByEmail(email);
         if (user == null)
             return BadRequest("User not found");
 
@@ -152,7 +152,7 @@ public class AuthController : ControllerBase
     [HttpPost("resetPassword")]
     public ActionResult ResetPassword(ResetPasswordDto request)
     {
-        User user = _repo.GetByEmail(request.Email);
+        User? user = _repo.GetByEmail(request.Email);
         if (user == null)
             return BadRequest("User not found");
         if (user.ResetPasswordToken != request.ResetPasswordToken)
