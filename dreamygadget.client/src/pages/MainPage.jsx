@@ -33,7 +33,6 @@ function MainPage() {
                 path="/admin"
                 element={
                     <>
-                        <Navbar/>
                         <AdminPage />
                     </>
                 }

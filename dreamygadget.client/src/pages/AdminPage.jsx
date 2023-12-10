@@ -1,102 +1,99 @@
-import React from "react";
+import React, { useState } from "react";
 import "../css/AdminPage.css"
-
+import AddProductForm from "./AddProductForm";
+import AddCategoryForm from "./AddCategoryForm";
+import ProductList from "./ProductList";
+import AdminMenu from "./AdminMenu";
 
 function AdminPage() {
+    const [showList, setShowList] = useState(false);
+    const [showAddProductForm, setShowAddProductForm] = useState(false);
+    const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const Orders = [
-        {
-            productName: 'JavaScript Tutorial',
-            productNumber: '85743',
-            paymentStatus: 'Due',
-            status: 'Pending'
-        },
-        {
-            productName: 'CSS Full Course',
-            productNumber: '97245',
-            paymentStatus: 'Refunded',
-            status: 'Declined'
-        },
-        {
-            productName: 'Flex-Box Tutorial',
-            productNumber: '36452',
-            paymentStatus: 'Paid',
-            status: 'Active'
-        },
-    ]
-    
-    let showList = false;
+    const products = [
+    {
+        productName: "Laptop",
+        category: "Electronics",
+        image: "url_do_obrazka",
+        price: 999,
+        description: "Powerful laptop for all your needs.",
+        quantity: 10,
+    },
+    {
+        productName: "Smartphone",
+        category: "Electronics",
+        image: "url_do_obrazka",
+        price: 499,
+        description: "The latest smartphone with amazing features.",
+        quantity: 20,
+    },
+    {
+        productName: "Desk Chair",
+        category: "Furniture",
+        image: "url_do_obrazka",
+        price: 129,
+        description: "Comfortable chair for long hours of work.",
+        quantity: 5,
+    },
+  ];
 
+    const handleAddProduct = (newProductData) => {
+        setShowAddProductForm(false);
+        setSelectedProduct(newProductData);
+    };
 
-    function showUsers() {
-        const usersButton = document.getElementById('users');
-        const usersList = document.getElementById('list');
+    const handleAddCategory = (newCategoryData) => {
+        setShowAddCategoryForm(false);
+    };
 
+    const showProducts = () => {
+        setShowList(true);
+        setShowAddProductForm(false);
+        setShowAddCategoryForm(false);
+        setSelectedProduct(null);
+    };
 
-        if(!showList){
-            const thead = document.createElement('thead');
-                    const content = `
-                        <td>ID</td>
-                        <td>Username</td>
-                        <td>Email</td>
-                        <td>Shipping Address</td>
-                    `;
-                    thead.innerHTML = content;
-                    usersList.append(thead);
-            for(let order of Orders){
-            const tr = document.createElement('tr');
-                    const trContent = `
-                        <td>${order.productNumber}</td>
-                        <td>${order.productName}</td>
-                        <td>${order.paymentStatus}</td>
-                        <td class="${order.status === 'Declined' ? 'danger' : order.status === 'Pending' ? 'warning' : 'primary'}">${order.status}</td>
-                    `;
-                    tr.innerHTML = trContent;
-                    usersList.append(tr);
-                    let btnConstraints = document.createElement('td')
-                    btnConstraints.classList.add("clickable")
-                    btnConstraints.innerText = 'Constraints'
-                    tr.append(" ", btnConstraints)
-                    // dodawanie ograniczeń:
-                    btnConstraints.onclick = () => {
-                        tr.remove()
-                    }
-                    let btnBan = document.createElement('td')
-                    btnBan.classList.add("clickable")
-                    btnBan.innerText = 'Ban'
-                    tr.append(" ", btnBan)
-                    // wykluczanie:
-                    btnBan.onclick = () => {
-                        tr.remove()
-                    }
-                    let btnSend = document.createElement('td')
-                    btnSend.classList.add("clickable")
-                    btnSend.innerText = 'Send an Email'
-                    tr.append(" ", btnSend)
-                    // wysyłanie maila:
-                    btnSend.onclick = () => {
-                        tr.remove()
-                    }
-            }
-            showList = true;
-        }
-      };
-    return (       
+    const showAddProductFormFn = () => {
+        setShowAddProductForm(true);
+        setShowList(false);
+        setShowAddCategoryForm(false);
+        setSelectedProduct(null);
+    };
+
+    const showAddCategoryFormFn = () => {
+        setShowAddCategoryForm(true);
+        setShowList(false);
+        setShowAddProductForm(false);
+        setSelectedProduct(null);
+    };
+
+    const handleCloseAddCategoryForm = () => {
+        setShowAddCategoryForm(false);
+    };
+
+    return (
         <div className="admincontainer">
-            
-            <div className="adminsidebar">
-                <p id="users" onClick={showUsers}>
-                    <span>Users</span>
-                </p>
-                <p>
-                    <span>Products</span>
-                </p>
-                <p>
-                    <span>Comments</span>
-                </p>
-            </div>
-                <table className="adminlist" id="list"> 
-                </table>
+            <AdminMenu
+                onShowProducts={showProducts}
+                onShowAddProductForm={showAddProductFormFn}
+                onShowProductList={() => {
+                    setShowList(true);
+                    setShowAddProductForm(false);
+                    setShowAddCategoryForm(false);
+                    setSelectedProduct(null);
+                }}
+                onShowAddCategoryForm={showAddCategoryFormFn}
+            />
+            {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
+            {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
+            {showList && (
+                <ProductList
+                    products={products}
+                    onSelectProduct={(product) => setSelectedProduct(product)}
+                    selectedProduct={selectedProduct}
+                />
+            )}
         </div>
     );
 }

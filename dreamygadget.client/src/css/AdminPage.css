@@ -12,7 +12,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
 }
 
-.adminsidebar p{
+.adminsidebar p {
     display: flex;
     align-items: center;
     color: var(--color-info-dark);
@@ -23,39 +23,39 @@
     transition: all 0.3s ease;
 }
 
-.adminsidebar p span{
+.adminsidebar p span {
     font-size: 1.6rem;
     transition: all 0.3s ease;
 }
 
-.adminsidebar p.active{
+.adminsidebar p.active {
     width: 100%;
     color: var(--color-primary);
     background-color: var(--color-light);
     margin-left: 0;
 }
 
-.adminsidebar p.active::before{
+.adminsidebar p.active::before {
     content: '';
     width: 6px;
     height: 18px;
     background-color: var(--color-primary);
 }
 
-.adminsidebar p.active span{
+.adminsidebar p.active span {
     color: var(--color-primary);
     margin-left: calc(1rem - 3px);
 }
 
-.adminsidebar p:hover{
+.adminsidebar p:hover {
     color: var(--color-primary);
 }
 
-.adminsidebar p:hover span{
+.adminsidebar p:hover span {
     margin-left: 0.6rem;
 }
 
-.adminsidebar .message-count{
+.adminsidebar .message-count {
     background-color: var(--color-danger);
     padding: 2px 6px;
     color: var(--color-white);
@@ -89,6 +89,6 @@
     text-decoration: underline;
 }
 
-.adminlist td.clickable:hover{
+.adminlist td.clickable:hover {
     color:rgb(172, 28, 28);
 }
