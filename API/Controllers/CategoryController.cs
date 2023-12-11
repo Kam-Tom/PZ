@@ -18,6 +18,20 @@ namespace API.Controllers
             return Ok(categories);
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<IEnumerable<Category>> Get([FromRoute]int id)
+        {
+            var category = _context
+                .Categories
+                .FirstOrDefault(p => p.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return Ok(category);
+        }
+
         [HttpPost]
         public ActionResult Post(string name)
         {
@@ -28,7 +42,7 @@ namespace API.Controllers
 
             _context.Categories.Add(category);
             _context.SaveChanges();
-            return Ok(category);
+            return Ok("Category created");
         }
     }
 }

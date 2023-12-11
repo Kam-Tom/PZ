@@ -11,14 +11,14 @@ using System.Security.Claims;
 
 namespace API.Controllers
 {
-    [Route("product")]
+    [Route("products")]
     public class ProductController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
         public ProductController(ApplicationDbContext context)
         {
-            _context = context; ;
+            _context = context;
         }
 
         // GET: ProductController
@@ -48,6 +48,8 @@ namespace API.Controllers
         [HttpPost]
         public ActionResult<Product> CreateProduct(int id, String name, String desc, decimal price)
         {
+
+
             Product product = new Product
             {
                 Id = id,

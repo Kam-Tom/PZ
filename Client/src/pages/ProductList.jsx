@@ -34,10 +34,10 @@ function ProductList({ products, onEditProduct, onDeleteProduct }) {
                                 <React.Fragment key={index}>
                                     {console.log("w liscie", products)}
                                     <tr className={`product-list-item ${ selectedProduct === product ? "active" : "" }`} onClick={() => onSelectProduct(product)}>
-                                        <td>{product.productName}</td>
+                                        <td>{product.name}</td>
                                         <td className="Category">{product.category}</td>
                                         <td className="Price">{product.price}</td>
-                                        <td className="Availability"> {product.quantity > 0 ? "In stock" : "Out of stock"}</td>
+                                        <td className="Availability"> {product.stock > 0 ? "In stock" : "Out of stock"}</td>
                                     </tr>
                                 {selectedProduct === product && (
                                     <tr>
@@ -47,10 +47,10 @@ function ProductList({ products, onEditProduct, onDeleteProduct }) {
                                                     <img src={selectedProduct.image} alt={selectedProduct.productName} />
                                                 </div>
                                                 <div className="product-info">
-                                                    <h3>Name: {selectedProduct.productName}</h3>
+                                                    <h3>Name: {selectedProduct.name}</h3>
                                                     <p>Category: {selectedProduct.category}</p>
                                                     <p>Price: {selectedProduct.price}</p>
-                                                    <p>Quantity: {selectedProduct.quantity}</p>
+                                                    <p>Quantity: {selectedProduct.stock}</p>
                                                         <div>
                                                             <button onClick={() => handleEditClick(selectedProduct)}>Edit</button>
                                                             <button onClick={() => handleDeleteClick(selectedProduct)}>Delete</button>

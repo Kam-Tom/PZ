@@ -23,7 +23,7 @@ function AdminPage() {
     //}, []);
 
     const products = async () => {
-        await fetch("https://localhost:44366/product")
+        await fetch("http://localhost:5293/products")
             .then(response => response.json())
             .then(response => {
                 setProdukty(response)
