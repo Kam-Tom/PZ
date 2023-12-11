@@ -4,20 +4,30 @@ import AddProductForm from "./AddProductForm";
 import AddCategoryForm from "./AddCategoryForm";
 import ProductList from "./ProductList";
 import AdminMenu from "./AdminMenu";
+import { useEffect } from "react";
 
 function AdminPage() {
     const [showList, setShowList] = useState(false);
     const [showAddProductForm, setShowAddProductForm] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [produkty, setProdukty] = useState(null);
 
-    let produkty = [];
+    //useEffect(() => {
+    //    fetch("https://localhost:44366/product")
+    //        .then(res => res.json()
+    //            .then((data) => {
+    //                setProdukty(data);
+    //                console.log("produkty get");
+    //        }))
+    //}, []);
+
     const products = async () => {
         await fetch("https://localhost:44366/product")
             .then(response => response.json())
             .then(response => {
-                produkty.push(response[0]);
-                console.log("produkty asd", produkty);
+                setProdukty(response)
+                console.log("produkty get");
             });
     }
 
@@ -71,7 +81,7 @@ function AdminPage() {
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
-            {showList && (
+            {showList && produkty && (
                 <ProductList
                     products={produkty}
                     onSelectProduct={(product) => setSelectedProduct(product)}
