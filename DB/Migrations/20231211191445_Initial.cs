@@ -97,7 +97,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
@@ -123,7 +124,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     Status = table.Column<int>(type: "int", nullable: false),
                     ShippingMethodId = table.Column<int>(type: "int", nullable: false),
@@ -153,7 +155,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FilePath = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false)
@@ -175,7 +178,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ImagePath = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
                     IsThumbnail = table.Column<bool>(type: "bit", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false)
@@ -224,7 +228,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", maxLength: 4096, nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
@@ -254,7 +259,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Cost = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
@@ -284,7 +290,8 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Method = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false)
@@ -318,6 +325,13 @@ namespace DB.Migrations
                 schema: "DreamyGadget",
                 table: "ProductPromotion",
                 column: "PromotionsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                schema: "DreamyGadget",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

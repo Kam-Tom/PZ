@@ -36,9 +36,10 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.ToTable("Categories");
-
             entity.HasKey(e => e.Id).HasName("PK_Category");
+            entity.Property(e => e.Id).UseIdentityColumn();
+            
+            entity.ToTable("Categories");
 
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
@@ -52,9 +53,10 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.ToTable("Orders");
-
             entity.HasKey(e => e.Id).HasName("PK_Order");
+            entity.Property(e => e.Id).UseIdentityColumn();
+            
+            entity.ToTable("Orders");
 
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -67,6 +69,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<OrderItem>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_OrderItem");
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.Property(e => e.Cost)
                 .HasPrecision(10,2);
@@ -86,6 +89,7 @@ public class ApplicationDbContext : DbContext
         {
 
             entity.HasKey(e => e.Id).HasName("PK_Payment");
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.ToTable("Payments");
 
@@ -97,6 +101,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Product");
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.ToTable("Products");
 
@@ -120,6 +125,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ProductFile>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_ProductFile");
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.ToTable("ProductFiles");
 
@@ -138,6 +144,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ProductImage>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_ProductImage");
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.ToTable("ProductImages");
 
@@ -153,6 +160,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Promotion>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Promotion");
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.ToTable("Promotions");
 
@@ -171,6 +179,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Review>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Review");
+
+            entity.Property(e => e.Id).UseIdentityColumn();
 
             entity.ToTable("Reviews");
 
@@ -192,6 +202,8 @@ public class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_ShippingMethod");
 
+            entity.Property(e => e.Id).UseIdentityColumn();
+
             entity.ToTable("ShippingMethods");
 
             entity.Property(e => e.Cost)
@@ -210,11 +222,15 @@ public class ApplicationDbContext : DbContext
 
             entity.HasKey(e => e.Id).HasName("PK_User");
 
+            entity.Property(e => e.Id).UseIdentityColumn();
+
             entity.ToTable("Users");
 
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .IsUnicode(true);
+
+            entity.HasIndex(e => e.Email).IsUnique();
 
             entity.Property(e => e.PasswordHash)
                 .HasMaxLength(255)

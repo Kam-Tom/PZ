@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231210213011_Initial")]
+    [Migration("20231211191445_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -54,7 +54,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Order", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
@@ -81,7 +84,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.OrderItem", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Cost")
                         .HasPrecision(10, 2)
@@ -105,7 +111,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Method")
                         .HasColumnType("int");
@@ -125,7 +134,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Product", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -164,7 +176,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.ProductFile", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -189,7 +204,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.ProductImage", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImagePath")
                         .IsRequired()
@@ -249,7 +267,10 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Review", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -351,6 +372,9 @@ namespace DB.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK_User");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users", "DreamyGadget");
                 });
