@@ -11,32 +11,15 @@ function AdminPage() {
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const products = [
-    {
-        productName: "Laptop",
-        category: "Electronics",
-        image: "url_do_obrazka",
-        price: 999,
-        description: "Powerful laptop for all your needs.",
-        quantity: 10,
-    },
-    {
-        productName: "Smartphone",
-        category: "Electronics",
-        image: "url_do_obrazka",
-        price: 499,
-        description: "The latest smartphone with amazing features.",
-        quantity: 20,
-    },
-    {
-        productName: "Desk Chair",
-        category: "Furniture",
-        image: "url_do_obrazka",
-        price: 129,
-        description: "Comfortable chair for long hours of work.",
-        quantity: 5,
-    },
-  ];
+    let produkty = [];
+    const products = async () => {
+        await fetch("https://localhost:44366/product")
+            .then(response => response.json())
+            .then(response => {
+                produkty.push(response[0]);
+                console.log("produkty asd", produkty);
+            });
+    }
 
     const handleAddProduct = (newProductData) => {
         setShowAddProductForm(false);
@@ -77,7 +60,8 @@ function AdminPage() {
             <AdminMenu
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
-                onShowProductList={() => {
+                onShowProductList={async () => {
+                    await products();
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);
@@ -89,7 +73,7 @@ function AdminPage() {
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
             {showList && (
                 <ProductList
-                    products={products}
+                    products={produkty}
                     onSelectProduct={(product) => setSelectedProduct(product)}
                     selectedProduct={selectedProduct}
                 />

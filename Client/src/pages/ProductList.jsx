@@ -29,8 +29,10 @@ function ProductList({ products, onEditProduct, onDeleteProduct }) {
                         </tr>
                     </thead>
                         <tbody>
+                            {console.log("przed lista", products)}
                             {products.map((product, index) => (
                                 <React.Fragment key={index}>
+                                    {console.log("w liscie", products)}
                                     <tr className={`product-list-item ${ selectedProduct === product ? "active" : "" }`} onClick={() => onSelectProduct(product)}>
                                         <td>{product.productName}</td>
                                         <td className="Category">{product.category}</td>
