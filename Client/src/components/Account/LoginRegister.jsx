@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../css/LoginRegister.css"
+import "./LoginRegister.css"
 import ReCAPTCHA from "react-google-recaptcha";
 
 function LoginRegister() {
@@ -96,6 +96,9 @@ function LoginRegister() {
 
     return (
         <div className={`container ${isPasswordReset ? "password-reset" : ""}`} id="container">
+            <div className={`back-button ${isSignUp ? "white-arrow" : "orange-arrow"}`} onClick={() => window.location.href = "/"}>
+                <ion-icon name="arrow-back-outline"></ion-icon>
+            </div>
             {isPasswordReset ? (
                 <div className="form-container password-reset">
                     <form>

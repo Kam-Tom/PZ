@@ -193,3 +193,20 @@ body {
 .container.active .toggle-right {
     transform: translateX(200%);
 }
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 1001;
+}
+
+.orange-arrow ion-icon {
+    color: #E67E22;
+}
+
+.white-arrow ion-icon {
+    color: #fff;
+}

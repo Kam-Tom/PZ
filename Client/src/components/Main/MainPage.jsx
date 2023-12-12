@@ -2,8 +2,8 @@ import React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
-import LoginRegister from "./LoginRegister";
-import AdminPage from "./AdminPage";
+import LoginRegister from "../Account/LoginRegister";
+import AdminPage from "../Admin/AdminPage";
 
 function MainPage() {
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ function MainPage() {
             />
 
             <Route
-                path="/login-register"
+                path="/account"
                 element={
                     <>
                         <LoginRegister />

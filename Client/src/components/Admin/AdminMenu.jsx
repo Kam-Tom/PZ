@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../css/AdminMenu.css";
+import "./AdminMenu.css";
 
-function AdminMenu({ onShowProducts, onShowAddProductForm, onShowProductList, onShowAddCategoryForm }) {
+function AdminMenu({ onShowProducts, onShowAddProductForm, onShowProductList, onShowAddCategoryForm, onShowUserList }) {
     return (
         <div className="admin-menu">
             <Link to="/" className="menu-item" onClick={onShowProducts}>
@@ -16,6 +16,9 @@ function AdminMenu({ onShowProducts, onShowAddProductForm, onShowProductList, on
             </Link>
             <Link to="/admin" className="menu-item" onClick={onShowProductList}>
                 <ion-icon name="eye-outline"></ion-icon>
+            </Link>
+            <Link to="/admin" className="menu-item" onClick={onShowUserList}>
+                <ion-icon name="person-outline"></ion-icon>
             </Link>
         </div>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../css/Navbar.css";
+import "./Navbar.css";
 
 function Navbar() {
     return (
@@ -9,7 +9,7 @@ function Navbar() {
                 Miejsce na logo
             </Link>
             <nav className="navbar">
-                <Link to="/login-register">
+                <Link to="/account">
                     <ion-icon name="person-outline"></ion-icon>
                 </Link>
                 <Link to="/admin">
