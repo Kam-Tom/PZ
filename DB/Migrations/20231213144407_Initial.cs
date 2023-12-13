@@ -112,7 +112,7 @@ namespace DB.Migrations
                     table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Category_Products",
-                        column: x => x.Id,
+                        column: x => x.CategoryId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Categories",
                         principalColumn: "Id",
@@ -143,7 +143,7 @@ namespace DB.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_User_Orders",
-                        column: x => x.Id,
+                        column: x => x.UserId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -166,7 +166,7 @@ namespace DB.Migrations
                     table.PrimaryKey("PK_ProductFile", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Product_ProductFiles",
-                        column: x => x.Id,
+                        column: x => x.ProductId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -189,7 +189,7 @@ namespace DB.Migrations
                     table.PrimaryKey("PK_ProductImage", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Product_ProductImages",
-                        column: x => x.Id,
+                        column: x => x.ProductId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -240,14 +240,14 @@ namespace DB.Migrations
                     table.PrimaryKey("PK_Review", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Product_Reviews",
-                        column: x => x.Id,
+                        column: x => x.ProductId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_User_Reviews",
-                        column: x => x.Id,
+                        column: x => x.UserId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -271,14 +271,14 @@ namespace DB.Migrations
                     table.PrimaryKey("PK_OrderItem", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Order_OrderItems",
-                        column: x => x.Id,
+                        column: x => x.OrderId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Product_OrderItems",
-                        column: x => x.Id,
+                        column: x => x.ProductId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -301,7 +301,7 @@ namespace DB.Migrations
                     table.PrimaryKey("PK_Payment", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Order_Payments",
-                        column: x => x.Id,
+                        column: x => x.OrderId,
                         principalSchema: "DreamyGadget",
                         principalTable: "Orders",
                         principalColumn: "Id",
@@ -315,16 +315,70 @@ namespace DB.Migrations
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                schema: "DreamyGadget",
+                table: "OrderItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_ProductId",
+                schema: "DreamyGadget",
+                table: "OrderItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_ShippingMethodId",
                 schema: "DreamyGadget",
                 table: "Orders",
                 column: "ShippingMethodId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                schema: "DreamyGadget",
+                table: "Orders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_OrderId",
+                schema: "DreamyGadget",
+                table: "Payments",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductFiles_ProductId",
+                schema: "DreamyGadget",
+                table: "ProductFiles",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductImages_ProductId",
+                schema: "DreamyGadget",
+                table: "ProductImages",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductPromotion_PromotionsId",
                 schema: "DreamyGadget",
                 table: "ProductPromotion",
                 column: "PromotionsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                schema: "DreamyGadget",
+                table: "Products",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ProductId",
+                schema: "DreamyGadget",
+                table: "Reviews",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserId",
+                schema: "DreamyGadget",
+                table: "Reviews",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

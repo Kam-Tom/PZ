@@ -62,7 +62,7 @@ public class ApplicationDbContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_User_Orders");
         });
 
@@ -77,11 +77,11 @@ public class ApplicationDbContext : DbContext
             entity.ToTable("OrderItems");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("FK_Order_OrderItems");
 
             entity.HasOne(d => d.Product).WithMany()
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK_Product_OrderItems");
         });
 
@@ -94,7 +94,7 @@ public class ApplicationDbContext : DbContext
             entity.ToTable("Payments");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("FK_Order_Payments");
         });
 
@@ -117,7 +117,7 @@ public class ApplicationDbContext : DbContext
 
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("FK_Category_Products");
 
         });
@@ -137,7 +137,7 @@ public class ApplicationDbContext : DbContext
                 .IsUnicode(false);
 
             entity.HasOne(d => d.Product).WithMany(p => p.Files)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK_Product_ProductFiles");
         });
 
@@ -153,7 +153,7 @@ public class ApplicationDbContext : DbContext
                 .IsUnicode(false);
 
             entity.HasOne(d => d.Product).WithMany(p => p.Images)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK_Product_ProductImages");
         });
 
@@ -190,11 +190,11 @@ public class ApplicationDbContext : DbContext
 
 
             entity.HasOne(d => d.Product).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK_Product_Reviews");
 
             entity.HasOne(d => d.User).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.Id)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_User_Reviews");
         });
 

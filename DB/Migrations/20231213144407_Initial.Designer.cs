@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231211191445_Initial")]
+    [Migration("20231213144407_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -78,6 +78,8 @@ namespace DB.Migrations
 
                     b.HasIndex("ShippingMethodId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Orders", "DreamyGadget");
                 });
 
@@ -105,6 +107,10 @@ namespace DB.Migrations
                     b.HasKey("Id")
                         .HasName("PK_OrderItem");
 
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("OrderItems", "DreamyGadget");
                 });
 
@@ -127,6 +133,8 @@ namespace DB.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK_Payment");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Payments", "DreamyGadget");
                 });
@@ -170,6 +178,8 @@ namespace DB.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Product");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products", "DreamyGadget");
                 });
 
@@ -198,6 +208,8 @@ namespace DB.Migrations
                     b.HasKey("Id")
                         .HasName("PK_ProductFile");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("ProductFiles", "DreamyGadget");
                 });
 
@@ -223,6 +235,8 @@ namespace DB.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK_ProductImage");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages", "DreamyGadget");
                 });
@@ -289,6 +303,10 @@ namespace DB.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK_Review");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews", "DreamyGadget");
                 });
@@ -406,18 +424,18 @@ namespace DB.Migrations
 
             modelBuilder.Entity("DB.Models.Order", b =>
                 {
-                    b.HasOne("DB.Models.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_User_Orders");
-
                     b.HasOne("DB.Models.ShippingMethod", "ShippingMethod")
                         .WithMany()
                         .HasForeignKey("ShippingMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("DB.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_User_Orders");
 
                     b.Navigation("ShippingMethod");
 
@@ -428,14 +446,14 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Order_OrderItems");
 
                     b.HasOne("DB.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Product_OrderItems");
@@ -449,7 +467,7 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.Order", "Order")
                         .WithMany("Payments")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Order_Payments");
@@ -461,7 +479,7 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Category_Products");
@@ -473,7 +491,7 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.Product", "Product")
                         .WithMany("Files")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Product_ProductFiles");
@@ -485,7 +503,7 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.Product", "Product")
                         .WithMany("Images")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Product_ProductImages");
@@ -497,14 +515,14 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.Product", "Product")
                         .WithMany("Reviews")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Product_Reviews");
 
                     b.HasOne("DB.Models.User", "User")
                         .WithMany("Reviews")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_User_Reviews");
