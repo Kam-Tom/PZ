@@ -1,48 +1,49 @@
 ﻿using DB;
 using DB.Models;
 using Microsoft.AspNetCore.Mvc;
+using ServerLogic.DTOs.Category;
+using ServerLogic.Interfaces;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+[Route("categories")]
+public class CategoryController : ControllerBase
 {
-    [Route("categories")]
-    public class CategoryController : ControllerBase
+    private readonly ICategoryRepository _repo;
+    public CategoryController(ICategoryRepository repo) { _repo = repo; }
+
+    [HttpPut]
+    public ActionResult Put(AddCategoryDto request)
     {
-        private readonly ApplicationDbContext _context;
-        public CategoryController(ApplicationDbContext context) { _context = context; }
+        Category? category = _repo.GetByName(request.Name,true);
+        if (category == null)
+            category = _repo.Create(request.Name);
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetAll()
-        {
-            var categories = _context.Categories.ToList();
+        if(request.Subcategories != null)
+            _repo.Update(category,request.Subcategories);
 
-            return Ok(categories);
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Category>> Get([FromRoute]int id)
-        {
-            var category = _context
-                .Categories
-                .FirstOrDefault(p => p.Id == id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return Ok(category);
-        }
-
-        [HttpPost]
-        public ActionResult Post(string name)
-        {
-            Category category = new Category
-            {
-                Name = name,
-            };
-
-            _context.Categories.Add(category);
-            _context.SaveChanges();
-            return Ok("Category created");
-        }
+        return Ok("Category updated");
     }
+
+    [HttpDelete]
+    public ActionResult Delete(string name)
+    {
+        Category? category = _repo.GetByName(name,true);
+        if (category == null)
+            return BadRequest("Category doesn't exist");
+        _repo.Delete(category);
+
+        return Ok("Category deleted");
+    }
+
+    [HttpGet]
+    public ActionResult Get() 
+    {
+        //RETURN ERROR
+        var categories = _repo.GetAll();
+
+        
+        return Ok(categories.ToArray());
+    }
+
 }

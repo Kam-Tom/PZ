@@ -24,5 +24,9 @@
   <ItemGroup>
     <ProjectReference Include="..\ServerLogic\ServerLogic.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Upload\Files\" />
+    <Folder Include="Upload\Files\Images\" />
+  </ItemGroup>
 
 </Project>

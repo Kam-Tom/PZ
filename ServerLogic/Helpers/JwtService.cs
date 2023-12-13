@@ -1,16 +1,10 @@
-﻿using Azure.Core;
-using Azure;
-using DB.Models;
+﻿using DB.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using ServerLogic.DTOs.User;
 
 namespace ServerLogic.Helpers;

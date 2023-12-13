@@ -9,6 +9,8 @@ using System.Security.Claims;
 
 namespace API.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IUserRepository _repo;
