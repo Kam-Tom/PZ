@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DreamyGadget.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "User")]
+    //[ApiController, Authorize(Roles = "User")]
+    [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {

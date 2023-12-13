@@ -15,7 +15,7 @@ function AdminPage() {
     const [produkty, setProdukty] = useState(null);
 
     const products = async () => {
-        await fetch("http://localhost:5293/products")
+        await fetch("https://localhost:7248/products")
             .then(response => response.json())
             .then(response => {
                 setProdukty(response)

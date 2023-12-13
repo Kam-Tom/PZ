@@ -8,15 +8,16 @@ using ServerLogic.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 
+#region ServerConfiguration
 var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
     .Build();
-
-builder.Services.AddSingleton<IConfiguration>(configuration);
 
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
@@ -31,20 +32,20 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
     };
 });
 
-
-
-// Add services to the container.
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<JwtService>();
-
-builder.Services.AddControllers();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//CORS
+builder.Services.AddCors(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB"));
+    options.AddDefaultPolicy(builder =>
+    {
+        //TODO CHANGE ANY TO SPECYFIC ORIGIN
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+//Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -59,6 +60,30 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+
+#endregion
+
+#region ASPServices
+builder.Services.AddControllers();
+
+builder.Services.AddSingleton<IConfiguration>(configuration);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB"));
+});
+#endregion
+
+#region CustomServices
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<JwtService>();
+
+#endregion
+
+#region App run
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -73,7 +98,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
+app.UseCors();
 
 app.UseAuthorization();
 
@@ -82,3 +107,5 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
+#endregion
+

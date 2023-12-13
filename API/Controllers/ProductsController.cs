@@ -25,7 +25,7 @@ namespace API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Product>> GetAll()
         {
-            HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            //HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             var products = _context.Products;
 
             return Ok(products);
