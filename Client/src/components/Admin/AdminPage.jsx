@@ -12,33 +12,16 @@ function AdminPage() {
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [produkty, setProdukty] = useState(null);
 
-    const products = [
-        {
-            productName: "Laptop",
-            category: "Electronics",
-            image: "url_do_obrazka",
-            price: 999,
-            description: "Powerful laptop for all your needs.",
-            quantity: 10,
-        },
-        {
-            productName: "Smartphone",
-            category: "Electronics",
-            image: "url_do_obrazka",
-            price: 499,
-            description: "The latest smartphone with amazing features.",
-            quantity: 20,
-        },
-        {
-            productName: "Desk Chair",
-            category: "Furniture",
-            image: "url_do_obrazka",
-            price: 129,
-            description: "Comfortable chair for long hours of work.",
-            quantity: 5,
-        },
-    ];
+    const products = async () => {
+        await fetch("http://localhost:5293/products")
+            .then(response => response.json())
+            .then(response => {
+                setProdukty(response)
+                console.log("produkty get");
+            });
+    }
 
     const users = [
         {
@@ -107,7 +90,8 @@ function AdminPage() {
             <AdminMenu
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
-                onShowProductList={() => {
+                onShowProductList={async () => {
+                    await products();
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);
@@ -119,9 +103,9 @@ function AdminPage() {
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
-            {showList && (
+            {showList && produkty && (
                 <ProductList
-                    products={products}
+                    products={produkty}
                     onSelectProduct={(product) => setSelectedProduct(product)}
                     selectedProduct={selectedProduct}
                 />
