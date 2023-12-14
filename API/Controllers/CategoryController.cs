@@ -39,7 +39,6 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public ActionResult Get() 
     {
-        //RETURN ERROR
         var categories = _repo.GetAll();
 
         

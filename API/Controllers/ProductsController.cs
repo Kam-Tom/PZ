@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DB.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using ServerLogic.DTOs.Product;
 using ServerLogic.Interfaces;
 
 
-namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -16,11 +17,17 @@ public class ProductController : ControllerBase
         _repo = repo;
     }
 
+    [HttpPut]
+    public ActionResult Add([FromForm] AddProductDto request)
+    {
+        _repo.Add(request);
+        return Ok();
+    }
 
-    //[HttpGet]
-    //public ActionResult<IEnumerable<Product>> GetAll()
+    //[HttpPut]
+    //public ActionResult<IEnumerable<Product>> GetAll(string categoryId,int amount)
     //{
-
+    //    IFormFile
     //}
 
     //[HttpGet("{id}")]
