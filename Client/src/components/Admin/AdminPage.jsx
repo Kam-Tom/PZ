@@ -5,6 +5,7 @@ import AddCategoryForm from "./AddCategoryForm";
 import ProductList from "./ProductList";
 import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
+import { getProducts } from "../../axios";
 
 function AdminPage() {
     const [showList, setShowList] = useState(false);
@@ -12,16 +13,9 @@ function AdminPage() {
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [produkty, setProdukty] = useState(null);
+    const [products, setProducts] = useState(null);
 
-    const products = async () => {
-        await fetch("https://localhost:7248/products")
-            .then(response => response.json())
-            .then(response => {
-                setProdukty(response)
-                console.log("produkty get");
-            });
-    }
+    
 
     const users = [
         {
@@ -91,7 +85,7 @@ function AdminPage() {
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
                 onShowProductList={async () => {
-                    await products();
+                    //setProducts(getProducts());
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);
@@ -103,9 +97,9 @@ function AdminPage() {
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
-            {showList && produkty && (
+            {showList && products && (
                 <ProductList
-                    products={produkty}
+                    products={products}
                     onSelectProduct={(product) => setSelectedProduct(product)}
                     selectedProduct={selectedProduct}
                 />

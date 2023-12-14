@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./AddCategoryForm.css";
+import { postNewCategory } from "../../axios.js";
 
 function AddCategoryForm({ onAddCategory, onClose }) {
     const [category, setCategory] = useState("");
@@ -27,6 +28,7 @@ function AddCategoryForm({ onAddCategory, onClose }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        postNewCategory(category, subCategories);
         onAddCategory(category, subCategories);
         setCategory("");
         setSubCategories([]);
