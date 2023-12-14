@@ -8,6 +8,6 @@ public interface ICategoryRepository
     void Update(Category category, IEnumerable<string> subcategorieNames);
     Category Create(string name);
     void Delete(Category category);
-    ICollection<Category> GetAll();
+    ICollection<GetCategoryDto> GetAll();
 
 }

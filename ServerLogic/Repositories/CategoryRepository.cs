@@ -61,15 +61,30 @@ public class CategoryRepository : ICategoryRepository
         _ctx.SaveChanges();
     }
 
-    public ICollection<Category> GetAll()
+    public ICollection<GetCategoryDto> GetAll()
     {
         var categories = _ctx.Categories
             .Include(c => c.Subcategories)
-            .Where(c => c.ParentCategoryId == null)
             .ToList();
 
+        var categoryDtos = categories.Where(p => p.ParentCategoryId == null).Select(c => MapCategoryToDto(c)).ToList();
 
-        return categories;
+        return categoryDtos;
+    }
+
+    private GetCategoryDto MapCategoryToDto(Category category)
+    {
+        var Id = category.Id;
+        var Name = category.Name;
+        var subcategies = category.Subcategories?.Select(subcategory => MapCategoryToDto(subcategory)).ToList();
+        var categoryDto = new GetCategoryDto
+        {
+            Id = Id,
+            Name = Name,
+            Subcategories = subcategies
+        };
+
+        return categoryDto;
     }
 
 
