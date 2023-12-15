@@ -1,0 +1,119 @@
+.product-tile {
+    width: 325px;
+    height: 325px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.product-tile .product-image {
+    width: 100%;
+    height: auto;
+    max-height: 70%;
+    object-fit: contain;
+}
+
+.product-tile .product-info {
+    width: 100%;
+}
+
+.product-tile .price-stock-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 2px;
+}
+
+.product-tile .price,
+.product-tile .stock {
+    margin: 0;
+    font-size: 14px;
+}
+
+.product-tile .product-name {
+    margin: 5px 0;
+    max-height: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 16px;
+}
+
+.product-tile .buttons-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 5px;
+}
+
+.product-tile button {
+    padding: 8px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.product-tile .view-more-btn {
+    background-color: #e67e22;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.product-tile .view-more-btn:hover {
+    background-color: #d35400;
+}
+
+.product-tile .cart-btn {
+    background-color: #27ae60;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.product-tile .out-of-stock-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: not-allowed;
+    font-size: 14px;
+}
+
+.product-tile .cart-btn:hover {
+    background-color: #219653;
+}
+
+.product-list-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.product-list-container {
+    width: calc(325px * 4 + 100px);
+    margin: 0 auto;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100px;
+    z-index: 1;
+}
