@@ -1,4 +1,5 @@
-﻿using DB.Models;
+﻿using Azure.Core;
+using DB.Models;
 using Microsoft.AspNetCore.Mvc;
 using ServerLogic.DTOs.User;
 using ServerLogic.Helpers;
@@ -167,6 +168,24 @@ public class AuthController : ControllerBase
         return Ok("Password reset successful");
     }
 
+    [HttpDelete("delete")]
+    public ActionResult Delete(int userId)
+    {
+        var user = _repo.GetById(userId);
 
+        if (user != null)
+            _repo.Delete(user);
+        else
+            return BadRequest("User dont exist");
+
+        return Ok("Password reset successful");
+    }
+
+    [HttpGet("Get")]
+    public ActionResult Get()
+    {
+
+        return Ok(_repo.GetAllUsersData());
+    }
 }
 

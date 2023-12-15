@@ -53,7 +53,10 @@ public class UserRepository : IUserRepository
     {
         return _ctx.Users.Where(u => u.Email == email).FirstOrDefault();
     }
-
+    public User? GetById(int id)
+    {
+        return _ctx.Users.Where(u => u.Id == id).FirstOrDefault();
+    }
     public void GenerateResetPassword(User user, SimpleToken token)
     {
         user.ResetPasswordToken = token.Token;
@@ -74,5 +77,28 @@ public class UserRepository : IUserRepository
             return JwtService.UserRole.Admin;
         else
             return JwtService.UserRole.User;
+    }
+
+    public void Delete(User user)
+    {
+        _ctx.Users.Remove(user);
+        _ctx.SaveChanges();
+    }
+
+    public IEnumerable<UserDataDto> GetAllUsersData()
+    {
+        var users = _ctx.Users.ToList();
+        var usersDto = users.Select(u =>
+        new UserDataDto
+        {
+            Id = u.Id,
+            Email = u.Email,
+            Username = u.Username,
+            ShippingAddress = u.ShippingAddress,
+            EmailVerified = u.EmailVerified,
+            NewsletterSubscription = u.NewsletterSubscription,
+        });
+
+        return usersDto;
     }
 }
