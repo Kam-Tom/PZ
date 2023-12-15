@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231213144407_Initial")]
+    [Migration("20231215204024_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -64,7 +64,7 @@ namespace DB.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("ShippingMethodId")
+                    b.Property<int?>("ShippingMethodId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -426,9 +426,7 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.ShippingMethod", "ShippingMethod")
                         .WithMany()
-                        .HasForeignKey("ShippingMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShippingMethodId");
 
                     b.HasOne("DB.Models.User", "User")
                         .WithMany("Orders")

@@ -30,6 +30,21 @@ public class ProductController : ControllerBase
         return Ok(_repo.GetMinaturesAll());
     }
 
+    [HttpGet("{categoryId}")]
+    public ActionResult GetByCategory(int categoryId)
+    {
+        return Ok();
+    }
+    [HttpGet("{name}")]
+    public ActionResult GetByName(string name)
+    {
+        return Ok();
+    }
+    [HttpGet("{promotionId}")]
+    public ActionResult GetByPromotion(int promotionId)
+    {
+        return Ok();
+    }
     [HttpGet("{id}")]
     public ActionResult<ProductDetailsDto> Get([FromRoute] int id)
     {

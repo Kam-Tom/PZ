@@ -8,9 +8,9 @@ public class Order
 
     public OrderStatusType Status { get; set; }
 
-    public int ShippingMethodId { get; set; }
+    public int? ShippingMethodId { get; set; }
 
-    public ShippingMethod ShippingMethod { get; set; }
+    public ShippingMethod? ShippingMethod { get; set; }
 
     public int UserId { get; set; }
 
@@ -23,6 +23,7 @@ public class Order
 
     public enum OrderStatusType
     {
+        InBasket,
         Pending,
         Processing,
         Shipped,

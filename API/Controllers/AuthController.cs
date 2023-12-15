@@ -169,9 +169,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpDelete("delete")]
-    public ActionResult Delete(int userId)
+    public ActionResult Delete(string email)
     {
-        var user = _repo.GetById(userId);
+        var user = _repo.GetByEmail(email);
 
         if (user != null)
             _repo.Delete(user);
@@ -181,11 +181,6 @@ public class AuthController : ControllerBase
         return Ok("Password reset successful");
     }
 
-    [HttpGet("Get")]
-    public ActionResult Get()
-    {
 
-        return Ok(_repo.GetAllUsersData());
-    }
 }
 

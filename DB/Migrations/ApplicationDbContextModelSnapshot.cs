@@ -61,7 +61,7 @@ namespace DB.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("ShippingMethodId")
+                    b.Property<int?>("ShippingMethodId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -423,9 +423,7 @@ namespace DB.Migrations
                 {
                     b.HasOne("DB.Models.ShippingMethod", "ShippingMethod")
                         .WithMany()
-                        .HasForeignKey("ShippingMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShippingMethodId");
 
                     b.HasOne("DB.Models.User", "User")
                         .WithMany("Orders")
