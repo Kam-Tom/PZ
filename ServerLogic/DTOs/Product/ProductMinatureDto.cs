@@ -8,4 +8,6 @@ public class ProductMinatureDto
     public decimal Price { get; set;}
     public int Stock { get; set; }
     public string ThumbnailUrl { get; set; }
+    public string Category { get; set; }
+    public string Description { get; internal set; }
 }

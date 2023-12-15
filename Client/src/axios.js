@@ -81,7 +81,7 @@ async function postNewProduct(product) {
     var formdata = new FormData();
     formdata.append("name", product.productName);
     formdata.append("categoryId", product.category);
-    formdata.append("images", product.image);
+    formdata.append("thumbnails", product.image);
     formdata.append("price", product.price);
     formdata.append("stock", product.quantity);
     formdata.append("description", product.description);

@@ -89,18 +89,14 @@ public class ProductRepository : IProductRepository
         _ctx.SaveChanges();
     }
 
-    public IEnumerable<Product> GetAll()
-    {
-        return _ctx.Products.ToList();
-    }
-
     public IEnumerable<Product> GetByCategory(int categoryId)
     {
         return _ctx.Products.Where(p => p.CategoryId == categoryId);
     }
-    public IEnumerable<ProductMinatureDto> GetMinaturesByCategory(int categoryId)
+    public IEnumerable<ProductMinatureDto> GetMinaturesAll()
     {
-        var products = _ctx.Products.Where(p => p.CategoryId == categoryId).Include(p => p.Images).ToList();
+        var products = _ctx.Products.Include(p => p.Images).ToList();
+        var categories = _ctx.Categories.ToList();
 
         var productDtos = products.Select(p =>
         {
@@ -108,9 +104,11 @@ public class ProductRepository : IProductRepository
             {
                 Id = p.Id,
                 Name = p.Name,
+                Category = categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
                 Stock = p.Stock,
                 Price = p.Price,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
+                Description = p.Description,
             };
         }).ToList();
 
@@ -159,6 +157,4 @@ public class ProductRepository : IProductRepository
                 .Include(p=>p.Promotions)
                 .FirstOrDefault();
     }
-
-
 }

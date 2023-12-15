@@ -25,16 +25,11 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult GetMiniatures(int categoryId)
+    public ActionResult GetMiniatures()
     {
-        return Ok(_repo.GetMinaturesByCategory(categoryId));
+        return Ok(_repo.GetMinaturesAll());
     }
 
-    [HttpGet("All")]
-    public ActionResult GetAll()
-    {
-        return Ok(_repo.GetAll());
-    }
     [HttpGet("{id}")]
     public ActionResult<ProductDetailsDto> Get([FromRoute] int id)
     {

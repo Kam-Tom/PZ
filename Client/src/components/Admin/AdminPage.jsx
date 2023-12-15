@@ -68,7 +68,7 @@ function AdminPage() {
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
                 onShowProductList={async () => {
-                    setProducts(await getAll("https://localhost:7248/Product/All"));
+                    setProducts(await getAll("https://localhost:7248/Product"));
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);

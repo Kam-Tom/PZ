@@ -44,7 +44,7 @@ function ProductList({ products, onEditProduct }) {
                                         <td colSpan="4">
                                             <div className="product-details">
                                                 <div className="product-image">
-                                                    <img src={selectedProduct.image} alt={selectedProduct.name} />
+                                                    <img src={`https://localhost:7248/Files/${selectedProduct.thumbnailUrl}`} alt={selectedProduct.name} width={200} />
                                                 </div>
                                                 <div className="product-info">
                                                     <h3>Name: {selectedProduct.name}</h3>
