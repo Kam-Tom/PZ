@@ -1,5 +1,6 @@
 using DB;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ServerLogic.Helpers;
@@ -88,7 +89,12 @@ builder.Services.AddScoped<FileService>();
 var app = builder.Build();
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "Upload/Files")),
+    RequestPath = "/Files"
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

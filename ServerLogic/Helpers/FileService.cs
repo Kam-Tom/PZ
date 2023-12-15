@@ -6,21 +6,21 @@ public class FileService
 {
 
 
-    //public async File DownloadFile(string filename)
-    //{
-    //    var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files", filename);
+    public (byte[],string,string) Load(string filename)
+    {
+        var filepath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files", filename);
 
-    //    var provider = new FileExtensionContentTypeProvider();
-    //    if (!provider.TryGetContentType(filepath, out var contentType))
-    //    {
-    //        contentType = "application/octet-stream";
-    //    }
+        var provider = new FileExtensionContentTypeProvider();
+        if (!provider.TryGetContentType(filepath, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
 
-    //    var bytes = await File.ReadAllBytesAsync(filepath);
-    //    return File(bytes, contentType, Path.GetFileName(filepath));
+        var bytes = File.ReadAllBytes(filepath);
+        return (bytes, contentType, Path.GetFileName(filepath));
 
-    //}
-    public string WriteFile(IFormFile file)
+    }
+    public string Write(IFormFile file)
     {
 
         string filename = "";

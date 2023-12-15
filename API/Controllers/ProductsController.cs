@@ -24,12 +24,34 @@ public class ProductController : ControllerBase
         return Ok();
     }
 
-    //[HttpPut]
-    //public ActionResult<IEnumerable<Product>> GetAll(string categoryId,int amount)
-    //{
-    //    IFormFile
-    //}
+    [HttpGet]
+    public ActionResult GetMiniatures(int categoryId)
+    {
+        return Ok(_repo.GetMinaturesByCategory(categoryId));
+    }
+    [HttpGet("{id}")]
+    public ActionResult<ProductDetailsDto> Get([FromRoute] int id)
+    {
+        var product = _repo.GetById(id,true);
+        if (product == null)
+            return BadRequest("Product dont exist");
 
+        var productDto = _repo.GetDetails(product);
+
+        return Ok(productDto);
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult Delete([FromRoute] int id) 
+    {
+        var product = _repo.GetById(id);
+        if (product == null)
+            return BadRequest("Product dont exist");
+
+        _repo.Delete(product);
+
+        return Ok();
+    }
     //[HttpGet("{id}")]
     //public ActionResult<IEnumerable<Product>> Get([FromRoute] int id)
     //{

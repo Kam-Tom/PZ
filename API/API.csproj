@@ -26,7 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Upload\Files\" />
-    <Folder Include="Upload\Files\Images\" />
   </ItemGroup>
 
 </Project>

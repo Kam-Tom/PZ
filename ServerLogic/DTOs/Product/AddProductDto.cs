@@ -9,7 +9,7 @@ public class AddProductDto
     public IFormFileCollection? Images { get; set; }
     public IFormFileCollection? Thumbnails { get; set; }
     public IFormFileCollection? Files { get; set; }
-    public IEnumerable<string>? FilesDesc { get; set; }
+    public IList<string>? FilesDesc { get; set; }
     public decimal Price { get; set; }
     public int Stock { get; set; }
     [Required] public string Description { get; set; } = string.Empty;
