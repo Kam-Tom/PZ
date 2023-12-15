@@ -89,6 +89,11 @@ public class ProductRepository : IProductRepository
         _ctx.SaveChanges();
     }
 
+    public IEnumerable<Product> GetAll()
+    {
+        return _ctx.Products.ToList();
+    }
+
     public IEnumerable<Product> GetByCategory(int categoryId)
     {
         return _ctx.Products.Where(p => p.CategoryId == categoryId);

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./LoginRegister.css"
 import ReCAPTCHA from "react-google-recaptcha";
+import { postNewUser, postLogin } from "../../axios.js"
 
 function LoginRegister() {
     const ReCAPTCHA1 = useRef();
@@ -31,6 +32,14 @@ function LoginRegister() {
             // make form submission
             console.log("weszlo");
             alert("Form submission successful!");
+            if(captchaRef == ReCAPTCHA1) {
+                console.log("Dane do logowania", loginFormData);
+                postLogin(loginFormData);
+            }
+            else if(captchaRef == ReCAPTCHA2) {
+                console.log("Dane do rejestracji", signupFormData);
+                postNewUser(signupFormData);
+            }
         }
     }
     //obsluga przyciskow

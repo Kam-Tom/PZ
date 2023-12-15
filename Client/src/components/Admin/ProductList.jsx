@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./ProductList.css";
+import { deleteElement } from "../../axios";
 
-function ProductList({ products, onEditProduct, onDeleteProduct }) {
+function ProductList({ products, onEditProduct }) {
     const [selectedProduct, setSelectedProduct] = useState(null);
 
     const onSelectProduct = (product) => {
@@ -12,8 +13,9 @@ function ProductList({ products, onEditProduct, onDeleteProduct }) {
         onEditProduct(product);
     };
 
-    const handleDeleteClick = (product) => {
-        onDeleteProduct(product);
+    const handleDeleteClick = (productId) => {
+        deleteElement(`https://localhost:7248/Product/${productId}`);
+        window.location.reload(false);
     };
 
     return (
@@ -50,7 +52,7 @@ function ProductList({ products, onEditProduct, onDeleteProduct }) {
                                                     <p>Price: {selectedProduct.price}</p>
                                                     <p>Quantity: {selectedProduct.stock}</p>
                                                     <button onClick={() => handleEditClick(selectedProduct)}>Edit</button>
-                                                    <button onClick={() => handleDeleteClick(selectedProduct)}>Delete</button>
+                                                    <button onClick={() => handleDeleteClick(selectedProduct.id)}>Delete</button>
                                                 </div>
                                                 <div className="product-description">
                                                     <p><strong>Description:</strong> {selectedProduct.description}</p>

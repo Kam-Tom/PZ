@@ -5,6 +5,7 @@ namespace ServerLogic.Interfaces;
 
 public interface IProductRepository
 {
+    public IEnumerable<Product> GetAll();
     public IEnumerable<ProductMinatureDto> GetMinaturesByCategory(int categoryId);
     public ProductDetailsDto GetDetails(Product product);
     public Product? GetById(int id,bool include = false);

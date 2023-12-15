@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "./UserList.css"
+import "./UserList.css";
+import { deleteElement } from "../../axios";
 
-function UserList({ users, onEditUser, onDeleteUser }) {
+function UserList({ users, onEditUser }) {
     const [selectedUser, setSelectedUser] = useState(null);
 
     const onSelectUser = (user) => {
@@ -12,8 +13,9 @@ function UserList({ users, onEditUser, onDeleteUser }) {
         onEditUser(user);
     };
 
-    const handleDeleteClick = (user) => {
-        onDeleteUser(user);
+    const handleDeleteClick = async (userId) => {
+        deleteElement(`https://localhost:7248/Auth/delete?userId=${userId}`);
+        window.location.reload(false);
     };
 
     return (
@@ -30,7 +32,7 @@ function UserList({ users, onEditUser, onDeleteUser }) {
                         {users.map((user, index) => (
                             <React.Fragment key={index}>
                                 <tr className={`user-list-item ${selectedUser === user ? "active" : ""}`} onClick={() => onSelectUser(user)}>
-                                    <td>{`${user.firstName} ${user.lastName}`}</td>
+                                    <td>{`${user.username}`}</td>
                                     <td>{user.email}</td>
                                 </tr>
                                 {selectedUser === user && (
@@ -38,12 +40,10 @@ function UserList({ users, onEditUser, onDeleteUser }) {
                                         <td colSpan="2">
                                             <div className="user-details">
                                                 <div className="user-info">
-                                                    <h3>Name: {`${user.firstName} ${user.lastName}`}</h3>
+                                                    <h3>Name: {`${user.username}`}</h3>
                                                     <p>Email: {user.email}</p>
-                                                    <p>Adress: {user.address}</p>
-                                                    <p>Phone Number: {user.phoneNumber}</p>
                                                     <div>
-                                                        <button onClick={() => handleDeleteClick(user)}>Delete</button>
+                                                        <button onClick={() => handleDeleteClick(user.id)}>Delete</button>
                                                     </div>
                                                 </div>
                                             </div>

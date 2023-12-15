@@ -5,7 +5,7 @@ import AddCategoryForm from "./AddCategoryForm";
 import ProductList from "./ProductList";
 import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
-import { getProducts } from "../../axios";
+import { getAll } from "../../axios";
 
 function AdminPage() {
     const [showList, setShowList] = useState(false);
@@ -14,25 +14,7 @@ function AdminPage() {
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [products, setProducts] = useState(null);
-
-    
-
-    const users = [
-        {
-            firstName: "John",
-            lastName: "Doe",
-            email: "john.doe@example.com",
-            address: "123 Main St, City",
-            phoneNumber: "123-456-7890",
-        },
-        {
-            firstName: "Jane",
-            lastName: "Smith",
-            email: "jane.smith@example.com",
-            address: "456 Oak St, Town",
-            phoneNumber: "987-654-3210",
-        },
-    ];
+    const [users, setUsers] = useState(null);
 
     const handleAddProduct = (newProductData) => {
         setShowAddProductForm(false);
@@ -67,7 +49,8 @@ function AdminPage() {
         setSelectedProduct(null);
     };
 
-    const showUserListFn = () => {
+    const showUserListFn = async () => {
+        setUsers(await getAll("https://localhost:7248/Auth/Get"));
         setShowUserList(true);
         setShowList(false);
         setShowAddProductForm(false);
@@ -85,7 +68,7 @@ function AdminPage() {
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
                 onShowProductList={async () => {
-                    //setProducts(getProducts());
+                    setProducts(await getAll("https://localhost:7248/Product/All"));
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);

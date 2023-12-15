@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./AddProductForm.css";
+import { postNewProduct } from "../../axios";
 
 function AddProductForm({ onAddProduct }) {
     const [newProductFormData, setNewProductFormData] = useState({
@@ -27,6 +28,7 @@ function AddProductForm({ onAddProduct }) {
     };
 
     const addNewProduct = () => {
+        postNewProduct(newProductFormData);
         onAddProduct(newProductFormData);
         setNewProductFormData({
             productName: "",
