@@ -104,6 +104,7 @@ public class ProductRepository : IProductRepository
                 Price = p.Price,
                 PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
+                Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
         }).ToList();
 
@@ -124,7 +125,7 @@ public class ProductRepository : IProductRepository
         };
 
         if(product.Images != null)
-            productDto.ImageUrls = product.Images.Where(i => !i.IsThumbnail).Select(i => i.ImagePath);
+            productDto.ImageUrls = product.Images.Select(i => i.ImagePath);
 
         if (product.Files != null)
         { 

@@ -41,10 +41,26 @@ function postNewUser(user) {
 
 }
 
-function postLogin(user) {
-    const url = "https://localhost:7248/Auth/login";
+async function postLogin(user) {
+    let token = "";
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    post(url, user);
+    var raw = JSON.stringify(user);
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    await fetch("https://localhost:7248/Auth/login", requestOptions)
+    .then(response => response.text())
+    .then(result => token = result)
+    .catch(error => console.log('error', error));
+
+    return token;
 
 }
 
@@ -56,7 +72,7 @@ async function post(url, request) {
             'Content-Type': 'application/json'
         }
       })
-        .then(console.log("Posted successfully"));
+        .then(console.log(response));
 }
 
 async function deleteElement(url) {
@@ -98,4 +114,27 @@ async function postNewProduct(product) {
     .catch(error => console.log('error', error));
 }
 
-export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct };
+async function addToCart(id) {
+    
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Authorization", "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIxYXNkQHdwLnBsIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTcwMjczMzExMn0.GQbTTsmHXNjPHR6SSsO9nBKXBh1PJaHgJCAxmWg2ZVi-yCiUAQWGZQNHoXguBSY54d1kvswde-BSG_CqvUIZuA");
+
+    console.log("id produktu dodawanego", id)
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("productId", id.toString());
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: 'follow'
+    };
+
+    fetch("https://localhost:7248/api/Shop", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+}
+
+export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart };
