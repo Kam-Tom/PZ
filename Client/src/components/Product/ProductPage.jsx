@@ -1,23 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ProductPage.css";
+import { getAll, addToCart } from "../../axios";
 
-const ProductPage = ({ products, onAddToCart }) => {
+const ProductPage = ({ products}) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const product = products.find(item => item.id === parseInt(id));
+
+    const [product, setProduct] = useState(null);
+    useEffect(() => {
+        async function fetch() {
+        setProduct(await getAll(`https://localhost:7248/Product/${parseInt(id)}`));
+        }
+        fetch();
+    }, []);
 
     if (!product) {
         navigate("/", { replace: true });
         return null;
     }
 
-    const { name, price, stock, image, description, category } = product;
-
+    const { name, price, stock, imageUrls, description, category } = product;
     return (
+        
         <div className="product-detail-container">
             <div className="product-detail-image-container">
-                <img className="product-detail-image" src={image} alt={name} />
+            {imageUrls.map((image, index) => (
+                <img key={index} className="product-detail-image" src={`https://localhost:7248/Files/${image}`} alt={name} sizes="(max-height 1000px) 500px, 1000px" />
+            ))}
             </div>
             <div className="product-detail-info">
                 <h2 className="product-detail-name">{name}</h2>
@@ -25,7 +35,7 @@ const ProductPage = ({ products, onAddToCart }) => {
                 <p className="product-detail-stock">Stock: {stock}</p>
                 <p className="product-detail-category">Category: {category}</p>
                 {stock > 0 ? (
-                    <button className="add-to-cart-btn" onClick={() => onAddToCart(parseInt(id))}>Add to cart</button>
+                    <button className="add-to-cart-btn" onClick={() => addToCart(parseInt(id))}>Add to cart</button>
                 ) : (
                     <button className="out-of-stock-btn" disabled>Out of stock</button>
                 )}

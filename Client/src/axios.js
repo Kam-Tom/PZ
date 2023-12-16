@@ -1,6 +1,11 @@
 import axios from "axios";
 import FormData from 'form-data';
 
+
+let token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIxYXNkQHdwLnBsIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTcwMjc0MDA5OH0.BgWlFy72iSSrdDxXzxVrni0-2qh_GbgYBapw8qZIAU-t5O4gzAMoSPQgYvOy43SpSrrCRAELqOs9dUi_mCXHhg";
+function getToken() {
+    return token;
+}
 async function postNewCategory(category, subCategories) {
     var newCategory = {};
     if(subCategories.length > 0) {
@@ -41,10 +46,24 @@ function postNewUser(user) {
 
 }
 
-function postLogin(user) {
-    const url = "https://localhost:7248/Auth/login";
+async function postLogin(user) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    post(url, user);
+    var raw = JSON.stringify(user);
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    await fetch("https://localhost:7248/Auth/login", requestOptions)
+    .then(response => response.text())
+    .then(result => {token = result;
+            localStorage.setItem("loginToken", token)})
+    .catch(error => console.log('error', error));
 
 }
 
@@ -56,7 +75,7 @@ async function post(url, request) {
             'Content-Type': 'application/json'
         }
       })
-        .then(console.log("Posted successfully"));
+        .then(console.log(response));
 }
 
 async function deleteElement(url) {
@@ -98,4 +117,20 @@ async function postNewProduct(product) {
     .catch(error => console.log('error', error));
 }
 
-export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct };
+async function addToCart(id) {
+    
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow'
+};
+
+fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+}
+
+export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart };

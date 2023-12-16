@@ -50,8 +50,8 @@ public class AuthController : ControllerBase
 
         if (user == null)
             return BadRequest("User not found");
-        if (!user.EmailVerified)
-            return BadRequest("Not verified");
+        //if (!user.EmailVerified)
+        //    return BadRequest("Not verified");
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             return BadRequest("Wrong password");
 
