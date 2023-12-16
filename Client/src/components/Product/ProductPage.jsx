@@ -14,7 +14,6 @@ const ProductPage = ({ products}) => {
         }
         fetch();
     }, []);
-    console.log("produkt detale", product)
 
     if (!product) {
         navigate("/", { replace: true });

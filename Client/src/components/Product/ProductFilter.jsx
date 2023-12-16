@@ -3,7 +3,6 @@ import "./ProductFilter.css";
 
 const ProductFilter = ({ categories, onSelectCategory }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
-    console.log("To kATEGORIE", categories);
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);

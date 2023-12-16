@@ -8,6 +8,7 @@
     position: absolute;
     top: 120px;
     left: 20px;
+    z-index: 2;
 }
   
 .product-filter h2 {

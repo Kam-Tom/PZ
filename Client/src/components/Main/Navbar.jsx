@@ -1,11 +1,22 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ onSearch }) {
+    const [searchQuery, setSearchQuery] = useState("");
+    const navigate = useNavigate();
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        onSearch(e.target.value);
+    };
 
     const handleLogoClick = () => {
-        window.location.reload();
+        if (window.location.pathname === "/") {
+            window.location.reload();
+        } else {
+            navigate("/");
+        }
     };
 
     return (
@@ -13,6 +24,14 @@ function Navbar() {
             <Link to="/" className="logo" onClick={handleLogoClick}>
                 Miejsce na logo
             </Link>
+            <div className="search-box">
+                <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+            </div>
             <nav className="navbar">
                 <Link to="/account">
                     <ion-icon name="person-outline"></ion-icon>

@@ -20,6 +20,7 @@ function TileArray(array, size) {
 function MainPage() {
     const navigate = useNavigate();
     const [filteredCategory, setFilteredCategory] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     useEffect(() => {
         async function fetch() {
@@ -90,11 +91,13 @@ function MainPage() {
         setFilteredCategory(category);
     };
 
-    const onAddToCart = (id) => {
-        addToCart(id);
+    const handleSearch = (query) => {
+        setSearchQuery(query);
     };
 
-    const filteredProducts = filteredCategory ? products.filter((product) => product.category === filteredCategory) : products;
+    const filteredProducts = products
+        .filter((product) => !filteredCategory || product.category === filteredCategory)
+        .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()));
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
@@ -104,7 +107,7 @@ function MainPage() {
                 path="/"
                 element={
                     <>
-                        <Navbar />
+                        <Navbar onSearch={handleSearch} />
                         <div className="filter-and-product-container">
                             <ProductFilter
                                 categories={categories}

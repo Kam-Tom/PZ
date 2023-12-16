@@ -1,7 +1,11 @@
 import axios from "axios";
 import FormData from 'form-data';
-import { tokenLogin } from "./components/Account/LoginRegister"
 
+
+let token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIxYXNkQHdwLnBsIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTcwMjc0MDA5OH0.BgWlFy72iSSrdDxXzxVrni0-2qh_GbgYBapw8qZIAU-t5O4gzAMoSPQgYvOy43SpSrrCRAELqOs9dUi_mCXHhg";
+function getToken() {
+    return token;
+}
 async function postNewCategory(category, subCategories) {
     var newCategory = {};
     if(subCategories.length > 0) {
@@ -43,7 +47,6 @@ function postNewUser(user) {
 }
 
 async function postLogin(user) {
-    let token = "";
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -61,7 +64,6 @@ async function postLogin(user) {
     .then(result => {token = result; console.log(token)})
     .catch(error => console.log('error', error));
 
-    return token;
 }
 
 async function post(url, request) {
@@ -117,8 +119,8 @@ async function postNewProduct(product) {
 async function addToCart(id) {
     
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${tokenLogin}`);
-    console.log(tokenLogin);
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    console.log(getToken());
     var requestOptions = {
     method: 'POST',
     headers: myHeaders,
