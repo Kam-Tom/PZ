@@ -87,6 +87,10 @@ function MainPage() {
     // ];
 
 
+    const [filteredCategory, setFilteredCategory] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
+
     const handleCategorySelect = (category) => {
         setFilteredCategory(category);
     };
@@ -98,6 +102,7 @@ function MainPage() {
     const filteredProducts = products
         .filter((product) => !filteredCategory || product.category === filteredCategory)
         .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
