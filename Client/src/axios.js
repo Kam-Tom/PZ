@@ -61,7 +61,8 @@ async function postLogin(user) {
 
     await fetch("https://localhost:7248/Auth/login", requestOptions)
     .then(response => response.text())
-    .then(result => {token = result; console.log(token)})
+    .then(result => {token = result;
+            localStorage.setItem("loginToken", token)})
     .catch(error => console.log('error', error));
 
 }
@@ -119,8 +120,7 @@ async function postNewProduct(product) {
 async function addToCart(id) {
     
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    console.log(getToken());
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
     var requestOptions = {
     method: 'POST',
     headers: myHeaders,
