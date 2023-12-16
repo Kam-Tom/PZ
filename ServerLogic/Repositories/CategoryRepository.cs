@@ -71,7 +71,18 @@ public class CategoryRepository : ICategoryRepository
 
         return categoryDtos;
     }
+    public ICollection<GetCategoryDto> GetList()
+    {
+        var categories = _ctx.Categories
+            .ToList();
 
+        return categories.Select(c => new GetCategoryDto()
+        {
+            Name = c.Name,
+            Id = c.Id
+        }).ToList();
+
+    }
     private GetCategoryDto MapCategoryToDto(Category category)
     {
         var Id = category.Id;

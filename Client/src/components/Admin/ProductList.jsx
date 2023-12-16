@@ -19,7 +19,7 @@ function ProductList({ products, onEditProduct }) {
     };
 
     return (
-        <div className="product-list-container">
+        <div className="products-list-container">
             <div className="product-details-container">
                 <table className="product-table">
                     <thead>

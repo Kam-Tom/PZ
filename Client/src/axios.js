@@ -1,6 +1,7 @@
 import axios from "axios";
 import FormData from 'form-data';
 
+
 async function postNewCategory(category, subCategories) {
     var newCategory = {};
     if(subCategories.length > 0) {
@@ -41,11 +42,26 @@ function postNewUser(user) {
 
 }
 
-function postLogin(user) {
-    const url = "https://localhost:7248/Auth/login";
+async function postLogin(user) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    post(url, user);
+    var raw = JSON.stringify(user);
 
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    await fetch("https://localhost:7248/Auth/login", requestOptions)
+    .then(response => response.text())
+    .then(result => {
+            localStorage.setItem("loginToken", result)})
+    .catch(error => console.log('error', error));
+
+    console.log(localStorage.getItem("loginToken"))
 }
 
 async function post(url, request) {
@@ -56,7 +72,7 @@ async function post(url, request) {
             'Content-Type': 'application/json'
         }
       })
-        .then(console.log("Posted successfully"));
+        .then(console.log(response));
 }
 
 async function deleteElement(url) {
@@ -98,4 +114,47 @@ async function postNewProduct(product) {
     .catch(error => console.log('error', error));
 }
 
-export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct };
+async function addToCart(id) {
+    
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
+    console.log(localStorage.getItem("loginToken"))
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow'
+};
+
+fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+}
+
+async function postNewReview(review) {
+    
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
+
+    var raw = JSON.stringify({
+    "description": review.comment,
+    "rating": review.rating
+    });
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    fetch(`https://localhost:7248/api/Review/${review.productId}`, requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+
+}
+
+export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart, postNewReview };

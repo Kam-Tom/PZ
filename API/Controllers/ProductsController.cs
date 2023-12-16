@@ -1,4 +1,5 @@
 ﻿using DB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using ServerLogic.DTOs.Product;
@@ -17,13 +18,13 @@ public class ProductController : ControllerBase
         _repo = repo;
     }
 
-    [HttpPut]
+    [HttpPut,Authorize(Roles = "Admin")]
     public ActionResult Add([FromForm] AddProductDto request)
     {
         _repo.Add(request);
         return Ok();
     }
-    [HttpGet("Admin")]
+    [HttpGet("Admin"), Authorize(Roles = "Admin")]
     public ActionResult Get()
     {
         return Ok(_repo.GetAll());
@@ -61,7 +62,7 @@ public class ProductController : ControllerBase
         return Ok(productDto);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}"), Authorize(Roles = "Admin")]
     public ActionResult Delete([FromRoute] int id) 
     {
         var product = _repo.GetById(id);

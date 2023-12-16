@@ -14,7 +14,7 @@ function UserList({ users, onEditUser }) {
     };
 
     const handleDeleteClick = async (userId) => {
-        deleteElement(`https://localhost:7248/Auth/delete?userId=${userId}`);
+        deleteElement(`https://localhost:7248/api/Users?userId=${userId}`);
         window.location.reload(false);
     };
 

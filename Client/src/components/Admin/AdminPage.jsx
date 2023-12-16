@@ -50,7 +50,7 @@ function AdminPage() {
     };
 
     const showUserListFn = async () => {
-        setUsers(await getAll("https://localhost:7248/Auth/Get"));
+        setUsers(await getAll("https://localhost:7248/api/Users/Get"));
         setShowUserList(true);
         setShowList(false);
         setShowAddProductForm(false);
@@ -68,7 +68,7 @@ function AdminPage() {
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
                 onShowProductList={async () => {
-                    setProducts(await getAll("https://localhost:7248/Product"));
+                    setProducts(await getAll("https://localhost:7248/Product/Admin"));
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);

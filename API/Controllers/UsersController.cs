@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServerLogic.Helpers;
 using ServerLogic.Interfaces;
@@ -15,12 +16,12 @@ public class UsersController : ControllerBase
     {
         _repo = repo;
     }
-    [HttpGet("Get")]
+    [HttpGet("Get"), Authorize(Roles = "Admin")]
     public ActionResult Get()
     {
         return Ok(_repo.GetAllUsersData());
     }
-    [HttpDelete]
+    [HttpDelete, Authorize(Roles = "Admin")]
     public ActionResult Delete(int userId)
     {
         var user = _repo.GetById(userId);

@@ -9,5 +9,6 @@ public interface ICategoryRepository
     Category Create(string name);
     void Delete(Category category);
     ICollection<GetCategoryDto> GetAll();
+    ICollection<GetCategoryDto> GetList();
 
 }

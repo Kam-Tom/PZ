@@ -134,7 +134,7 @@ function LoginRegister() {
                 </div>
             ) : (
                 <div className="form-container sign-in">
-                    <form>
+                    
                         <h1>Sign In</h1>
                         <input type="email" name="email" placeholder="Email" onChange={handleLoginInputChange} value={loginFormData.email} />
                         <input type="password" name="password" placeholder="Password" onChange={handleLoginInputChange} value={loginFormData.password} />
@@ -142,7 +142,7 @@ function LoginRegister() {
                         <ReCAPTCHA ref={ReCAPTCHA1} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
                         <a href="#" onClick={handlePasswordReset}>Forget Your Password?</a>
                         <button onClick={() => checkCaptcha(ReCAPTCHA1)}>Sign In</button>
-                    </form>
+                  
                 </div>
             )}
                 <div className="toggle-container">
