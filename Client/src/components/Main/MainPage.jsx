@@ -87,8 +87,8 @@ function MainPage() {
     // ];
 
 
-    const [filteredCategory, setFilteredCategory] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");
+    //const [filteredCategory, setFilteredCategory] = useState(null);
+    //const [searchQuery, setSearchQuery] = useState("");
 
 
     const handleCategorySelect = (category) => {
