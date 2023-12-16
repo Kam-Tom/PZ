@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./AdminMenu.css";
 
-function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionForm, onShowProductList, onShowAddCategoryForm, onShowUserList }) {
+function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionForm, onShowAddShippingMethodForm, onShowProductList, onShowAddCategoryForm, onShowUserList }) {
     return (
         <div className="admin-menu">
             <Link to="/" className="menu-item" onClick={onShowProducts}>
@@ -13,6 +13,9 @@ function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionFor
             </Link>
             <Link to="/admin" className="menu-item" onClick={onShowAddPromotionForm}>
                 <ion-icon name="pricetag-outline"></ion-icon>
+            </Link>
+            <Link to="/admin" className="menu-item" onClick={onShowAddShippingMethodForm}>
+                <ion-icon name="car-outline"></ion-icon>
             </Link>
             <Link to="/admin" className="menu-item" onClick={onShowAddProductForm}>
                 <ion-icon name="bag-add-outline"></ion-icon>
