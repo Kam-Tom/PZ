@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AddPromotionForm.css";
-import { postNewPromotion } from "../../axios.js";
+//import { postNewPromotion } from "../../axios.js";
 
 function AddPromotionForm({ onAddPromotion, onClose }) {
     const [productName, setProductName] = useState("");

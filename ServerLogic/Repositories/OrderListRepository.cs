@@ -113,7 +113,11 @@ public class OrderListRepository : IOrderListRepository
             Status = basket.Status.ToString(),
             Cost = basket.OrderItems.Sum(i => i.Cost),
             Date = basket.Date,
-            Items = basket.OrderItems.Select(i => new OrderItemDto() {Name=i.Product.Name, Quantity = i.Quantity })
+            Items = basket.OrderItems.Select(i => new OrderItemDto() {
+                Name=i.Product.Name, 
+                Quantity = i.Quantity,
+                Id = i.Product.Id,
+            })
 
         };
 
