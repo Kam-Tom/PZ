@@ -3,6 +3,7 @@ import "./AdminPage.css"
 import AddProductForm from "./AddProductForm";
 import AddCategoryForm from "./AddCategoryForm";
 import AddPromotionForm from "./AddPromotionForm";
+import AddShippingMethodForm from "./AddShippingMethodForm";
 import ProductList from "./ProductList";
 import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
@@ -13,6 +14,7 @@ function AdminPage() {
     const [showAddProductForm, setShowAddProductForm] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [showAddPromotionForm, setShowAddPromotionForm] = useState(false);
+    const [showAddShippingMethodForm, setShowAddShippingMethodForm] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [products, setProducts] = useState(null);
@@ -29,6 +31,10 @@ function AdminPage() {
 
     const handleAddPromotion = (newPromotionData) => {
         setShowAddPromotionForm(false);
+    };
+
+    const handleAddShippingMethod = (newShippingMethodData) => {
+        setShowAddShippingMethodForm(false);
     };
 
     const showProducts = () => {
@@ -64,6 +70,15 @@ function AdminPage() {
         setSelectedProduct(null);
     };
 
+    const showAddShippingMethodFormFn = () => {
+        setShowAddShippingMethodForm(true);
+        setShowList(false);
+        setShowAddProductForm(false);
+        setShowAddCategoryForm(false);
+        setShowUserList(false);
+        setSelectedProduct(null);
+    };
+
     const showUserListFn = async () => {
         setUsers(await getAll("https://localhost:7248/api/Users/Get"));
         setShowUserList(true);
@@ -81,6 +96,10 @@ function AdminPage() {
         setShowAddPromotionForm(false);
     };
 
+    const handleCloseAddShippingMethodForm = () => {
+        setShowAddShippingMethodForm(false);
+    };
+
     return (
         <div className="admincontainer">
             <AdminMenu
@@ -96,11 +115,13 @@ function AdminPage() {
                 }}
                 onShowAddCategoryForm={showAddCategoryFormFn}
                 onShowAddPromotionForm={showAddPromotionFormFn}
+                onShowAddShippingMethodForm={showAddShippingMethodFormFn}
                 onShowUserList={showUserListFn}
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
             {showAddPromotionForm && <AddPromotionForm onAddPromotion={handleAddPromotion} onClose={handleCloseAddPromotionForm} />}
+            {showAddShippingMethodForm && <AddShippingMethodForm onAddShippingMethod={handleAddShippingMethod} onClose={handleCloseAddShippingMethodForm} />}
             {showList && products && (
                 <ProductList
                     products={products}

@@ -16,7 +16,7 @@ const ReviewsProduct = ({  onAddReview }) => {
 
     useEffect(() => {
         async function fetch() {
-        setReviews(await getAll(`https://localhost:7248/api/Review/${id}`));
+            setReviews(await getAll(`https://localhost:7248/api/Review/${id}`));
         }
         fetch();
     }, []);  
@@ -33,7 +33,6 @@ const ReviewsProduct = ({  onAddReview }) => {
             productId: parseInt(id),
         };
 
-        
         setReviews(prevReviews => [newReview, ...prevReviews]);
         postNewReview(newReview);
         setIsModalOpen(false);
@@ -53,53 +52,31 @@ const ReviewsProduct = ({  onAddReview }) => {
         <div className="ReviewsProduct">
             <h1>Reviews</h1>
             <button className="add-review-btn" onClick={openModal}>Add Review</button>
-
-            {/* Wyświetlanie recenzji */}
             <div>
-            {reviews.map((review, index) => (
-    <div key={index}>
-        {/* Check if the user with the specified id is found */}
- 
-        <div className="OneReview">
-            <p>User: {review.author}</p>
-            {/* Dodanie gwiazdek */}
-            <div className="star-rating">
-                {[1, 2, 3, 4, 5].map((value, idx) => (
-                    <label key={idx} className={value <= review.rating ? "star-filled" : ""}>
-                        {value <= review.rating ? "★" : ""}
-                    </label>
+                {reviews.map((review, index) => (
+                    <div key={index}>
+                        <div className="OneReview">
+                            <p>User: {review.author}</p>
+                            <div className="star-rating">
+                                {[1, 2, 3, 4, 5].map((value, idx) => (
+                                    <label key={idx} className={value <= review.rating ? "star-filled" : ""}>
+                                        {value <= review.rating ? "★" : ""}
+                                    </label>
+                                ))}
+                            </div>
+                                <p>Comment: {review.description}</p>
+                        </div>
+                    </div>
                 ))}
             </div>
-            <p>Comment: {review.description}</p>
-        </div>
-    </div>
-))}
-            </div>
 
-            {/* Modal */}
-            <Modal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                contentLabel="Add Review Modal"
-                overlayClassName="ReactModal__Overlay"
-                className="ReactModal__Content"
-            >
+            <Modal isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Add Review Modal" overlayClassName="ReactModal__Overlay" className="ReactModal__Content">
                 <h2>Add Review</h2>
                 <label>Rating:</label>
                 <div className="star-rating" onMouseLeave={() => setHoverRating(0)}>
                     {[1, 2, 3, 4, 5].map((value, index) => (
-                        <label
-                            key={index}
-                            onMouseEnter={() => setHoverRating(value)}
-                            onClick={() => setRating(value)}
-                            className={value <= (hoverRating || rating) ? "star-filled" : ""}
-                        >
-                            <input
-                                type="radio"
-                                name="rating"
-                                value={value}
-                                style={{ display: "none" }}
-                            />
+                        <label key={index} onMouseEnter={() => setHoverRating(value)} onClick={() => setRating(value)} className={value <= (hoverRating || rating) ? "star-filled" : ""}>
+                            <input type="radio" name="rating" value={value} style={{ display: "none" }} />
                             {value <= (hoverRating || rating) ? "★" : "☆"}
                         </label>
                     ))}
