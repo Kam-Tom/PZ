@@ -30,20 +30,20 @@ public class ProductController : ControllerBase
         return Ok(_repo.GetMinaturesAll());
     }
 
-    [HttpGet("{categoryId}")]
+    [HttpGet("category/{categoryId}")]
     public ActionResult GetByCategory(int categoryId)
     {
-        return Ok();
+        return Ok(_repo.GetMinaturesByCategory(categoryId));
     }
-    [HttpGet("{name}")]
+    [HttpGet("name/{name}")]
     public ActionResult GetByName(string name)
     {
-        return Ok();
+        return Ok(_repo.GetMinaturesByName(name));
     }
-    [HttpGet("{promotionId}")]
+    [HttpGet("promotion/{promotionId}")]
     public ActionResult GetByPromotion(int promotionId)
     {
-        return Ok();
+        return Ok(_repo.GetMinaturesByPromotion(promotionId));
     }
     [HttpGet("{id}")]
     public ActionResult<ProductDetailsDto> Get([FromRoute] int id)

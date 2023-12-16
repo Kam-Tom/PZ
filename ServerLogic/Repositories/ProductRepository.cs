@@ -89,14 +89,10 @@ public class ProductRepository : IProductRepository
         _ctx.SaveChanges();
     }
 
-    public IEnumerable<Product> GetByCategory(int categoryId)
-    {
-        return _ctx.Products.Where(p => p.CategoryId == categoryId);
-    }
+
     public IEnumerable<ProductMinatureDto> GetMinaturesAll()
     {
-        var products = _ctx.Products.Include(p => p.Images).ToList();
-        var categories = _ctx.Categories.ToList();
+        var products = _ctx.Products.Include(p => p.Images).Include(p => p.Promotions).ToList();
 
         var productDtos = products.Select(p =>
         {
@@ -104,11 +100,10 @@ public class ProductRepository : IProductRepository
             {
                 Id = p.Id,
                 Name = p.Name,
-                Category = categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
                 Stock = p.Stock,
                 Price = p.Price,
+                PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
-                Description = p.Description,
             };
         }).ToList();
 
@@ -156,5 +151,67 @@ public class ProductRepository : IProductRepository
                 .Include(p=>p.Reviews)
                 .Include(p=>p.Promotions)
                 .FirstOrDefault();
+    }
+
+    public IEnumerable<ProductMinatureDto> GetMinaturesByName(string name)
+    {
+        var products = _ctx.Products.Where(p => p.Name.Contains(name)).Include(p => p.Images).Include(p => p.Promotions).ToList();
+
+        var productDtos = products.Select(p =>
+        {
+            return new ProductMinatureDto()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Stock = p.Stock,
+                Price = p.Price,
+                PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+            };
+        }).ToList();
+
+        return productDtos;
+    }
+
+    public IEnumerable<ProductMinatureDto> GetMinaturesByCategory(int categoryId)
+    {
+        var products = _ctx.Products.Include(p => p.Images).ToList();
+
+        var productDtos = products.Where(p => p.CategoryId == categoryId).Select(p =>
+        {
+            return new ProductMinatureDto()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Stock = p.Stock,
+                Price = p.Price,
+                PromotionPrice = p.Promotions?.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+            };
+        }).ToList();
+
+        return productDtos;
+    }
+
+    public IEnumerable<ProductMinatureDto> GetMinaturesByPromotion(int promotionId)
+    {
+        var promotion = _ctx.Promotions.Where(p => p.Id == promotionId).Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).Include(p => p.Products).ThenInclude(p => p.Images).OrderByDescending(p => p.Discount).FirstOrDefault();
+        if(promotion == null)
+            return Enumerable.Empty<ProductMinatureDto>();
+
+        var productDtos = promotion.Products.Select(p =>
+        {
+            return new ProductMinatureDto()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Stock = p.Stock,
+                Price = p.Price,
+                PromotionPrice = promotion.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+            };
+        }).ToList();
+
+        return productDtos;
     }
 }
