@@ -2,6 +2,8 @@
 using DB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.Extensions.Primitives;
+using ServerLogic.DTOs.Order;
 using ServerLogic.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -97,14 +99,43 @@ public class OrderListRepository : IOrderListRepository
 
         return basket;
     }
-
-    public IEnumerable<Order> GetAll(string email)
+    public GetOrderDto GetBasketData(string email)
     {
-        var user =  _ctx.Users.Where(u => u.Email == email).Include(u => u.Orders).ThenInclude(u => u.OrderItems).SingleOrDefault();
+        var user = _ctx.Users.Where(u => u.Email == email).Include(u => u.Orders).ThenInclude(o => o.OrderItems).ThenInclude(i => i.Product).SingleOrDefault();
+        var basket = user.Orders.Where(o => o.Status == Order.OrderStatusType.InBasket).SingleOrDefault();
+
+        if (basket == null)
+            return new GetOrderDto();
+
+        return new GetOrderDto()
+        {
+            OrderId = basket.Id,
+            Status = basket.Status.ToString(),
+            Cost = basket.OrderItems.Sum(i => i.Cost),
+            Date = basket.Date,
+            Items = basket.OrderItems.Select(i => new OrderItemDto() {Name=i.Product.Name, Quantity = i.Quantity })
+
+        };
+
+    }
+    public IEnumerable<GetOrderDto> GetAll(string email)
+    {
+        var user =  _ctx.Users.Where(u => u.Email == email).Include(u => u.Orders).ThenInclude(u => u.OrderItems).ThenInclude(i => i.Product).SingleOrDefault();
         if(user == null)
-            return new List<Order>();
+            return new List<GetOrderDto>();
+        var orders = user.Orders.Select(o =>
+        {
+            return new GetOrderDto
+            {
+                OrderId = o.Id,
+                Date = o.Date,
+                Cost = o.OrderItems.Sum(i => i.Cost),
+                Status = o.Status.ToString(),
+                Items = o.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity })
+            };
+        });
         
-        return user.Orders;
+        return orders;
     }
 
     public void Remove(int productId, Order order)

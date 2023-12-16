@@ -1,4 +1,5 @@
 ﻿using DB.Models;
+using ServerLogic.DTOs.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ public interface IOrderListRepository
     public bool Add(Product product,int amount, Order order);
     public void Remove(int productId, Order order);
     public Order GetBasket(string email);
-    public IEnumerable<Order> GetAll(string email);
+    public IEnumerable<GetOrderDto> GetAll(string email);
+    public GetOrderDto GetBasketData(string email);
 }

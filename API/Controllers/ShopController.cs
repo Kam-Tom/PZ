@@ -49,7 +49,7 @@ public class ShopController : ControllerBase
     public ActionResult GetBasket()
     {
         var email = User?.FindFirstValue(ClaimTypes.Email);
-        var basket = _orderRepo.GetBasket(email);
+        var basket = _orderRepo.GetBasketData(email);
 
         return Ok(basket);
     }
