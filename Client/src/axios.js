@@ -1,5 +1,6 @@
 import axios from "axios";
 import FormData from 'form-data';
+import { tokenLogin } from "./components/Account/LoginRegister"
 
 async function postNewCategory(category, subCategories) {
     var newCategory = {};
@@ -57,11 +58,10 @@ async function postLogin(user) {
 
     await fetch("https://localhost:7248/Auth/login", requestOptions)
     .then(response => response.text())
-    .then(result => token = result)
+    .then(result => {token = result; console.log(token)})
     .catch(error => console.log('error', error));
 
     return token;
-
 }
 
 async function post(url, request) {
@@ -117,24 +117,18 @@ async function postNewProduct(product) {
 async function addToCart(id) {
     
     var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append("Authorization", "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIxYXNkQHdwLnBsIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTcwMjczMzExMn0.GQbTTsmHXNjPHR6SSsO9nBKXBh1PJaHgJCAxmWg2ZVi-yCiUAQWGZQNHoXguBSY54d1kvswde-BSG_CqvUIZuA");
-
-    console.log("id produktu dodawanego", id)
-    var urlencoded = new URLSearchParams();
-    urlencoded.append("productId", id.toString());
-
+    myHeaders.append("Authorization", `Bearer ${tokenLogin}`);
+    console.log(tokenLogin);
     var requestOptions = {
     method: 'POST',
     headers: myHeaders,
-    body: urlencoded,
     redirect: 'follow'
-    };
+};
 
-    fetch("https://localhost:7248/api/Shop", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
 }
 
 export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart };
