@@ -13,6 +13,7 @@ const ProductFilter = ({ categories, onSelectCategory }) => {
         <div className="product-filter">
             <h2>Filter by Category</h2>
             <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : ''}>All</button>
+            <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : ''}>Discounted</button>
             {categories.map((category, index) => (
                 <button key={index} onClick={() => handleCategoryChange(category)} className={selectedCategory === null ? 'active' : ''}>{category}</button>
             ))}

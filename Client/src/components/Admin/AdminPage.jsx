@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./AdminPage.css"
 import AddProductForm from "./AddProductForm";
 import AddCategoryForm from "./AddCategoryForm";
+import AddPromotionForm from "./AddPromotionForm";
 import ProductList from "./ProductList";
 import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
@@ -11,6 +12,7 @@ function AdminPage() {
     const [showList, setShowList] = useState(false);
     const [showAddProductForm, setShowAddProductForm] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
+    const [showAddPromotionForm, setShowAddPromotionForm] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [products, setProducts] = useState(null);
@@ -23,6 +25,10 @@ function AdminPage() {
 
     const handleAddCategory = (newCategoryData) => {
         setShowAddCategoryForm(false);
+    };
+
+    const handleAddPromotion = (newPromotionData) => {
+        setShowAddPromotionForm(false);
     };
 
     const showProducts = () => {
@@ -49,6 +55,15 @@ function AdminPage() {
         setSelectedProduct(null);
     };
 
+    const showAddPromotionFormFn = () => {
+        setShowAddPromotionForm(true);
+        setShowList(false);
+        setShowAddProductForm(false);
+        setShowAddCategoryForm(false);
+        setShowUserList(false);
+        setSelectedProduct(null);
+    };
+
     const showUserListFn = async () => {
         setUsers(await getAll("https://localhost:7248/api/Users/Get"));
         setShowUserList(true);
@@ -60,6 +75,10 @@ function AdminPage() {
 
     const handleCloseAddCategoryForm = () => {
         setShowAddCategoryForm(false);
+    };
+
+    const handleCloseAddPromotionForm = () => {
+        setShowAddPromotionForm(false);
     };
 
     return (
@@ -76,10 +95,12 @@ function AdminPage() {
                     setSelectedProduct(null);
                 }}
                 onShowAddCategoryForm={showAddCategoryFormFn}
+                onShowAddPromotionForm={showAddPromotionFormFn}
                 onShowUserList={showUserListFn}
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
+            {showAddPromotionForm && <AddPromotionForm onAddPromotion={handleAddPromotion} onClose={handleCloseAddPromotionForm} />}
             {showList && products && (
                 <ProductList
                     products={products}
