@@ -76,13 +76,21 @@ function MainPage() {
         },
     ];
 
-
     const [filteredCategory, setFilteredCategory] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
     const handleCategorySelect = (category) => {
         setFilteredCategory(category);
     };
 
-    const filteredProducts = filteredCategory ? products.filter((product) => product.category === filteredCategory) : products;
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
+    const filteredProducts = products
+        .filter((product) => !filteredCategory || product.category === filteredCategory)
+        .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
@@ -92,7 +100,7 @@ function MainPage() {
                 path="/"
                 element={
                     <>
-                        <Navbar />
+                        <Navbar onSearch={handleSearch} />
                         <div className="filter-and-product-container">
                             <ProductFilter
                                 categories={categories}
