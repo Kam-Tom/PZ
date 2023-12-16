@@ -26,8 +26,8 @@ public class PromotionController : ControllerBase
     [HttpPost, Authorize(Roles = "Admin")]
     public ActionResult Create([FromBody] CreatePromotionDto request)
     {
-        _repo.Add(request);
-        return Ok();
+        
+        return Ok(_repo.Add(request));
     }
     [HttpPost("{promotionId}/Add/{productId}"), Authorize(Roles = "Admin")]
     public ActionResult AddProduct([FromRoute] int promotionId, [FromRoute] int productId)
