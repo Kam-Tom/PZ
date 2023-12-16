@@ -9,4 +9,5 @@ public class ProductMinatureDto
     public decimal? PromotionPrice { get; set;}
     public int Stock { get; set; }
     public string ThumbnailUrl { get; set; }
+    public string Category { get; set; }
 }

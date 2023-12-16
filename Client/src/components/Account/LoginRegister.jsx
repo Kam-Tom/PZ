@@ -23,7 +23,7 @@ function LoginRegister() {
     const [isSignUp, setIsSignUp] = useState(false);
     const [isPasswordReset, setIsPasswordReset] = useState(false);
 
-    function checkCaptcha(captchaRef) {
+    async function checkCaptcha(captchaRef) {
         const captchaValue = captchaRef.current.getValue();
         if (!captchaValue) {
             console.log("nie weszlo");
@@ -34,7 +34,7 @@ function LoginRegister() {
             alert("Form submission successful!");
             if(captchaRef == ReCAPTCHA1) {
                 console.log("Dane do logowania", loginFormData);
-                postLogin(loginFormData);
+                await postLogin(loginFormData);
             }
             else if(captchaRef == ReCAPTCHA2) {
                 console.log("Dane do rejestracji", signupFormData);
