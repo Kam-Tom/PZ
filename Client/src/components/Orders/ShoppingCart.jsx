@@ -1,8 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { getAll } from "../../axios";
 import "./ShoppingCart.css";
 
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
+    const [basket, setBasket] = useState([]);
+    useEffect(() => {
+        async function fetch() {
+            let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
+            setBasket(items);
+            console.log(items)
+        }
+        fetch();
+    }, []);
 
     const removeFromCart = (productId) => {
         setCartItems((prevCartItems) => {
@@ -18,12 +28,12 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
     return (
         <div className="shopping-cart-container">
             <h2>Your Shopping Cart</h2>
-            {cartItems.length === 0 ? (
+            {basket && basket.length === 0 ? (
                 <p>Your cart is empty.</p>
             ) : (
                 <>
-                    <ul className="cart-items-list">
-                        {cartItems.map((item) => (
+                    <ul className="cart-items-list"> 
+                            {basket?.items && basket.items.map((item) => (
                             <li key={item.id} className="product-tile">
                                 <img className="product-image" src={`https://localhost:7248/Files/${item.image}`} alt={item.name} />
                                 <div className="product-info">

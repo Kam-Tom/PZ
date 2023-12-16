@@ -28,9 +28,12 @@ function MainPage() {
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [items, setItems] = useState([]);
-
+     
     async function shopItems() {
         let items = [];
+        if (!cartItems.items)
+            return items;
+
         for(let i = 0; i < cartItems.items.length; i++) {
             let product = await getAll(`https://localhost:7248/Product/${cartItems.items[i].id}`);
             const itemik = {
@@ -64,8 +67,6 @@ function MainPage() {
         fetch2();
     }, [items])
 
-    
-    console.log("itenki w carcik", items);
     // const products = [
     //     {
     //         id: 0,
@@ -144,12 +145,14 @@ function MainPage() {
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
 
-    const addToCart = (productToAdd) => {
+    const addToCart2 = (productToAdd) => {
         setCartItems((prevCartItems) => [...prevCartItems, productToAdd])
     };
       
     const handleAddToCart = (product) => {
+        console.log(product);
         addToCart(product);
+        addToCart2(product);
     };
 
     const removeFromCart = (productId) => {
