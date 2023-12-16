@@ -18,6 +18,7 @@
     margin-bottom: 20px;
 }
   
+.form-container.product-form select,
 .form-container.product-form input,
 .form-container.product-form textarea {
     background-color: #eee;
