@@ -39,6 +39,9 @@ function Navbar({ onSearch }) {
                 <Link to="/admin">
                     <ion-icon name="construct-outline"></ion-icon>
                 </Link>
+                <Link to="/order">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </Link>
             </nav>
         </header>
     );

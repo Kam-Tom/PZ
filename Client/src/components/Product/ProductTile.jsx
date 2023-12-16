@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ProductTile.css";
 
-const ProductTile = ({ product }) => {
+const ProductTile = ({ product, addToCart }) => {
     return (
         <div className="product-tile">
             <img className="product-image" src={product.image} alt={product.name} />
@@ -15,7 +15,7 @@ const ProductTile = ({ product }) => {
                 <div className="buttons-container">
                     <Link to={`/product/${product.id}`} className="view-more-btn">View more</Link>
                     {product.stock > 0 ? (
-                        <button className="cart-btn" onClick={() => onAddToCart(product.id)}>
+                        <button className="cart-btn" onClick={() => addToCart(product)}>
                             <ion-icon name="cart-outline"></ion-icon>
                         </button>
                     ) : (
