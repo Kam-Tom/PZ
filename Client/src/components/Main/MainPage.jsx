@@ -7,6 +7,8 @@ import AdminPage from "../Admin/AdminPage";
 import ProductTile from "../Product/ProductTile";
 import ProductPage from "../Product/ProductPage";
 import ProductFilter from "../Product/ProductFilter";
+import ShoppingCart from "../Orders/ShoppingCart";
+import PaymentForm from "../Orders/PaymentForm";
 import { getAll, addToCart } from "../../axios";
 import ReviewsProduct from "../Product/ReviewsProduct";
 
@@ -107,6 +109,26 @@ function MainPage() {
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
+    const [cartItems, setCartItems] = useState([]);
+
+    const addToCart = (productToAdd) => {
+        setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);
+    };
+      
+    const handleAddToCart = (product) => {
+        addToCart(product);
+    };
+
+    const removeFromCart = (productId) => {
+        setCartItems((prevCartItems) =>
+            prevCartItems.filter((item) => item.id !== productId)
+        );
+    };
+
+    const calculateTotalPrice = () => {
+        return cartItems.reduce((total, item) => total + parseFloat(item.price.replace(" zł", "").replace(" ", "")), 0).toFixed(2);
+    };
+
 
 
     const handleAddReview = (newReview) => {
@@ -131,7 +153,7 @@ function MainPage() {
                             {productRows.map((row, rowIndex) => (
                                 <div key={rowIndex} className="product-list-row">
                                     {row.map((product) => (
-                                        <ProductTile key={product.id} product={product} />
+                                        <ProductTile key={product.id} product={product} addToCart={handleAddToCart} />
                                     ))}
                                 </div>
                             ))}
@@ -169,6 +191,17 @@ function MainPage() {
                 }
             />
 
+            <Route
+                path="/order"
+                element={
+                    <>
+                        <Navbar />
+                        <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} />
+                        <PaymentForm cartTotal={calculateTotalPrice()} />
+                    </>
+                }
+            />
+            
             <Route
                 path="/*"
                 element={() => {

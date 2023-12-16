@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./ProductTile.css";
 import { addToCart } from "../../axios"
 
-const ProductTile = ({ product }) => {
+const ProductTile = ({ product, addToCart }) => {
     return (
         <div className="product-tile">
             <img className="product-image" src={`https://localhost:7248/Files/${product.thumbnailUrl}`} alt={product.name} />
