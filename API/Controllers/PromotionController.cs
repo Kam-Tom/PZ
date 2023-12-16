@@ -23,13 +23,13 @@ public class PromotionController : ControllerBase
     {
         return Ok(_repo.GetAll());
     }
-    [HttpPost, Authorize("Admin")]
+    [HttpPost, Authorize(Roles = "Admin")]
     public ActionResult Create([FromBody] CreatePromotionDto request)
     {
         _repo.Add(request);
         return Ok();
     }
-    [HttpPost("{promotionId}/Add/{productId}"), Authorize("Admin")]
+    [HttpPost("{promotionId}/Add/{productId}"), Authorize(Roles = "Admin")]
     public ActionResult AddProduct([FromRoute] int promotionId, [FromRoute] int productId)
     {
         if(_repo.AddProduct(productId,promotionId))

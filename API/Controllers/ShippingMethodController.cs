@@ -22,7 +22,7 @@ public class ShippingMethodController : ControllerBase
     {
         _repo = repo;
     }
-    [HttpPost, Authorize("Admin")]
+    [HttpPost, Authorize(Roles = "Admin")]
     public ActionResult Add([FromBody] CreateShippingMethodDto request)
     {
         _repo.Add(request);
@@ -33,7 +33,7 @@ public class ShippingMethodController : ControllerBase
     {
         return Ok(_repo.GetAll());
     }
-    [HttpDelete("{id}"), Authorize("Admin")]
+    [HttpDelete("{id}"), Authorize(Roles = "Admin")]
     public ActionResult Remove([FromRoute] int id)
     {
         _repo.Remove(id);

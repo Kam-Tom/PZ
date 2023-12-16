@@ -18,13 +18,13 @@ public class ProductController : ControllerBase
         _repo = repo;
     }
 
-    [HttpPut,Authorize("Admin")]
+    [HttpPut,Authorize(Roles = "Admin")]
     public ActionResult Add([FromForm] AddProductDto request)
     {
         _repo.Add(request);
         return Ok();
     }
-    [HttpGet("Admin"), Authorize("Admin")]
+    [HttpGet("Admin"), Authorize(Roles = "Admin")]
     public ActionResult Get()
     {
         return Ok(_repo.GetAll());
@@ -62,7 +62,7 @@ public class ProductController : ControllerBase
         return Ok(productDto);
     }
 
-    [HttpDelete("{id}"), Authorize("Admin")]
+    [HttpDelete("{id}"), Authorize(Roles = "Admin")]
     public ActionResult Delete([FromRoute] int id) 
     {
         var product = _repo.GetById(id);

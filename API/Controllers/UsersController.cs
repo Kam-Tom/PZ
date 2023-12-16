@@ -16,12 +16,12 @@ public class UsersController : ControllerBase
     {
         _repo = repo;
     }
-    [HttpGet("Get"), Authorize("Admin")]
+    [HttpGet("Get"), Authorize(Roles = "Admin")]
     public ActionResult Get()
     {
         return Ok(_repo.GetAllUsersData());
     }
-    [HttpDelete, Authorize("Admin")]
+    [HttpDelete, Authorize(Roles = "Admin")]
     public ActionResult Delete(int userId)
     {
         var user = _repo.GetById(userId);

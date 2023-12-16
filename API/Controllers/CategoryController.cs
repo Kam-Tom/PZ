@@ -13,7 +13,7 @@ public class CategoryController : ControllerBase
     private readonly ICategoryRepository _repo;
     public CategoryController(ICategoryRepository repo) { _repo = repo; }
 
-    [HttpPut,Authorize("Admin")]
+    [HttpPut,Authorize(Roles = "Admin")]
     public ActionResult Put(AddCategoryDto request)
     {
         Category? category = _repo.GetByName(request.Name,true);
@@ -26,7 +26,7 @@ public class CategoryController : ControllerBase
         return Ok("Category updated");
     }
 
-    [HttpDelete,Authorize("Admin")]
+    [HttpDelete,Authorize(Roles = "Admin")]
     public ActionResult Delete(string name)
     {
         Category? category = _repo.GetByName(name,true);
@@ -44,6 +44,11 @@ public class CategoryController : ControllerBase
 
         
         return Ok(categories.ToArray());
+    }
+    [HttpGet("List")]
+    public ActionResult GetList()
+    {
+        return Ok(_repo.GetList());
     }
 
 }
