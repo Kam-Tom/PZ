@@ -103,8 +103,7 @@ public class ProductRepository : IProductRepository
                 Stock = p.Stock,
                 Price = p.Price,
                 PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
-                Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
             };
         }).ToList();
 
@@ -166,7 +165,7 @@ public class ProductRepository : IProductRepository
                 Name = p.Name,
                 Stock = p.Stock,
                 Price = p.Price,
-                PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionPrice = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
             };
         }).ToList();
@@ -176,7 +175,7 @@ public class ProductRepository : IProductRepository
 
     public IEnumerable<ProductMinatureDto> GetMinaturesByCategory(int categoryId)
     {
-        var products = _ctx.Products.Include(p => p.Images).ToList();
+        var products = _ctx.Products.Include(p => p.Images).Include(p=>p.Promotions).ToList();
 
         var productDtos = products.Where(p => p.CategoryId == categoryId).Select(p =>
         {
@@ -186,7 +185,7 @@ public class ProductRepository : IProductRepository
                 Name = p.Name,
                 Stock = p.Stock,
                 Price = p.Price,
-                PromotionPrice = p.Promotions?.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionPrice = p.Promotions?.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
             };
         }).ToList();
@@ -196,7 +195,8 @@ public class ProductRepository : IProductRepository
 
     public IEnumerable<ProductMinatureDto> GetMinaturesByPromotion(int promotionId)
     {
-        var promotion = _ctx.Promotions.Where(p => p.Id == promotionId).Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).Include(p => p.Products).ThenInclude(p => p.Images).OrderByDescending(p => p.Discount).FirstOrDefault();
+
+        var promotion = _ctx.Promotions.Where(p => p.Id == promotionId).Where(p=> (p.Start < DateTime.Now && p.End > DateTime.Now)).Include(p => p.Products).ThenInclude(p => p.Images).OrderByDescending(p => p.Discount).FirstOrDefault();
         if(promotion == null)
             return Enumerable.Empty<ProductMinatureDto>();
 
@@ -229,7 +229,7 @@ public class ProductRepository : IProductRepository
                 Stock = p.Stock,
                 Price = p.Price,
                 Description = p.Description,
-                PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionPrice = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
             };
         }).ToList();

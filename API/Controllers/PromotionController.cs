@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ServerLogic.DTOs.Promotion;
 using ServerLogic.Helpers;
 using ServerLogic.Interfaces;
 
@@ -19,18 +21,23 @@ public class PromotionController : ControllerBase
     [HttpGet]
     public ActionResult GetAll()
     {
-        return Ok();
+        return Ok(_repo.GetAll());
     }
-    [HttpPost]
-    public ActionResult Create()
+    [HttpPost, Authorize("Admin")]
+    public ActionResult Create([FromBody] CreatePromotionDto request)
     {
+        _repo.Add(request);
         return Ok();
     }
-    [HttpPost("{promotionId}/Add/{productId}")]
+    [HttpPost("{promotionId}/Add/{productId}"), Authorize("Admin")]
     public ActionResult AddProduct([FromRoute] int promotionId, [FromRoute] int productId)
     {
-        return Ok();
+        if(_repo.AddProduct(productId,promotionId))
+            return Ok();
+        else
+            return BadRequest("Promotion or Product dont exist");
     }
+    
     
 
 }

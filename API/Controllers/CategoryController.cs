@@ -1,5 +1,6 @@
 ﻿using DB;
 using DB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServerLogic.DTOs.Category;
 using ServerLogic.Interfaces;
@@ -12,7 +13,7 @@ public class CategoryController : ControllerBase
     private readonly ICategoryRepository _repo;
     public CategoryController(ICategoryRepository repo) { _repo = repo; }
 
-    [HttpPut]
+    [HttpPut,Authorize("Admin")]
     public ActionResult Put(AddCategoryDto request)
     {
         Category? category = _repo.GetByName(request.Name,true);
@@ -25,7 +26,7 @@ public class CategoryController : ControllerBase
         return Ok("Category updated");
     }
 
-    [HttpDelete]
+    [HttpDelete,Authorize("Admin")]
     public ActionResult Delete(string name)
     {
         Category? category = _repo.GetByName(name,true);
