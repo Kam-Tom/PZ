@@ -21,12 +21,13 @@ public class PaymentRepository : IPaymentRepository
     }
     public bool ConfirmPayment(int paymentId)
     {
-        var payment = _ctx.Payments.Where(o => o.Id == paymentId).SingleOrDefault();
+        var payment = _ctx.Payments.Where(p => p.Id == paymentId).Include(p => p.Order).SingleOrDefault();
         if (payment == null)
             return false;
         if (payment.Status == PaymentStatusType.Completed)
             return false;
 
+        payment.Order.Status = Order.OrderStatusType.Shipped;
         payment.Status = PaymentStatusType.Completed;
         _ctx.SaveChanges();
         return true;
@@ -45,19 +46,22 @@ public class PaymentRepository : IPaymentRepository
 
     }
 
-    public bool MakePayment(int orderId, CreatePaymentMethodDto payment)
+    public bool MakePayment(CreatePaymentMethodDto payment)
     {
-        var order = _ctx.Orders.Where(o => o.Id == orderId).Include(o => o.Payments).SingleOrDefault();
+        var order = _ctx.Orders.Where(o => o.Id == payment.OrderId).Include(o => o.Payments).SingleOrDefault();
         if (order == null)
             return false;
-        if(order.Payments.Any(p => p.Status == Payment.PaymentStatusType.Completed))
+        if(order.Payments.Any(p => p.Status == PaymentStatusType.Completed))
             return false;
 
         order.Payments.Add(new Payment
         {
-            //Method = payment.Method,
+            Method = payment.Method,
             Status = PaymentStatusType.Pending,
         });
+
+        order.Status = Order.OrderStatusType.Processing;
+        
         _ctx.SaveChanges();
         return true;
     }

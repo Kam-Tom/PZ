@@ -91,7 +91,6 @@ async function post(url, request) {
       })
         .then(console.log(response));
 }
-
 async function deleteElement(url) {
 
     var requestOptions = requestOptions = getOptions('DELETE');

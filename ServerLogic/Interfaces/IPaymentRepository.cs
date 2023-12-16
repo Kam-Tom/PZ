@@ -12,7 +12,7 @@ namespace ServerLogic.Interfaces;
 public interface IPaymentRepository
 {
     public IEnumerable<PaymentMethodType> GetTypes();
-    public bool MakePayment(int orderId,CreatePaymentMethodDto payment);
+    public bool MakePayment(CreatePaymentMethodDto payment);
     public bool ConfirmPayment(int paymentId);
 
 }

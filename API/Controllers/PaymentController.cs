@@ -17,22 +17,26 @@ public class PaymentController : ControllerBase
     {
         _repo = repo;
     }
-    [HttpPost, Authorize(Roles ="Admin")]
-    public ActionResult Add([FromBody] CreatePaymentMethodDto request)
+
+    [HttpPost]
+    public ActionResult Pay([FromBody] CreatePaymentMethodDto request)
     {
-        //_repo.Add(request);
+        if (!_repo.MakePayment(request))
+            return BadRequest();
+        
         return Ok();
     }
     [HttpGet]
-    public ActionResult GetAll()
+    public ActionResult GetTypes()
     {
-        return Ok();
-        //return Ok(_repo.GetAll());
+        return Ok(_repo.GetTypes());
     }
-    [HttpDelete("{id}"), Authorize(Roles = "Admin")]
-    public ActionResult Remove([FromRoute] int id)
+    [HttpPatch("{id}"), Authorize(Roles = "Admin")]
+    public ActionResult Confirm([FromRoute] int paymentId)
     {
-        //_repo.Remove(id);
+        _repo.ConfirmPayment(paymentId);
         return Ok();
     }
+
+
 }
