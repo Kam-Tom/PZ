@@ -17,14 +17,13 @@ function getOptions(method) {
 async function postNewPromotion(productName, amount, productId) {
 
     var raw = JSON.stringify({
-        "end": "2999-12-20T21:20:05.793Z",
-        "start": "2000-12-14T21:20:05.793Z",
-        "name": "Promocja na " + productName,
-        "description": "description",
-        "discount": amount
+        name: "Promocja na " + productName,
+        description: "description",
+        discount: amount
     });
 
     var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
 
     var requestOptions = {
@@ -74,31 +73,26 @@ async function postNewCategory(category, subCategories) {
 
 }
 async function postNewShippingMethod(name, cost) {
-    //var newCategory = {};
-    //if(subCategories.length > 0) {
-    //    newCategory = {
-    //        Name: category,
-    //        Subcategories: subCategories
-    //    }
-    //}
-    //else {
-    //    newCategory = {
-    //        Name: category
-    //    }
-    //}
+    var raw = JSON.stringify({
+        name: name,
+        cost: cost
+    });
 
-    //let params = new URLSearchParams(newCategory)
-    //    .toString()
-    //    .replaceAll("%2C", "&Subcategories=");
-    //const url = `https://localhost:7248/categories?${params}`;
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
 
-    //var requestOptions = getOptions('PUT');
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
 
-    //fetch(url, requestOptions)
-    //.then(response => response.text())
-    //.then(result => console.log(result))
-    //.catch(error => console.log('error', error));
-
+    await fetch("https://localhost:7248/ShippingMethod", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
 }
 function postNewUser(user) {
     

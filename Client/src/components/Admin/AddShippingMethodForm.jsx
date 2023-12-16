@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./AddShippingMethodForm.css";
-//import { postNewShippingMethod } from "../../axios.js";
+import { postNewShippingMethod } from "../../axios.js";
 
 function AddShippingMethodForm({ onAddShippingMethod, onClose }) {
     const [shippingMethod, setShippingMethod] = useState("");
@@ -8,7 +8,7 @@ function AddShippingMethodForm({ onAddShippingMethod, onClose }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        //postNewShippingMethod(shippingMethod, shippingCost);
+        postNewShippingMethod(shippingMethod, shippingCost);
         onAddShippingMethod(shippingMethod, shippingCost);
         setShippingMethod("");
         setShippingCost("");
