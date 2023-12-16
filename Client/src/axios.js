@@ -62,7 +62,6 @@ function postNewUser(user) {
 async function postLogin(user) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
 
     var raw = JSON.stringify(user);
 
@@ -88,7 +87,6 @@ async function post(url, request) {
         headers: {
             'Accept': 'text/plain',
             'Content-Type': 'application/json',
-            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
         }
       })
         .then(console.log(response));
