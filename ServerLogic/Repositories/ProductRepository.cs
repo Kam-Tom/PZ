@@ -214,4 +214,25 @@ public class ProductRepository : IProductRepository
 
         return productDtos;
     }
+
+    public IEnumerable<GetProductDto> GetAll()
+    {
+        var products = _ctx.Products.Include(p => p.Images).Include(p => p.Promotions).ToList();
+
+        var productDtos = products.Select(p =>
+        {
+            return new GetProductDto()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Stock = p.Stock,
+                Price = p.Price,
+                Description = p.Description,
+                PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
+            };
+        }).ToList();
+
+        return productDtos;
+    }
 }

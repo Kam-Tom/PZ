@@ -23,7 +23,11 @@ public class ProductController : ControllerBase
         _repo.Add(request);
         return Ok();
     }
-
+    [HttpGet("Admin")]
+    public ActionResult Get()
+    {
+        return Ok(_repo.GetAll());
+    }
     [HttpGet]
     public ActionResult GetMiniatures()
     {
