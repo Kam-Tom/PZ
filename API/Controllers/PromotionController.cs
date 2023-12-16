@@ -21,6 +21,16 @@ public class PromotionController : ControllerBase
     {
         return Ok();
     }
-    //[HttpGet]
-    //public Aci
+    [HttpPost]
+    public ActionResult Create()
+    {
+        return Ok();
+    }
+    [HttpPost("{promotionId}/Add/{productId}")]
+    public ActionResult AddProduct([FromRoute] int promotionId, [FromRoute] int productId)
+    {
+        return Ok();
+    }
+    
+
 }
