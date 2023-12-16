@@ -2,6 +2,19 @@ import axios from "axios";
 import FormData from 'form-data';
 
 
+function getOptions(method) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
+
+    var requestOptions = {
+    method: method,
+    headers: myHeaders,
+    redirect: 'follow'
+    };
+
+    return requestOptions;
+}
+
 async function postNewCategory(category, subCategories) {
     var newCategory = {};
     if(subCategories.length > 0) {
@@ -21,8 +34,12 @@ async function postNewCategory(category, subCategories) {
         .replaceAll("%2C", "&Subcategories=");
     const url = `https://localhost:7248/categories?${params}`;
 
-    await axios.put(url)
-        .then(console.log("Category posted successfully"));
+    var requestOptions = getOptions('PUT');
+
+    fetch(url, requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
 
 }
 
@@ -45,6 +62,7 @@ function postNewUser(user) {
 async function postLogin(user) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
 
     var raw = JSON.stringify(user);
 
@@ -69,28 +87,35 @@ async function post(url, request) {
     await axios.post(url, request, {
         headers: {
             'Accept': 'text/plain',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
         }
       })
         .then(console.log(response));
 }
 
 async function deleteElement(url) {
-  
-    await axios.delete(url)
-        .then(console.log("Deleted successfully"));
+
+    var requestOptions = requestOptions = getOptions('DELETE');
+
+    fetch(url, requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
   
   }
 
 async function getAll(url) {
-  let results = [];
+    let results = [];
 
-  await fetch(url)
-  .then(response => response.json())
-  .then(response => {
-      results = response
-  });
-    return results;
+    var requestOptions = getOptions('GET');
+
+    await fetch(url, requestOptions)
+    .then(response => response.json())
+    .then(response => {
+        results = response
+    });
+        return results;
 }
 
 async function postNewProduct(product) {
@@ -102,8 +127,12 @@ async function postNewProduct(product) {
     formdata.append("stock", product.quantity);
     formdata.append("description", product.description);
 
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
+
     var requestOptions = {
     method: 'PUT',
+    headers: myHeaders,
     body: formdata,
     redirect: 'follow'
     };
@@ -116,14 +145,7 @@ async function postNewProduct(product) {
 
 async function addToCart(id) {
     
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
-    console.log(localStorage.getItem("loginToken"))
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    redirect: 'follow'
-};
+    var requestOptions = getOptions('POST');
 
 fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
   .then(response => response.text())
