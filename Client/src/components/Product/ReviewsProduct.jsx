@@ -1,19 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "react-modal";
 import "./ReviewsProduct.css";
+import { getAll, postNewCategory, postNewReview } from "../../axios";
 
-const ReviewsProduct = ({ reviews, onAddReview, users }) => {
+const ReviewsProduct = ({  onAddReview }) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [productReviews, setProductReviews] = useState(reviews.filter(item => item.productId === parseInt(id)));
     const [hoverRating, setHoverRating] = useState(0);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [reviews, setReviews] = useState([]);
     Modal.setAppElement('#root');
 
-    
+    useEffect(() => {
+        async function fetch() {
+        setReviews(await getAll(`https://localhost:7248/api/Review/${id}`));
+        }
+        fetch();
+    }, []);  
 
     const handleAddReview = () => {
         if (rating === 0 || comment.trim() === "") {
@@ -25,11 +31,11 @@ const ReviewsProduct = ({ reviews, onAddReview, users }) => {
             rating,
             comment,
             productId: parseInt(id),
-            userId: 1,// aktualnie zalogowany użytkownik
         };
 
-        setProductReviews(prevReviews => [newReview, ...prevReviews]);
-        onAddReview(newReview);
+        
+        setReviews(prevReviews => [newReview, ...prevReviews]);
+        postNewReview(newReview);
         setIsModalOpen(false);
     };
 
@@ -50,25 +56,22 @@ const ReviewsProduct = ({ reviews, onAddReview, users }) => {
 
             {/* Wyświetlanie recenzji */}
             <div>
-            {productReviews.map((review, index) => (
+            {reviews.map((review, index) => (
     <div key={index}>
         {/* Check if the user with the specified id is found */}
-        {users.find(user => user.id === review.userId) ? (
-            <div className="OneReview">
-                <p>User: {users.find(user => user.id === review.userId).Username}</p>
-                {/* Dodanie gwiazdek */}
-                <div className="star-rating">
-                    {[1, 2, 3, 4, 5].map((value, idx) => (
-                        <label key={idx} className={value <= review.rating ? "star-filled" : ""}>
-                            {value <= review.rating ? "★" : ""}
-                        </label>
-                    ))}
-                </div>
-                <p>Comment: {review.comment}</p>
+ 
+        <div className="OneReview">
+            <p>User: {review.author}</p>
+            {/* Dodanie gwiazdek */}
+            <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((value, idx) => (
+                    <label key={idx} className={value <= review.rating ? "star-filled" : ""}>
+                        {value <= review.rating ? "★" : ""}
+                    </label>
+                ))}
             </div>
-        ) : (
-            null
-        )}
+            <p>Comment: {review.description}</p>
+        </div>
     </div>
 ))}
             </div>

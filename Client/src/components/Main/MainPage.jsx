@@ -107,61 +107,7 @@ function MainPage() {
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
-    const sampleReviews = [
-        {
-          rating: 4,
-          comment: "Great product! It exceeded my expectations.",
-          productId: 1,
-          userId: 1,
-        },
-        {
-          rating: 5,
-          comment: "Excellent quality and fast delivery.",
-          productId: 1,
-          userId: 2,
-        },
-        {
-          rating: 3,
-          comment: "Good product, but the packaging was damaged.",
-          productId: 2,
-          userId: 3,
-        },
-      ];
 
-      const users = [
-        {
-          id: 1,
-          Username: "john_doe",
-          PasswordHash: "hashed_password_1",
-          Email: "john.doe@example.com",
-          ShippingAddress: "123 Main St, Cityville, Country",
-          NewsletterSubscription: true,
-          EmailVerified: true,
-          VerificationToken: null,
-          RefreshToken: "refresh_token_1",
-          RefreshTokenExpires: new Date(), // Set an appropriate date
-          ResetPasswordToken: null,
-          ResetPasswordTokenExpires: null,
-        },
-        {
-          id: 2,
-          Username: "jane_smith",
-          PasswordHash: "hashed_password_2",
-          Email: "jane.smith@example.com",
-          ShippingAddress: "456 Oak St, Townsville, Country",
-          NewsletterSubscription: false,
-          EmailVerified: true,
-          VerificationToken: null,
-          RefreshToken: "refresh_token_2",
-          RefreshTokenExpires: new Date(), // Set an appropriate date
-          ResetPasswordToken: null,
-          ResetPasswordTokenExpires: null,
-        },
-        // Add more user records as needed
-      ];
-      
-
-      const [reviews, setReviews] = useState([]);
 
     const handleAddReview = (newReview) => {
         // Update the reviews state with the new review
@@ -200,7 +146,7 @@ function MainPage() {
                     <>
                         <Navbar />
                         <ProductPage products={products} />
-                        <ReviewsProduct reviews={sampleReviews} onAddReview={handleAddReview} users = {users} />
+                        <ReviewsProduct onAddReview={handleAddReview} />
                     </>
                 }
             />
