@@ -37,15 +37,13 @@ async function postNewPromotion(productName, amount, productId) {
 
     let promotionId = 1;
 
-    console.log("1:");
     await fetch("https://localhost:7248/api/Promotion", requestOptions)
         .then(response => response.text())
         .then(result => promotionId = result)
         .catch(error => console.log('error', error));
-    console.log("2:" + promotionId);
+
 
     fetch(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, requestOptions)
-    console.log("3:");
 
 }
 async function postNewCategory(category, subCategories) {
@@ -75,7 +73,33 @@ async function postNewCategory(category, subCategories) {
     .catch(error => console.log('error', error));
 
 }
+async function postNewShippingMethod(name, cost) {
+    //var newCategory = {};
+    //if(subCategories.length > 0) {
+    //    newCategory = {
+    //        Name: category,
+    //        Subcategories: subCategories
+    //    }
+    //}
+    //else {
+    //    newCategory = {
+    //        Name: category
+    //    }
+    //}
 
+    //let params = new URLSearchParams(newCategory)
+    //    .toString()
+    //    .replaceAll("%2C", "&Subcategories=");
+    //const url = `https://localhost:7248/categories?${params}`;
+
+    //var requestOptions = getOptions('PUT');
+
+    //fetch(url, requestOptions)
+    //.then(response => response.text())
+    //.then(result => console.log(result))
+    //.catch(error => console.log('error', error));
+
+}
 function postNewUser(user) {
     
     const newUser = {
@@ -209,4 +233,4 @@ async function postNewReview(review) {
 
 }
 
-export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart, postNewReview, postNewPromotion };
+export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart, postNewReview, postNewPromotion, postNewShippingMethod };
