@@ -103,7 +103,8 @@ public class ProductRepository : IProductRepository
                 Stock = p.Stock,
                 Price = p.Price,
                 PromotionPrice = p.Promotions.Where(p => p.End < DateTime.Now && p.Start > DateTime.Now).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
+                Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
         }).ToList();
 
@@ -121,6 +122,7 @@ public class ProductRepository : IProductRepository
             Description = product.Description,
             Name = product.Name,
             Price = product.Price,
+            Category = _ctx.Categories.Where(i => i.Id == product.CategoryId).FirstOrDefault().Name,
         };
 
         if(product.Images != null)
@@ -230,7 +232,7 @@ public class ProductRepository : IProductRepository
                 Price = p.Price,
                 Description = p.Description,
                 PromotionPrice = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath, 
             };
         }).ToList();
 

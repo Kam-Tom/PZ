@@ -20,6 +20,7 @@ public class ProductDetailsDto
     public decimal Price { get; set; }
 
     public int Stock { get; set; }
+    public string Category { get; set; }
 
     public IEnumerable<string> FileUrls { get; set; }
     public IEnumerable<string> FileDescs { get; set; }
