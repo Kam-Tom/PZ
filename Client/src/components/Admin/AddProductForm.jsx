@@ -3,6 +3,8 @@ import "./AddProductForm.css";
 import { postNewProduct } from "../../axios";
 
 function AddProductForm({ onAddProduct }) {
+    const categories = ["Phones", "Laptops"];
+
     const [newProductFormData, setNewProductFormData] = useState({
         productName: "",
         category: "",
@@ -46,7 +48,12 @@ function AddProductForm({ onAddProduct }) {
             <form>
                 <h1>Add New Product</h1>
                 <input type="text" name="productName" placeholder="Product Name" onChange={handleAddProductInputChange} value={newProductFormData.productName} />
-                <input type="text" name="category" placeholder="Category" onChange={handleAddProductInputChange} value={newProductFormData.category} />
+                <select name="category" onChange={handleAddProductInputChange} value={newProductFormData.category}>
+                    <option value="" disabled>Select Category</option>
+                        {categories.map((category) => (
+                            <option key={category} value={category}>{category}</option>
+                        ))}
+                </select>
                 <label htmlFor="image"></label>
                 <input type="file" name="image" accept="image/*" onChange={handleAddProductInputChange} />
                 {imagePreview && (
