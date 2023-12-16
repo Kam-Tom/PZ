@@ -35,7 +35,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                     <ul className="cart-items-list"> 
                             {basket?.items && basket.items.map((item) => (
                             <li key={item.id} className="product-tile">
-                                <img className="product-image" src={`https://localhost:7248/Files/${item.image}`} alt={item.name} />
+                                <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
                                 <div className="product-info">
                                     <div className="price-stock-container">
                                         <p className="price">Price: {item.price}</p>

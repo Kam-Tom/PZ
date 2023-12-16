@@ -20,5 +20,6 @@ public class OrderItemDto
 {
     public string Name { get; set; }
     public int Id { get; set; }
+    public string ImageUrl { get; set; }
     public int Quantity { get; set; }
 }

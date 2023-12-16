@@ -101,7 +101,7 @@ public class OrderListRepository : IOrderListRepository
     }
     public GetOrderDto GetBasketData(string email)
     {
-        var user = _ctx.Users.Where(u => u.Email == email).Include(u => u.Orders).ThenInclude(o => o.OrderItems).ThenInclude(i => i.Product).SingleOrDefault();
+        var user = _ctx.Users.Where(u => u.Email == email).Include(u => u.Orders).ThenInclude(o => o.OrderItems).ThenInclude(i => i.Product).ThenInclude(p => p.Images).SingleOrDefault();
         var basket = user.Orders.Where(o => o.Status == Order.OrderStatusType.InBasket).SingleOrDefault();
 
         if (basket == null)
@@ -116,6 +116,7 @@ public class OrderListRepository : IOrderListRepository
             Items = basket.OrderItems.Select(i => new OrderItemDto() {
                 Name=i.Product.Name, 
                 Quantity = i.Quantity,
+                ImageUrl = i.Product.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Id = i.Product.Id,
             })
 
