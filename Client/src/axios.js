@@ -144,10 +144,10 @@ async function addToCart(id) {
     
     var requestOptions = getOptions('POST');
 
-fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
+    fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
 }
 
 async function postNewReview(review) {

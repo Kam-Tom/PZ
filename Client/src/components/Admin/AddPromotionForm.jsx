@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./AddPromotionForm.css";
-import { postNewPromotion } from "../../axios.js";
+//import { postNewPromotion } from "../../axios.js";
 
 function AddPromotionForm({ onAddPromotion, onClose }) {
     const [productName, setProductName] = useState("");
@@ -20,7 +20,7 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        postNewPromotion(productName, discountAmount);
+        //postNewPromotion(productName, discountAmount);
         onAddPromotion(productName, discountAmount);
         setProductName("");
         setDiscountAmount("");

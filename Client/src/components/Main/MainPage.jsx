@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
@@ -20,18 +20,52 @@ function TileArray(array, size) {
     return tilesArray;
 }
 
+
 function MainPage() {
     const navigate = useNavigate();
     const [filteredCategory, setFilteredCategory] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
+    const [items, setItems] = useState([]);
+
+    async function shopItems() {
+        let items = [];
+        for(let i = 0; i < cartItems.items.length; i++) {
+            let product = await getAll(`https://localhost:7248/Product/${cartItems.items[i].id}`);
+            const itemik = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.imageUrls[0]
+            }
+            items.push(itemik)
+        }
+        console.log("itemki w itemshopie",items)
+        return items;
+    }
+
     useEffect(() => {
         async function fetch() {
         setProducts(await getAll("https://localhost:7248/Product"));
+        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
+        await fetch2();
+        }
+        async function fetch2() {
+            setItems(await shopItems());
         }
         fetch();
     }, []);
 
+    useCallback(() => {
+        async function fetch2() {
+            setItems(await shopItems());
+        }
+        fetch2();
+    }, [items])
+
+    
+    console.log("itenki w carcik", items);
     // const products = [
     //     {
     //         id: 0,
@@ -109,10 +143,9 @@ function MainPage() {
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
-    const [cartItems, setCartItems] = useState([]);
 
     const addToCart = (productToAdd) => {
-        setCartItems((prevCartItems) => [...prevCartItems, productToAdd]);
+        setCartItems((prevCartItems) => [...prevCartItems, productToAdd])
     };
       
     const handleAddToCart = (product) => {
@@ -126,7 +159,7 @@ function MainPage() {
     };
 
     const calculateTotalPrice = () => {
-        return cartItems.reduce((total, item) => total + parseFloat(item.price.replace(" zł", "").replace(" ", "")), 0).toFixed(2);
+        return items.reduce((total, item) => total + parseFloat(item.price.toFixed(2)))
     };
 
 
@@ -196,8 +229,8 @@ function MainPage() {
                 element={
                     <>
                         <Navbar />
-                        <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} />
-                        <PaymentForm cartTotal={calculateTotalPrice()} />
+                        <ShoppingCart cartItems={items} setCartItems={setCartItems} />
+                        <PaymentForm cartTotal={cartItems.cost} />
                     </>
                 }
             />
@@ -205,7 +238,7 @@ function MainPage() {
             <Route
                 path="/*"
                 element={() => {
-                    navigate("/", { replace: true });
+                    navigate("/", { replace: true })
                     return null;
                 }}
             />
