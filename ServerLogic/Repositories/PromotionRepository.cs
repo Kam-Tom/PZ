@@ -19,7 +19,7 @@ public class PromotionRepository : IPromotionRepository
     {
         _ctx = ctx;
     }
-    public void Add(CreatePromotionDto request)
+    public int Add(CreatePromotionDto request)
     {
         var promotion = new Promotion()
         {
@@ -32,6 +32,7 @@ public class PromotionRepository : IPromotionRepository
 
         _ctx.Promotions.Add(promotion);
         _ctx.SaveChanges();
+        return promotion.Id;
     }
 
     public bool AddProduct(int productId,int promotionId)

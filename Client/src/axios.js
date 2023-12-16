@@ -14,7 +14,40 @@ function getOptions(method) {
 
     return requestOptions;
 }
+async function postNewPromotion(productName, amount, productId) {
 
+    var raw = JSON.stringify({
+        "end": "2999-12-20T21:20:05.793Z",
+        "start": "2000-12-14T21:20:05.793Z",
+        "name": "Promocja na " + productName,
+        "description": "description",
+        "discount": amount
+    });
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+
+    let promotionId = 1;
+
+    console.log("1:");
+    await fetch("https://localhost:7248/api/Promotion", requestOptions)
+        .then(response => response.text())
+        .then(result => promotionId = result)
+        .catch(error => console.log('error', error));
+    console.log("2:" + promotionId);
+
+    fetch(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, requestOptions)
+    console.log("3:");
+
+}
 async function postNewCategory(category, subCategories) {
     var newCategory = {};
     if(subCategories.length > 0) {
@@ -176,4 +209,4 @@ async function postNewReview(review) {
 
 }
 
-export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart, postNewReview };
+export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart, postNewReview, postNewPromotion };

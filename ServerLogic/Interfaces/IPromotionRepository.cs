@@ -11,6 +11,6 @@ public interface IPromotionRepository
 {
     bool AddProduct(int productId, int promotionId);
     IEnumerable<GetPromotionsDto> GetAll();
-    void Add(CreatePromotionDto request);
+    int Add(CreatePromotionDto request);
 
 }
