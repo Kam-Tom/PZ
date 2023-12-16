@@ -12,7 +12,7 @@ const ProductPage = ({ products, onAddToCart }) => {
         return null;
     }
 
-    const { name, price, stock, image, description } = product;
+    const { name, price, stock, image, description, category } = product;
 
     return (
         <div className="product-detail-container">
@@ -23,6 +23,7 @@ const ProductPage = ({ products, onAddToCart }) => {
                 <h2 className="product-detail-name">{name}</h2>
                 <p className="product-detail-price">Price: {price}</p>
                 <p className="product-detail-stock">Stock: {stock}</p>
+                <p className="product-detail-category">Category: {category}</p>
                 {stock > 0 ? (
                     <button className="add-to-cart-btn" onClick={() => onAddToCart(parseInt(id))}>Add to cart</button>
                 ) : (

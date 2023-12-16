@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
+
+    const handleLogoClick = () => {
+        window.location.reload();
+    };
+
     return (
         <header className="header">
-            <Link to="/" className="logo">
+            <Link to="/" className="logo" onClick={handleLogoClick}>
                 Miejsce na logo
             </Link>
             <nav className="navbar">

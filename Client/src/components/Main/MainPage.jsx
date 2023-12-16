@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
@@ -6,6 +6,7 @@ import LoginRegister from "../Account/LoginRegister";
 import AdminPage from "../Admin/AdminPage";
 import ProductTile from "../Product/ProductTile";
 import ProductPage from "../Product/ProductPage";
+import ProductFilter from "../Product/ProductFilter";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -26,6 +27,7 @@ function MainPage() {
             stock: 7,
             image: "https://pngimg.com/d/iphone_14_PNG6.png",
             description: "Smartfon Apple 128 GB z ekranem 6,1 cala, wyświetlacz OLED. Aparat 12 Mpix, pamięć 6 GB RAM, bateria 3279mAh. Obsługuje sieć: 5G",
+            category: "Phone",
         },
         {
             id: 1,
@@ -34,6 +36,7 @@ function MainPage() {
             stock: 5,
             image: "https://static.api.plenti.app/file/product/2808",
             description: "Smartfon Samsung 128 GB z ekranem 6,8 cala, wyświetlacz Dynamic AMOLED 2X. Aparat 108 Mpix, pamięć 8 GB RAM, bateria 5000mAh. Obsługuje sieć: 5G",
+            category: "Phone",
         },
         {
             id: 2,
@@ -42,6 +45,7 @@ function MainPage() {
             stock: 0,
             image: "https://mi-home.pl/cdn/shop/products/7592_k1-black-1200px-1_35179415-033a-4d1e-a2be-ed2a47fbaf26.png?v=1679742574&width=1260",
             description: "Smartfon Xiaomi 256 GB z ekranem 6,81 cala, wyświetlacz AMOLED. Aparat 50 Mpix, pamięć 12 GB RAM, bateria 5000mAh. Obsługuje sieć: 5G",
+            category: "Phone",
         },
         {
             id: 3,
@@ -50,6 +54,7 @@ function MainPage() {
             stock: 2,
             image: "https://swiat-laptopow.pl/img/cms/HP%2014-ce/Laptop%20HP%20Pavilion%2014-ce_szary_3.png",
             description: "LAPTOP HP PAVILION 14 Nowoczesny i wydajny laptop HP Pavilion 14-ce to idealne narzędzie dla wymagających uczniów",
+            category: "Laptop",
         },
         {
             id: 4,
@@ -58,6 +63,7 @@ function MainPage() {
             stock: 9,
             image: "https://swiat-laptopow.pl/img/cms/HP%2014-ce/Laptop%20HP%20Pavilion%2014-ce_szary_3.png",
             description: "LAPTOP HP PAVILION 14 Nowoczesny i wydajny laptop HP Pavilion 14-ce to idealne narzędzie dla wymagających uczniów",
+            category: "Laptop",
         },
         {
             id: 5,
@@ -66,10 +72,19 @@ function MainPage() {
             stock: 0,
             image: "https://swiat-laptopow.pl/img/cms/HP%2014-ce/Laptop%20HP%20Pavilion%2014-ce_szary_3.png",
             description: "LAPTOP HP PAVILION 14 Nowoczesny i wydajny laptop HP Pavilion 14-ce to idealne narzędzie dla wymagających uczniów",
+            category: "Laptop",
         },
     ];
 
-    const productRows = TileArray(products, 4);
+
+    const [filteredCategory, setFilteredCategory] = useState(null);
+    const handleCategorySelect = (category) => {
+        setFilteredCategory(category);
+    };
+
+    const filteredProducts = filteredCategory ? products.filter((product) => product.category === filteredCategory) : products;
+    const productRows = TileArray(filteredProducts, 4);
+    const categories = Array.from(new Set(products.map((product) => product.category)));
 
     return (
         <Routes>
@@ -78,6 +93,12 @@ function MainPage() {
                 element={
                     <>
                         <Navbar />
+                        <div className="filter-and-product-container">
+                            <ProductFilter
+                                categories={categories}
+                                onSelectCategory={handleCategorySelect}
+                            />
+                        </div>
                         <div className="product-list-container">
                             {productRows.map((row, rowIndex) => (
                                 <div key={rowIndex} className="product-list-row">

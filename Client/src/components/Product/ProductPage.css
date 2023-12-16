@@ -25,7 +25,8 @@
 }
 
 .product-detail-price,
-.product-detail-stock {
+.product-detail-stock,
+.product-detail-category {
     margin: 5px 0;
     font-size: 16px;
 }
