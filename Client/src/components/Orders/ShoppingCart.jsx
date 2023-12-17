@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { getAll } from "../../axios";
+import React, { useCallback, useEffect, useState } from "react";
+import { getAll, deleteElement } from "../../axios";
 import "./ShoppingCart.css";
 
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
     const [basket, setBasket] = useState([]);
+    async function fetch() {
+        let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
+        setBasket(items);
+    }
     useEffect(() => {
-        async function fetch() {
-            let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
-            setBasket(items);
-            console.log(items)
-        }
         fetch();
     }, []);
 
-    const removeFromCart = (productId) => {
-        setCartItems((prevCartItems) => {
-            const indexToRemove = prevCartItems.findIndex((item) => item.id === productId);
-            if (indexToRemove !== -1) {
-                const updatedCartItems = [...prevCartItems.slice(0, indexToRemove), ...prevCartItems.slice(indexToRemove + 1)];
-                return updatedCartItems;
-            }
-            return prevCartItems;
-        });
+    const removeFromCart = async (productId) => {
+        await deleteElement(`https://localhost:7248/api/Shop?productId=${productId}`)
+        fetch();
+        
       };
 
     return (

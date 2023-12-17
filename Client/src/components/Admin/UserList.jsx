@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./UserList.css";
-import { deleteElement } from "../../axios";
+import { deleteElement, getAll } from "../../axios";
 
-function UserList({ users, onEditUser }) {
+function UserList() {
+    const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+
+    async function fetchUsers() {
+        let items = await getAll("https://localhost:7248/api/Users/Get");
+        setUsers(items);
+    }
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     const onSelectUser = (user) => {
         setSelectedUser(selectedUser === user ? null : user);
@@ -14,8 +23,8 @@ function UserList({ users, onEditUser }) {
     };
 
     const handleDeleteClick = async (userId) => {
-        deleteElement(`https://localhost:7248/api/Users?userId=${userId}`);
-        window.location.reload(false);
+        await deleteElement(`https://localhost:7248/api/Users?userId=${userId}`);
+        fetchUsers();
     };
 
     return (

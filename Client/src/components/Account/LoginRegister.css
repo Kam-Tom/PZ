@@ -75,6 +75,16 @@ body {
     height: 100%;
 }
 
+.login-container {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    height: 100%;
+}
+
 .container input {
     background-color: #eee;
     border: none;

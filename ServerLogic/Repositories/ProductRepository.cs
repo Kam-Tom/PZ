@@ -233,6 +233,7 @@ public class ProductRepository : IProductRepository
                 Description = p.Description,
                 PromotionPrice = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath, 
+                Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
         }).ToList();
 

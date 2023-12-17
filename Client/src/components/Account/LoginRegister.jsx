@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css"
 import ReCAPTCHA from "react-google-recaptcha";
 import { postNewUser, postLogin } from "../../axios.js"
@@ -7,6 +8,7 @@ function LoginRegister() {
     const ReCAPTCHA1 = useRef();
     const ReCAPTCHA2 = useRef();
     const ReCAPTCHA3 = useRef();
+    const navigate = useNavigate();
 
     const [loginFormData, setLoginFormData] = useState({
         email: "",
@@ -23,7 +25,7 @@ function LoginRegister() {
     const [isSignUp, setIsSignUp] = useState(false);
     const [isPasswordReset, setIsPasswordReset] = useState(false);
 
-    function checkCaptcha(captchaRef) {
+    async function checkCaptcha(captchaRef) {
         const captchaValue = captchaRef.current.getValue();
         if (!captchaValue) {
             console.log("nie weszlo");
@@ -34,11 +36,13 @@ function LoginRegister() {
             alert("Form submission successful!");
             if(captchaRef == ReCAPTCHA1) {
                 console.log("Dane do logowania", loginFormData);
-                postLogin(loginFormData);
+                await postLogin(loginFormData);
+                // window.location.reload();
+                navigate("/");
             }
             else if(captchaRef == ReCAPTCHA2) {
                 console.log("Dane do rejestracji", signupFormData);
-                postNewUser(signupFormData);
+                await postNewUser(signupFormData);
             }
         }
     }
@@ -134,7 +138,7 @@ function LoginRegister() {
                 </div>
             ) : (
                 <div className="form-container sign-in">
-                    
+                    <div className="login-container">
                         <h1>Sign In</h1>
                         <input type="email" name="email" placeholder="Email" onChange={handleLoginInputChange} value={loginFormData.email} />
                         <input type="password" name="password" placeholder="Password" onChange={handleLoginInputChange} value={loginFormData.password} />
@@ -142,7 +146,7 @@ function LoginRegister() {
                         <ReCAPTCHA ref={ReCAPTCHA1} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
                         <a href="#" onClick={handlePasswordReset}>Forget Your Password?</a>
                         <button onClick={() => checkCaptcha(ReCAPTCHA1)}>Sign In</button>
-                  
+                    </div>
                 </div>
             )}
                 <div className="toggle-container">

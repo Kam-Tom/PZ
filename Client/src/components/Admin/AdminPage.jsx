@@ -17,8 +17,8 @@ function AdminPage() {
     const [showAddShippingMethodForm, setShowAddShippingMethodForm] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [products, setProducts] = useState(null);
-    const [users, setUsers] = useState(null);
+    // const [products, setProducts] = useState(null);
+    // const [users, setUsers] = useState(null);
 
     const handleAddProduct = (newProductData) => {
         setShowAddProductForm(false);
@@ -42,6 +42,8 @@ function AdminPage() {
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowAddPromotionForm(false);
+        setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
     };
 
@@ -50,6 +52,8 @@ function AdminPage() {
         setShowList(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowAddPromotionForm(false);
+        setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
     };
 
@@ -58,6 +62,8 @@ function AdminPage() {
         setShowList(false);
         setShowAddProductForm(false);
         setShowUserList(false);
+        setShowAddPromotionForm(false);
+        setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
     };
 
@@ -67,6 +73,7 @@ function AdminPage() {
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
     };
 
@@ -76,15 +83,18 @@ function AdminPage() {
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowAddPromotionForm(false);
         setSelectedProduct(null);
     };
 
     const showUserListFn = async () => {
-        setUsers(await getAll("https://localhost:7248/api/Users/Get"));
+        // setUsers(await getAll("https://localhost:7248/api/Users/Get"));
         setShowUserList(true);
         setShowList(false);
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
+        setShowAddPromotionForm(false);
+        setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
     };
 
@@ -106,11 +116,13 @@ function AdminPage() {
                 onShowProducts={showProducts}
                 onShowAddProductForm={showAddProductFormFn}
                 onShowProductList={async () => {
-                    setProducts(await getAll("https://localhost:7248/Product/Admin"));
+                    // setProducts(await getAll("https://localhost:7248/Product/Admin"));
                     setShowList(true);
                     setShowAddProductForm(false);
                     setShowAddCategoryForm(false);
                     setShowUserList(false);
+                    setShowAddPromotionForm(false);
+                    setShowAddShippingMethodForm(false);
                     setSelectedProduct(null);
                 }}
                 onShowAddCategoryForm={showAddCategoryFormFn}
@@ -122,14 +134,16 @@ function AdminPage() {
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
             {showAddPromotionForm && <AddPromotionForm onAddPromotion={handleAddPromotion} onClose={handleCloseAddPromotionForm} />}
             {showAddShippingMethodForm && <AddShippingMethodForm onAddShippingMethod={handleAddShippingMethod} onClose={handleCloseAddShippingMethodForm} />}
-            {showList && products && (
+            {showList && (
                 <ProductList
-                    products={products}
+                    // products={products}
                     onSelectProduct={(product) => setSelectedProduct(product)}
-                    selectedProduct={selectedProduct}
+                    // selectedProduct={selectedProduct}
                 />
             )}
-            {showUserList && <UserList users={users} />}
+            {showUserList && <UserList 
+                //users={users} 
+            />}
         </div>
     );
 }

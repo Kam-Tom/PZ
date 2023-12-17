@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ProductList.css";
-import { deleteElement } from "../../axios";
+import { deleteElement, getAll } from "../../axios";
 
-function ProductList({ products, onEditProduct }) {
+function ProductList({ onEditProduct }) {
+    const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
+
+    async function fetchProducts() {
+        let items = await getAll("https://localhost:7248/Product/Admin");
+        setProducts(items);
+    }
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
     const onSelectProduct = (product) => {
         setSelectedProduct(selectedProduct === product ? null : product);
@@ -13,9 +22,9 @@ function ProductList({ products, onEditProduct }) {
         onEditProduct(product);
     };
 
-    const handleDeleteClick = (productId) => {
-        deleteElement(`https://localhost:7248/Product/${productId}`);
-        window.location.reload(false);
+    const handleDeleteClick = async (productId) => {
+        await deleteElement(`https://localhost:7248/Product/${productId}`);
+        fetchProducts();
     };
 
     return (

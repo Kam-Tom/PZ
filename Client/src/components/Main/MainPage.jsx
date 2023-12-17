@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
@@ -27,45 +27,39 @@ function MainPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
-    const [items, setItems] = useState([]);
+    //const [items, setItems] = useState([]);
      
-    async function shopItems() {
-        let items = [];
-        if (!cartItems.items)
-            return items;
+    // async function shopItems() {
+    //     let items = [];
+    //     if (!cartItems.items)
+    //         return items;
 
-        for(let i = 0; i < cartItems.items.length; i++) {
-            let product = await getAll(`https://localhost:7248/Product/${cartItems.items[i].id}`);
-            const itemik = {
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.imageUrls[0]
-            }
-            items.push(itemik)
+    //     for(let i = 0; i < cartItems.items.length; i++) {
+    //         let product = await getAll(`https://localhost:7248/Product/${cartItems.items[i].id}`);
+    //         const itemik = {
+    //             id: product.id,
+    //             name: product.name,
+    //             price: product.price,
+    //             image: product.imageUrls[0]
+    //         }
+    //         items.push(itemik)
+    //     }
+    //     console.log("itemki w itemshopie",items)
+    //     return items;
+    // }
+
+    async function fetch() {
+        setProducts(await getAll("https://localhost:7248/Product"));
+        //setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         }
-        console.log("itemki w itemshopie",items)
-        return items;
-    }
 
     useEffect(() => {
-        async function fetch() {
-        setProducts(await getAll("https://localhost:7248/Product"));
-        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
-        await fetch2();
-        }
-        async function fetch2() {
-            setItems(await shopItems());
-        }
         fetch();
     }, []);
 
-    useCallback(() => {
-        async function fetch2() {
-            setItems(await shopItems());
-        }
-        fetch2();
-    }, [items])
+    useContext(() => {
+        fetch();
+    })
 
     // const products = [
     //     {
@@ -155,15 +149,15 @@ function MainPage() {
         addToCart2(product);
     };
 
-    const removeFromCart = (productId) => {
-        setCartItems((prevCartItems) =>
-            prevCartItems.filter((item) => item.id !== productId)
-        );
-    };
+    // const removeFromCart = (productId) => {
+    //     setCartItems((prevCartItems) =>
+    //         prevCartItems.filter((item) => item.id !== productId)
+    //     );
+    // };
 
-    const calculateTotalPrice = () => {
-        return items.reduce((total, item) => total + parseFloat(item.price.toFixed(2)))
-    };
+    // const calculateTotalPrice = () => {
+    //     return items.reduce((total, item) => total + parseFloat(item.price.toFixed(2)))
+    // };
 
 
 
@@ -232,7 +226,9 @@ function MainPage() {
                 element={
                     <>
                         <Navbar />
-                        <ShoppingCart cartItems={items} setCartItems={setCartItems} />
+                        <ShoppingCart 
+                        //cartItems={items} setCartItems={setCartItems} 
+                        />
                         <PaymentForm cartTotal={cartItems.cost} />
                     </>
                 }

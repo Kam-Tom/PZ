@@ -14,7 +14,6 @@ function AddProductForm({ onAddProduct }) {
             const response = await fetch('https://localhost:7248/categories/List');
             const data = await response.json();
             setCategories(data); // Assuming data is an array of category objects with 'Name' and 'Id' properties
-            console.log(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
