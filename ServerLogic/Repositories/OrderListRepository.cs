@@ -118,6 +118,7 @@ public class OrderListRepository : IOrderListRepository
                 Quantity = i.Quantity,
                 ImageUrl = i.Product.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Id = i.Product.Id,
+                Price = i.Product.Price,
             })
 
         };

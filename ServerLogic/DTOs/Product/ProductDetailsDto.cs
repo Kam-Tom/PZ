@@ -26,4 +26,5 @@ public class ProductDetailsDto
     public IEnumerable<string> FileDescs { get; set; }
 
     public IEnumerable<string> ImageUrls { get; set; }
+    public decimal? PromotionPrice { get; internal set; }
 }

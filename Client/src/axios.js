@@ -17,6 +17,8 @@ function getOptions(method) {
 async function postNewPromotion(productName, amount, productId) {
 
     var raw = JSON.stringify({
+        start: "2023-12-18T16:22:53.089Z",
+        end: "2024-12-18T16:22:53.089Z",
         name: "Promocja na " + productName,
         description: "description",
         discount: amount

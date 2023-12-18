@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAll, deleteElement } from "../../axios";
 import "./PaymentForm.css";
 
 const PaymentForm = ({ cartTotal }) => {
@@ -11,6 +12,16 @@ const PaymentForm = ({ cartTotal }) => {
     const [isCardNumberValid, setIsCardNumberValid] = useState(false);
     const [isCvcValid, setIsCvcValid] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(false);
+
+    const [cost, setCost] = useState(0);
+    async function fetch() {
+        let v = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
+        setCost(v.cost);
+        console.log(v);
+    }
+    useEffect(() => {
+        fetch();
+    }, [cost]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -91,7 +102,7 @@ const PaymentForm = ({ cartTotal }) => {
                                 <div className="error-message">Invalid email</div>
                             )}
                         </label>
-                        <button type="submit" style={{ backgroundColor: "#e67e22" }}>Pay: {cartTotal} zł</button>
+                        <button type="submit" style={{ backgroundColor: "#e67e22" }}>Pay: {cost} zł</button>
                     </div>
                 )}
             </form>

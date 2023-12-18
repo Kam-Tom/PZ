@@ -5,6 +5,7 @@ import "./ShoppingCart.css";
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
     const [basket, setBasket] = useState([]);
+    const [cost, setCost] = useState(0);
     async function fetch() {
         let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
         setBasket(items);
@@ -32,7 +33,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                                 <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
                                 <div className="product-info">
                                     <div className="price-stock-container">
-                                        <p className="price">Price: {item.price}</p>
+                                        <p className="price">Price: {item.price} zł</p>
                                     </div>
                                     <h3 className="product-name">{item.name}</h3>
                                 </div>

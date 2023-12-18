@@ -61,13 +61,13 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
                         <option value="" disabled>Select a product</option>
                         {products.map((product) => (
                             <option key={product.id} value={product.name}>
-                                {product.name}
+                                {product.name.length > 45 ? `${product.name.slice(0, 45)}...` : product.name}
                             </option>
                         ))}
                     </select>
                 </label>
                 <label>
-                    Discount Amount:
+                    Discount %:
                     <input type="number" value={discountAmount} onChange={handleDiscountAmountChange} required />
                 </label>
                 <br />

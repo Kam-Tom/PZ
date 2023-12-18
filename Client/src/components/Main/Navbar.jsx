@@ -22,7 +22,7 @@ function Navbar({ onSearch }) {
     return (
         <header className="header">
             <Link to="/" className="logo" onClick={handleLogoClick}>
-                Miejsce na logo
+                DreamyGadget
             </Link>
             <div className="search-box">
                 <input

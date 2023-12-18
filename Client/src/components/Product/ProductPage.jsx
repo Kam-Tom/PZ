@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./ProductPage.css";
 import { getAll, addToCart } from "../../axios";
 
-const ProductPage = ({ products}) => {
+const ProductPage = ({ products} ) => {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -21,6 +21,8 @@ const ProductPage = ({ products}) => {
     }
 
     const { name, price, stock, imageUrls, description, category } = product;
+    const isDiscounted = product.promotionPrice !== null && product.promotionPrice < price;
+
     return (
         
         <div className="product-detail-container">
@@ -31,7 +33,13 @@ const ProductPage = ({ products}) => {
             </div>
             <div className="product-detail-info">
                 <h2 className="product-detail-name">{name}</h2>
-                <p className="product-detail-price">Price: {price}</p>
+                {isDiscounted ? (
+                    <>
+                        <p className="product-detail-price">Price: <del>{price} zł</del> {(price * (100 - product.promotionPrice)) / 100} zł</p>
+                    </>
+                ) : (
+                    <p className="product-detail-price">Price: {price} zł</p>
+                )}
                 <p className="product-detail-stock">Stock: {stock}</p>
                 <p className="product-detail-category">Category: {category}</p>
                 {stock > 0 ? (

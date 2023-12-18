@@ -50,7 +50,7 @@ function MainPage() {
 
     async function fetch() {
         setProducts(await getAll("https://localhost:7248/Product"));
-        //setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
+        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         }
 
     useEffect(() => {
@@ -127,6 +127,10 @@ function MainPage() {
         setFilteredCategory(category);
     };
 
+    const handleDiscountedToggle = (showDiscounted) => {
+        setFilteredCategory(showDiscounted ? "Discounted" : null);
+    };
+
     const handleSearch = (query) => {
         setSearchQuery(query);
     };
@@ -177,6 +181,7 @@ function MainPage() {
                             <ProductFilter
                                 categories={categories}
                                 onSelectCategory={handleCategorySelect}
+                                onFilterDiscounted={handleDiscountedToggle}
                             />
                         </div>
                         <div className="product-list-container">
