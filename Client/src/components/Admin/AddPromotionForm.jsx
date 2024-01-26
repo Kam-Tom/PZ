@@ -11,10 +11,10 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
 
     useEffect(() => {
         // Fetch categories from the server API
-        fetchCategories();
+        fetchProducts();
     }, []); // Empty dependency array ensures this effect runs once when the component mounts
 
-    const fetchCategories = async () => {
+    const fetchProducts = async () => {
         try {
             const response = await fetch('https://localhost:7248/Product');
             const data = await response.json();

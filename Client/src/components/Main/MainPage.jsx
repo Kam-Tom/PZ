@@ -50,16 +50,15 @@ function MainPage() {
 
     async function fetch() {
         setProducts(await getAll("https://localhost:7248/Product"));
-        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         }
 
     useEffect(() => {
         fetch();
-    }, []);
+    }, [products]);
 
-    useContext(() => {
-        fetch();
-    })
+    // useContext(() => {
+    //     fetch();
+    // })
 
     // const products = [
     //     {
@@ -147,9 +146,10 @@ function MainPage() {
         setCartItems((prevCartItems) => [...prevCartItems, productToAdd])
     };
       
-    const handleAddToCart = (product) => {
+    const handleAddToCart = async (product) => {
         console.log(product);
         addToCart(product);
+        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         addToCart2(product);
     };
 

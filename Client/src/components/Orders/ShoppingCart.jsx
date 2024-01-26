@@ -5,20 +5,19 @@ import "./ShoppingCart.css";
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
     const [basket, setBasket] = useState([]);
-    const [cost, setCost] = useState(0);
-    async function fetch() {
+    async function fetchFromDatabase() {
         let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
         setBasket(items);
     }
     useEffect(() => {
-        fetch();
+        fetchFromDatabase();
     }, []);
 
     const removeFromCart = async (productId) => {
         await deleteElement(`https://localhost:7248/api/Shop?productId=${productId}`)
-        fetch();
+        fetchFromDatabase();
         
-      };
+    };
 
     return (
         <div className="shopping-cart-container">

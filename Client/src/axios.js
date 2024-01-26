@@ -2,53 +2,44 @@ import axios from "axios";
 import FormData from 'form-data';
 
 
-function getOptions(method) {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
-
-    var requestOptions = {
-    method: method,
-    headers: myHeaders,
-    redirect: 'follow'
+export function getOptions(method) {
+    return {
+        method: method,
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
+        }
     };
-
-    return requestOptions;
 }
-async function postNewPromotion(productName, amount, productId) {
 
-    var raw = JSON.stringify({
+export async function postNewPromotion(productName, amount, productId) {
+    const data = {
         start: "2023-12-18T16:22:53.089Z",
         end: "2024-12-18T16:22:53.089Z",
         name: "Promocja na " + productName,
         description: "description",
         discount: amount
-    });
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
     };
 
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
+        },
+        data: data
+    };
 
     let promotionId = 1;
 
-    await fetch("https://localhost:7248/api/Promotion", requestOptions)
-        .then(response => response.text())
-        .then(result => promotionId = result)
+    await axios("https://localhost:7248/api/Promotion", options)
+        .then(response => promotionId = response.data)
         .catch(error => console.log('error', error));
 
-
-    fetch(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, requestOptions)
-
+    await axios(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, options);
 }
-async function postNewCategory(category, subCategories) {
-    var newCategory = {};
+
+export async function postNewCategory(category, subCategories) {
+    let newCategory = {};
     if(subCategories.length > 0) {
         newCategory = {
             Name: category,
@@ -66,37 +57,34 @@ async function postNewCategory(category, subCategories) {
         .replaceAll("%2C", "&Subcategories=");
     const url = `https://localhost:7248/categories?${params}`;
 
-    var requestOptions = getOptions('PUT');
+    const options = getOptions('PUT');
 
-    fetch(url, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-
-}
-async function postNewShippingMethod(name, cost) {
-    var raw = JSON.stringify({
-        name: name,
-        cost: cost
-    });
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-
-    await fetch("https://localhost:7248/ShippingMethod", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
+    await axios.put(url, null, options)
+        .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }
-function postNewUser(user) {
+
+export async function postNewShippingMethod(name, cost) {
+    const data = {
+        name: name,
+        cost: cost
+    };
+
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
+        },
+        data: data
+    };
+
+    await axios("https://localhost:7248/ShippingMethod", options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}
+
+export async function postNewUser(user) {
     
     const newUser = {
         name: user.name,
@@ -108,125 +96,102 @@ function postNewUser(user) {
       console.log("user do dodania", newUser);
     const url = "https://localhost:7248/Auth/register";
 
-    post(url, newUser);
-
-}
-
-async function postLogin(user) {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify(user);
-
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-    };
-
-    await fetch("https://localhost:7248/Auth/login", requestOptions)
-    .then(response => response.text())
-    .then(result => {
-            localStorage.setItem("loginToken", result)})
-    .catch(error => console.log('error', error));
-
-    console.log(localStorage.getItem("loginToken"))
-}
-
-async function post(url, request) {
-
-    await axios.post(url, request, {
+    await axios.post(url, newUser, {
         headers: {
             'Accept': 'text/plain',
             'Content-Type': 'application/json',
         }
       })
-        .then(console.log(response));
+        .then(response => console.log(response));
+
 }
-async function deleteElement(url) {
 
-    var requestOptions = requestOptions = getOptions('DELETE');
+export async function postLogin(user) {
+    const data = JSON.stringify(user);
 
-    await fetch(url, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-  
-  }
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: data
+    };
 
-async function getAll(url) {
+    await axios("https://localhost:7248/Auth/login", options)
+        .then(response => {
+            localStorage.setItem("loginToken", response.data);
+            console.log(localStorage.getItem("loginToken"));
+        })
+        .catch(error => console.log('error', error));
+
+    console.log(localStorage.getItem("loginToken"))
+}
+
+export async function deleteElement(url) {
+    const options = getOptions('DELETE');
+
+    await axios.delete(url, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}
+
+export async function getAll(url) {
+    const options = getOptions('GET');
     let results = [];
 
-    var requestOptions = getOptions('GET');
+    await axios.get(url, options)
+        .then(response => {
+            results = response.data;
+        })
+        .catch(error => console.log('error', error));
 
-    await fetch(url, requestOptions)
-    .then(response => response.json())
-    .then(response => {
-        results = response
-    });
-        return results;
+    return results;
 }
 
-async function postNewProduct(product) {
-    var formdata = new FormData();
-    formdata.append("name", product.productName);
-    formdata.append("categoryId", product.category);
-    formdata.append("thumbnails", product.image);
-    formdata.append("price", product.price);
-    formdata.append("stock", product.quantity);
-    formdata.append("description", product.description);
+export async function postNewProduct(product) {
+    let formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("categoryId", product.category);
+    formData.append("thumbnails", product.image);
+    formData.append("price", product.price);
+    formData.append("stock", product.stock);
+    formData.append("description", product.description);
 
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
-
-    var requestOptions = {
-    method: 'PUT',
-    headers: myHeaders,
-    body: formdata,
-    redirect: 'follow'
+    const options = {
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
+        }
     };
 
-    fetch("https://localhost:7248/Product", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+    await axios.put("https://localhost:7248/Product", formData, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
 }
 
-async function addToCart(id) {
-    
-    var requestOptions = getOptions('POST');
+export async function addToCart(id) {
+    const options = getOptions('POST');
 
-    fetch(`https://localhost:7248/api/Shop?productId=${id}`, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+    await axios.post(`https://localhost:7248/api/Shop?productId=${id}`, null, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
 }
 
-async function postNewReview(review) {
-    
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("loginToken")}`);
-
-    var raw = JSON.stringify({
-    "description": review.comment,
-    "rating": review.rating
-    });
-
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
+export async function postNewReview(review) {
+    const data = {
+        description: review.comment,
+        rating: review.rating
     };
 
-    fetch(`https://localhost:7248/api/Review/${review.productId}`, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
+        },
+        data: data
+    };
 
+    await axios.post(`https://localhost:7248/api/Review/${review.productId}`, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
 }
-
-export { postNewCategory, postNewUser, postLogin, deleteElement, getAll, postNewProduct, addToCart, postNewReview, postNewPromotion, postNewShippingMethod };

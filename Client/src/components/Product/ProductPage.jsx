@@ -9,16 +9,16 @@ const ProductPage = ({ products} ) => {
 
     const [product, setProduct] = useState(null);
     useEffect(() => {
-        async function fetch() {
+        async function fetchFromDatabase() {
         setProduct(await getAll(`https://localhost:7248/Product/${parseInt(id)}`));
         }
-        fetch();
+        fetchFromDatabase();
     }, []);
 
     if (!product) {
         navigate("/", { replace: true });
         return null;
-    }
+    }    
 
     const { name, price, stock, imageUrls, description, category } = product;
     const isDiscounted = product.promotionPrice !== null && product.promotionPrice < price;

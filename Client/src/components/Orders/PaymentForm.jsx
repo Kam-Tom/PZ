@@ -21,7 +21,7 @@ const PaymentForm = ({ cartTotal }) => {
     }
     useEffect(() => {
         fetch();
-    }, [cost]);
+    }, [cartTotal]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -102,7 +102,7 @@ const PaymentForm = ({ cartTotal }) => {
                                 <div className="error-message">Invalid email</div>
                             )}
                         </label>
-                        <button type="submit" style={{ backgroundColor: "#e67e22" }}>Pay: {cost} zł</button>
+                        <button type="submit" style={{ backgroundColor: "#e67e22" }}>Pay: {cartTotal} zł</button>
                     </div>
                 )}
             </form>

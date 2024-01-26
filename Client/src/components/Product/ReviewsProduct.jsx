@@ -15,10 +15,10 @@ const ReviewsProduct = ({  onAddReview }) => {
     Modal.setAppElement('#root');
 
     useEffect(() => {
-        async function fetch() {
+        async function fetchFromDatabase() {
             setReviews(await getAll(`https://localhost:7248/api/Review/${id}`));
         }
-        fetch();
+        fetchFromDatabase();
     }, []);  
 
     const handleAddReview = () => {
