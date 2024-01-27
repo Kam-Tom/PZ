@@ -21,7 +21,7 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
 
     const handleDelete = async (id) => {
 
-        const response = await deleteElement(`${apiDeleteEndpoint}/${id}`);
+        const response = await deleteElement(`${apiDeleteEndpoint}${id}`);
         
         if (response && response.status === 200) {
             setData(data.filter(item => item.id !== id));

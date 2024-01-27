@@ -17,7 +17,7 @@ function UserList() {
     return (
         <DataTable 
             apiGetEndpoint="https://localhost:7248/api/Users/Get"
-            apiDeleteEndpoint="https://localhost:7248/api/Users" 
+            apiDeleteEndpoint="https://localhost:7248/api/Users?userId=" 
             columns={[
                 { header: 'Name', field: 'username', className: '' },
                 { header: 'Email', field: 'email', className: 'Email' }
