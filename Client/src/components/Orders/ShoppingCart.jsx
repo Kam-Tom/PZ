@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { getAll, deleteElement } from "../../axios";
 import "./ShoppingCart.css";
+import OrderTile from "./OrderTile";
 
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
@@ -27,17 +28,8 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
             ) : (
                 <>
                     <ul className="cart-items-list"> 
-                            {cartItems?.items && cartItems.items.map((item) => (
-                            <li key={item.id} className="product-tile">
-                                <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
-                                <div className="product-info">
-                                    <div className="price-stock-container">
-                                        <p className="price">Price: {item.price} zł</p>
-                                    </div>
-                                    <h3 className="product-name">{item.name}</h3>
-                                </div>
-                                <button onClick={() => removeFromCart(item.id)}>Remove</button>
-                            </li>
+                        {cartItems?.items && cartItems.items.map((item) => (
+                            <OrderTile item={item} removeFromCart={removeFromCart} />
                         ))}
                     </ul>
                 </>
