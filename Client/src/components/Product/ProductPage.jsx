@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ProductPage.css";
 import { getAll, addToCart } from "../../axios";
+import PropTypes from 'prop-types';
 
-const ProductPage = ({ products} ) => {
+const ProductPage = ({ products } ) => {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -51,6 +52,19 @@ const ProductPage = ({ products} ) => {
             </div>
         </div>
     );
+};
+
+ProductPage.propTypes = {
+    products: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        stock: PropTypes.number.isRequired,
+        imageUrls: PropTypes.arrayOf(PropTypes.string),
+        description: PropTypes.string,
+        category: PropTypes.string.isRequired,
+        promotionPrice: PropTypes.number,
+    })).isRequired,
 };
 
 export default ProductPage;

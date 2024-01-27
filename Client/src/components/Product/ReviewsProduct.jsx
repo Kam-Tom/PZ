@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Modal from "react-modal";
 import "./ReviewsProduct.css";
 import { getAll, postNewCategory, postNewReview } from "../../axios";
+import PropTypes from 'prop-types';
 
 const ReviewsProduct = ({  onAddReview }) => {
     const { id } = useParams();
@@ -88,6 +89,10 @@ const ReviewsProduct = ({  onAddReview }) => {
             </Modal>
         </div>
     );
+};
+
+ReviewsProduct.propTypes = {
+    onAddReview: PropTypes.func,
 };
 
 export default ReviewsProduct;

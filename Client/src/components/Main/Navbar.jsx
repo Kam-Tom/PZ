@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 import "./Navbar.css";
 
 function Navbar({ onSearch }) {
@@ -46,5 +47,9 @@ function Navbar({ onSearch }) {
         </header>
     );
 }
+
+Navbar.propTypes = {
+    onSearch: PropTypes.func,
+};
 
 export default Navbar;

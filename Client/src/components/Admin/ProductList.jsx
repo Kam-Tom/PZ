@@ -1,5 +1,7 @@
+import React from "react";
 import DataTable from './DataTable';
 import './DataTable.css';
+
 
 function ProductList() {
     const renderProductDetails = (data, onDelete) => {
@@ -27,7 +29,7 @@ function ProductList() {
         <DataTable 
             apiEndpoint="https://localhost:7248/Product/Admin" 
             columns={[
-                { header: 'Name', field: 'name', className: '' },
+                { header: 'Name', field: 'name', className: 'Name' },
                 { header: 'Category', field: 'category', className: 'Category' },
                 { header: 'Price', field: 'price', className: 'Price' },
                 { header: 'Availability', field: 'stock', className: 'Availability' }

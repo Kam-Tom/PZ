@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import "./AddPromotionForm.css";
 import { postNewPromotion } from "../../axios.js";
 
@@ -76,5 +77,10 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
         </div>
     );
 }
+
+AddPromotionForm.propTypes = {
+    onAddPromotion: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
 
 export default AddPromotionForm;

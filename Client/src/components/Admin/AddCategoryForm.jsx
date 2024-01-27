@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import "./AddCategoryForm.css";
 import { postNewCategory } from "../../axios.js";
 
@@ -73,5 +74,10 @@ function AddCategoryForm({ onAddCategory, onClose }) {
         </div>
     );
 }
+
+AddCategoryForm.propTypes = {
+    onAddCategory: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
 
 export default AddCategoryForm;
