@@ -25,7 +25,8 @@ function ProductList() {
 
     return (
         <DataTable 
-            apiEndpoint="https://localhost:7248/Product/Admin" 
+            apiGetEndpoint="https://localhost:7248/Product/Admin" 
+            apiDeleteEndpoint="https://localhost:7248/Product" 
             columns={[
                 { header: 'Name', field: 'name', className: '' },
                 { header: 'Category', field: 'category', className: 'Category' },

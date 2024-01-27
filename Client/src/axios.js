@@ -155,8 +155,9 @@ export async function getAll(url) {
 }
 
 export async function postNewProduct(product) {
+    console.log(product)
     let formData = new FormData();
-    formData.append("name", product.name);
+    formData.append("name", product.ProductName);
     formData.append("categoryId", product.category);
     formData.append("thumbnails", product.image);
     formData.append("price", product.price);

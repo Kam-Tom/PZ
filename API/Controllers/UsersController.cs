@@ -24,6 +24,7 @@ public class UsersController : ControllerBase
     [HttpDelete, Authorize(Roles = "Admin")]
     public ActionResult Delete(int userId)
     {
+        Console.WriteLine("OK");
         var user = _repo.GetById(userId);
 
         if (user != null)

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./DataTable.css";
 import { deleteElement, getAll } from "../../axios";
 
-function DataTable({ apiEndpoint, columns, renderDetails }) {
+function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails }) {
     const [data, setData] = useState([]);
     const [selectedData, setSelectedData] = useState(null);
 
     async function fetchData() {
-        let items = await getAll(apiEndpoint);
+        let items = await getAll(apiGetEndpoint);
         setData(items);
     }
     useEffect(() => {
@@ -19,7 +19,8 @@ function DataTable({ apiEndpoint, columns, renderDetails }) {
     };
 
     const handleDelete = async (id) => {
-        const response = await deleteElement(`${apiEndpoint}/${id}`);
+
+        const response = await deleteElement(`${apiDeleteEndpoint}/${id}`);
         
         if (response && response.status === 200) {
             setData(data.filter(item => item.id !== id));
