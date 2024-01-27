@@ -27,6 +27,7 @@ function MainPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [a, setA] = useState([]);
     //const [items, setItems] = useState([]);
      
     // async function shopItems() {
@@ -54,7 +55,7 @@ function MainPage() {
 
     useEffect(() => {
         fetch();
-    }, [products]);
+    }, [products.length]);
 
     // useContext(() => {
     //     fetch();
