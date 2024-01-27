@@ -129,10 +129,16 @@ export async function postLogin(user) {
 
 export async function deleteElement(url) {
     const options = getOptions('DELETE');
+    let response;
 
-    await axios.delete(url, options)
-        .then(response => console.log(response.data))
-        .catch(error => console.log('error', error));
+    try {
+        response = await axios.delete(url, options);
+        console.log(response.data);
+    } catch (error) {
+        console.error('error', error);
+    }
+
+    return response;
 }
 
 export async function getAll(url) {

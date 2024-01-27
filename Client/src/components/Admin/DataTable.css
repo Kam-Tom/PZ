@@ -1,4 +1,4 @@
-.user-list-container {
+.data-list-container {
     padding: 10px;
     width: calc(50% - 10px);
     box-sizing: border-box;
@@ -9,22 +9,22 @@
     overflow-x: hidden;
 }
 
-.user-details-container {
+.data-details-container {
     width: 100%;
     position: absolute;
     top: 0;
     overflow-x: auto;
 }
 
-.user-table {
+.data-table {
     width: calc(50% - 10px);
     border-collapse: collapse;
     margin-top: 10px;
     overflow-x: hidden;
 }
 
-.user-table th,
-.user-table td {
+.data-table th,
+.data-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
@@ -33,28 +33,23 @@
     text-overflow: ellipsis;
 }
 
-.user-table th {
+.data-table th {
     background-color: #E67E22;
     color: #fff;
 }
 
-.user-table th.Email,
-.user-table td.Email {
-    width: 150px;
-}
-
-.user-list-item {
+.data-list-item {
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     position: relative;
     margin-bottom: 5px;
 }
 
-.user-list-item:hover {
+.data-list-item:hover {
     background-color: #d4d4d4;
 }
 
-.user-details {
+.data-details {
     background-color: #ecf0f1;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
@@ -66,37 +61,51 @@
     justify-content: space-between;
 }
 
-.user-list-item.active {
+.data-list-item.active {
     background-color: #d4d4d4;
 }
 
-.user-list-item.active .user-details-container {
+.data-list-item.active .data-details-container {
     display: block;
     position: relative;
     margin-top: 10px;
 }
 
-.user-details .user-info {
+.data-details .data-info {
     flex: 1;
     margin-right: 10px;
 }
 
-.user-details .user-info p {
+.data-details .data-info p {
     margin-bottom: 5px;
 }
 
-.user-details .user-info div {
+.data-details .data-info div {
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
     margin-top: -50px;
 }
 
-.user-details .user-info div button {
+.data-details .data-info div button {
     padding: 8px 12px;
     cursor: pointer;
 }
 
-.user-details .user-info div button:hover {
+.data-details .data-info div button:hover {
     filter: brightness(0.9);
+}
+
+.data-details .data-info div button.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.data-details .data-info div button.delete-button:hover {
+    background-color: #c0392b;
 }
