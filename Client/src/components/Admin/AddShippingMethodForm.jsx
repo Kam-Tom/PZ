@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import "./AddShippingMethodForm.css";
 import { postNewShippingMethod } from "../../axios.js";
 
@@ -33,5 +34,10 @@ function AddShippingMethodForm({ onAddShippingMethod, onClose }) {
         </div>
     );
 }
+
+AddShippingMethodForm.propTypes = {
+    onAddShippingMethod: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
 
 export default AddShippingMethodForm;

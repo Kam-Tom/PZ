@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ProductTile.css";
 import { addToCart } from "../../axios"
+import PropTypes from 'prop-types';
 
 const ProductTile = ({ product }) => {
     const isDiscounted = product.promotionPrice !== null && product.promotionPrice < product.price;
@@ -35,6 +36,17 @@ const ProductTile = ({ product }) => {
             </div>
         </div>
     );
+};
+
+ProductTile.propTypes = {
+    product: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        promotionPrice: PropTypes.number,
+        stock: PropTypes.number.isRequired,
+        thumbnailUrl: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 export default ProductTile;

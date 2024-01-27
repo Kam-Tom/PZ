@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import "./DataTable.css";
 import { deleteElement, getAll } from "../../axios";
 
@@ -65,5 +66,15 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
         </div>
     );
 }
+
+DataTable.propTypes = {
+    apiEndpoint: PropTypes.string.isRequired,
+    columns: PropTypes.arrayOf(PropTypes.shape({
+        className: PropTypes.string,
+        header: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
+    })).isRequired,
+    renderDetails: PropTypes.func.isRequired,
+};
 
 export default DataTable;

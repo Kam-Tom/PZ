@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import "./AddProductForm.css";
 import { postNewProduct } from "../../axios";
+
 function AddProductForm({ onAddProduct }) {
     const [categories, setCategories] = useState([]);
 
@@ -85,5 +87,9 @@ function AddProductForm({ onAddProduct }) {
         </div>
     );
 }
+
+AddProductForm.propTypes = {
+    onAddProduct: PropTypes.func.isRequired,
+};
 
 export default AddProductForm;

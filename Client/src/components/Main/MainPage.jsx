@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 import Navbar from "./Navbar";
 import LoginRegister from "../Account/LoginRegister";
@@ -51,6 +52,7 @@ function MainPage() {
 
     async function fetch() {
         setProducts(await getAll("https://localhost:7248/Product"));
+        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         }
 
     useEffect(() => {
@@ -148,9 +150,7 @@ function MainPage() {
     };
       
     const handleAddToCart = async (product) => {
-        console.log(product);
         addToCart(product);
-        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         addToCart2(product);
     };
 
@@ -222,7 +222,7 @@ function MainPage() {
                 path="/admin"
                 element={
                     <>
-                        <AdminPage />
+                        <AdminPage onAddProduct={fetch} />
                     </>
                 }
             />
@@ -233,7 +233,7 @@ function MainPage() {
                     <>
                         <Navbar />
                         <ShoppingCart 
-                        //cartItems={items} setCartItems={setCartItems} 
+                        cartItems={cartItems} setCartItems={setCartItems} 
                         />
                         <PaymentForm cartTotal={cartItems.cost} />
                     </>
@@ -250,5 +250,23 @@ function MainPage() {
         </Routes>
     );
 }
+
+MainPage.propTypes = {
+    products: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.string.isRequired,
+        stock: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+    })),
+    cartItems: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
+    })),
+};
 
 export default MainPage;

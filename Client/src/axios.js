@@ -157,13 +157,12 @@ export async function getAll(url) {
 export async function postNewProduct(product) {
     console.log(product)
     let formData = new FormData();
-    formData.append("name", product.ProductName);
+    formData.append("name", product.productName);
     formData.append("categoryId", product.category);
     formData.append("thumbnails", product.image);
     formData.append("price", product.price);
-    formData.append("stock", product.stock);
+    formData.append("stock", product.quantity);
     formData.append("description", product.description);
-
     const options = {
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("loginToken")}`

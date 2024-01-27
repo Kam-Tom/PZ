@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import "./AdminPage.css"
 import AddProductForm from "./AddProductForm";
 import AddCategoryForm from "./AddCategoryForm";
@@ -9,7 +10,7 @@ import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
 import { getAll } from "../../axios";
 
-function AdminPage() {
+function AdminPage({ onAddProduct }) {
     const [showList, setShowList] = useState(false);
     const [showAddProductForm, setShowAddProductForm] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
@@ -38,6 +39,7 @@ function AdminPage() {
     };
 
     const showProducts = () => {
+        onAddProduct();
         setShowList(true);
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
@@ -147,5 +149,9 @@ function AdminPage() {
         </div>
     );
 }
+
+AdminPage.propTypes = {
+    onAddProduct: PropTypes.func.isRequired,
+};
 
 export default AdminPage;

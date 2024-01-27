@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAll, deleteElement } from "../../axios";
+import PropTypes from 'prop-types';
 import "./PaymentForm.css";
 
 const PaymentForm = ({ cartTotal }) => {
@@ -108,6 +109,10 @@ const PaymentForm = ({ cartTotal }) => {
             </form>
         </div>
     );
+};
+
+PaymentForm.propTypes = {
+    cartTotal: PropTypes.number,
 };
 
 export default PaymentForm;

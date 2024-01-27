@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import "./ProductFilter.css";
 
 const ProductFilter = ({ categories, onSelectCategory, onFilterDiscounted }) => {
@@ -25,6 +26,12 @@ const ProductFilter = ({ categories, onSelectCategory, onFilterDiscounted }) => 
             ))}
         </div>
     );
+};
+
+ProductFilter.propTypes = {
+    categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onSelectCategory: PropTypes.func.isRequired,
+    onFilterDiscounted: PropTypes.func.isRequired,
 };
 
 export default ProductFilter;

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 import "./AdminMenu.css";
 
 function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionForm, onShowAddShippingMethodForm, onShowProductList, onShowAddCategoryForm, onShowUserList }) {
@@ -29,5 +30,15 @@ function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionFor
         </div>
     );
 }
+
+AdminMenu.propTypes = {
+    onShowProducts: PropTypes.func.isRequired,
+    onShowAddProductForm: PropTypes.func.isRequired,
+    onShowAddPromotionForm: PropTypes.func.isRequired,
+    onShowAddShippingMethodForm: PropTypes.func.isRequired,
+    onShowProductList: PropTypes.func.isRequired,
+    onShowAddCategoryForm: PropTypes.func.isRequired,
+    onShowUserList: PropTypes.func.isRequired,
+};
 
 export default AdminMenu;
