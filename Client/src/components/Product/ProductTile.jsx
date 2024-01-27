@@ -4,7 +4,7 @@ import "./ProductTile.css";
 import { addToCart } from "../../axios"
 import PropTypes from 'prop-types';
 
-const ProductTile = ({ product }) => {
+const ProductTile = ({ product, addToCart }) => {
     const isDiscounted = product.promotionPrice !== null && product.promotionPrice < product.price;
 
     return (
@@ -47,6 +47,7 @@ ProductTile.propTypes = {
         stock: PropTypes.number.isRequired,
         thumbnailUrl: PropTypes.string.isRequired,
     }).isRequired,
+    addToCart: PropTypes.func.isRequired,
 };
 
 export default ProductTile;

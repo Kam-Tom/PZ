@@ -13,11 +13,7 @@ function Navbar({ onSearch }) {
     };
 
     const handleLogoClick = () => {
-        if (window.location.pathname === "/") {
-            window.location.reload();
-        } else {
-            navigate("/");
-        }
+        navigate("/");
     };
 
     return (
