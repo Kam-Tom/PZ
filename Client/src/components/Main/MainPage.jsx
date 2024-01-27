@@ -55,7 +55,7 @@ function MainPage() {
 
     useEffect(() => {
         fetch();
-    }, [products.length]);
+    }, []);
 
     // useContext(() => {
     //     fetch();
