@@ -102,7 +102,18 @@ public class OrderListRepository : IOrderListRepository
     }
     public GetOrderDto GetBasketData(string email)
     {
-        var user = _ctx.Users.Where(u => u.Email == email).Include(u => u.Orders).ThenInclude(o => o.OrderItems).ThenInclude(i => i.Product).ThenInclude(p => p.Images).SingleOrDefault();
+        var user = _ctx.Users
+            .Where(u => u.Email == email)
+            .Include(u => u.Orders)
+                .ThenInclude(o => o.OrderItems)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.Images)
+            .Include(u => u.Orders)
+                .ThenInclude(o => o.OrderItems)
+                    .ThenInclude(i => i.Product)
+                        .ThenInclude(p => p.Promotions)
+            .SingleOrDefault();
+
         var basket = user.Orders.Where(o => o.Status == Order.OrderStatusType.InBasket).SingleOrDefault();
 
         if (basket == null)
@@ -112,7 +123,7 @@ public class OrderListRepository : IOrderListRepository
         {
             OrderId = basket.Id,
             Status = basket.Status.ToString(),
-            Cost = basket.OrderItems.Sum(i => i.Cost),
+            Cost = getProductsPromitonsCost(basket),
             Date = basket.Date,
             Items = basket.OrderItems.Select(i => new OrderItemDto() {
                 Name=i.Product.Name, 
@@ -124,6 +135,20 @@ public class OrderListRepository : IOrderListRepository
 
         };
 
+    }
+    private decimal getProductsPromitonsCost(Order order)
+    {
+        decimal total = 0;
+        foreach (var o in order.OrderItems) 
+        {
+            Promotion? promotion = o.Product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault();
+            if (promotion != null)
+                total += (o.Product.Price * (100 - promotion.Discount) / 100) * o.Quantity;
+            else 
+                total += o.Product.Price * o.Quantity;
+        }
+
+        return total;
     }
     public IEnumerable<GetOrderDto> GetAll(string email)
     {
