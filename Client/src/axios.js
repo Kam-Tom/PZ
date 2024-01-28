@@ -202,10 +202,9 @@ export async function postNewReview(review) {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("loginToken")}`
         },
-        data: data
     };
 
-    await axios.post(`https://localhost:7248/api/Review/${review.productId}`, options)
+    await axios.post(`https://localhost:7248/api/Review/${review.productId}`, data, options)
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }

@@ -32,9 +32,11 @@ const ReviewsProduct = ({  onAddReview }) => {
             rating,
             comment,
             productId: parseInt(id),
+            author: "Me",
+            description: comment
         };
 
-        setReviews(prevReviews => [newReview, ...prevReviews]);
+        setReviews(prevReviews => [...prevReviews, newReview]);
         postNewReview(newReview);
         setIsModalOpen(false);
     };
