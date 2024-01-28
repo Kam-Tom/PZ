@@ -7,6 +7,7 @@ import OrderTile from "./OrderTile";
 const ShoppingCart = ({ cartItems, setCartItems }) => {
     async function fetchFromDatabase() {
         let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
+        console.log("TEST ",items);
         setCartItems(items);
     }
     useEffect(() => {

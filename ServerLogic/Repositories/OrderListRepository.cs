@@ -123,7 +123,8 @@ public class OrderListRepository : IOrderListRepository
         {
             OrderId = basket.Id,
             Status = basket.Status.ToString(),
-            Cost = getProductsPromitonsCost(basket),
+            Cost = getProductsPromitonCost(basket),
+
             Date = basket.Date,
             Items = basket.OrderItems.Select(i => new OrderItemDto() {
                 Name=i.Product.Name, 
@@ -131,12 +132,13 @@ public class OrderListRepository : IOrderListRepository
                 ImageUrl = i.Product.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Id = i.Product.Id,
                 Price = i.Product.Price,
+                PromotionPrice = getProductPromitonCost(i)
             })
 
         };
 
     }
-    private decimal getProductsPromitonsCost(Order order)
+    private decimal getProductsPromitonCost(Order order)
     {
         decimal total = 0;
         foreach (var o in order.OrderItems) 
@@ -147,6 +149,16 @@ public class OrderListRepository : IOrderListRepository
             else 
                 total += o.Product.Price * o.Quantity;
         }
+
+        return total;
+    }
+    private decimal? getProductPromitonCost(OrderItem items)
+    {
+        decimal? total = null;
+
+        Promotion? promotion = items.Product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault();
+        if (promotion != null)
+            total = (items.Product.Price * (100 - promotion.Discount) / 100);
 
         return total;
     }
