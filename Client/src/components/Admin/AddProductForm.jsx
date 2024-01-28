@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import "./AddProductForm.css";
 import { postNewProduct } from "../../axios";
+import ValidationError from "../Main/ValidNotification.jsx";
 
 function AddProductForm({ onAddProduct }) {
     const [categories, setCategories] = useState([]);
@@ -33,21 +34,84 @@ function AddProductForm({ onAddProduct }) {
     });
 
     const [imagePreview, setImagePreview] = useState(null);
+    const [newProductFormDataError, setNewProductFormDataError] = useState({
+        productName: "Invalid product name. Its must be at least 3 characters",
+        category: "Invalid category. Please select one from the list",
+        image: "Invalid image. Please insert one",
+        price: "Invalid price. The price must be a positive number",
+        description: "Invalid description. Its must be at least 3 characters",
+        quantity: "Invalid quantity. The quantity must be a positive number and decimal numbers are not allowed",
+    });
+
+    function validateProductNameAndDescription(productName) {
+        return productName.length >= 3;
+    }
+
+    function validatePrice(price) {
+        const regex = /^\d+(\.\d{1,2})?$/;
+        return regex.test(price) && parseFloat(price) > 0;;
+    }
+
+    function validateQuantity(quantity) {
+        return parseInt(quantity) > 0 && !quantity.includes(".");
+    }
+
 
     const handleAddProductInputChange = (e) => {
         const { name, value, type } = e.target;
-        setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
+        if(name === "productName" || name === "description"){
+            if (!validateProductNameAndDescription(value)) {
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. Its must be at least 3 characters`}));
+            } else {
+                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
+            }
+        }else if(name === "price"){
+            if (!validatePrice(value)) {
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. The ${name} must be a positive number`}));
+            } else {
+                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
+            }
+        }else if(name === "quantity"){
+            if (!validateQuantity(value)) {
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. The ${name} must be a positive number and decimal numbers are not allowed`}));
+            } else {
+                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
+            }
+        }else if(name === "category"){
+            setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
+            setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
+        }else if(name === "image"){
+            if(!e.target.files[0]){
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. Please insert one`}));
+            }else{
+                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
+                console.log(e.target.files[0]);
+                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
+            }
+        }
 
-        if (type === "file") {
+
+            
+
+        if (type === "file" && e.target.files[0]) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
             };
             reader.readAsDataURL(e.target.files[0]);
-        }
+        }else if(type === "file" && !e.target.files[0]){
+            setImagePreview(null);
+        }   
     };
 
     const addNewProduct = () => {
+        if(newProductFormDataError.category || newProductFormDataError.productName || newProductFormDataError.image ||  newProductFormDataError.price || newProductFormDataError.description || newProductFormDataError.quantity){
+        confirm("Invalid product data. Please check the errors and try again");
+    }
+    else{
         postNewProduct(newProductFormData);
         onAddProduct(newProductFormData);
         setNewProductFormData({
@@ -59,13 +123,15 @@ function AddProductForm({ onAddProduct }) {
             quantity: "",
         });
         setImagePreview(null);
+    }
     };
 
     return (
+        <div className="parent-container">
         <div className="form-container product-form">
             <form>
                 <h1>Add New Product</h1>
-                <input type="text" name="productName" placeholder="Product Name" onChange={handleAddProductInputChange} value={newProductFormData.productName} />
+                <input type="text" name="productName" placeholder="Product Name" onChange={handleAddProductInputChange} />
                 <select name="category" onChange={handleAddProductInputChange} value={newProductFormData.category}>
                     <option value="" disabled>Select Category</option>
                     {categories.map((category) => (
@@ -79,11 +145,39 @@ function AddProductForm({ onAddProduct }) {
                         <img src={imagePreview} alt="Product Preview" />
                     </div>
                 )}
-                <input type="number" name="price" placeholder="Price" onChange={handleAddProductInputChange} value={newProductFormData.price} />
-                <textarea name="description" placeholder="Description" onChange={handleAddProductInputChange} value={newProductFormData.description}></textarea>
-                <input type="number" name="quantity" placeholder="Quantity" onChange={handleAddProductInputChange} value={newProductFormData.quantity} />
+                <input type="number" name="price" placeholder="Price" onChange={handleAddProductInputChange}  />
+                <textarea name="description" placeholder="Description" onChange={handleAddProductInputChange} ></textarea>
+                <input type="number" name="quantity" placeholder="Quantity" onChange={handleAddProductInputChange}  />
                 <button type="button" onClick={addNewProduct}>Add Product</button>
             </form>
+        </div>
+        { (newProductFormDataError.category || newProductFormDataError.productName || newProductFormDataError.image ||  newProductFormDataError.price || newProductFormDataError.description || newProductFormDataError.quantity) && (
+                <div className="error-container right">
+                    <table>
+                        <tbody>
+                            <tr>
+                        <td>{newProductFormDataError.productName && <ValidationError message={newProductFormDataError.productName} />}</td>
+                            </tr>
+                            <tr>
+                        <td>{newProductFormDataError.category && <ValidationError message={newProductFormDataError.category} />}</td>
+                            </tr>
+                            <tr>
+                        <td>{newProductFormDataError.image && <ValidationError message={newProductFormDataError.image} />}</td>
+                            </tr>
+                            <tr>
+                        <td>{newProductFormDataError.price && <ValidationError message={newProductFormDataError.price} />}</td>
+                            </tr>
+                            <tr>
+                        <td>{newProductFormDataError.description && <ValidationError message={newProductFormDataError.description} />}</td>
+                            </tr>
+                            <tr>
+                        <td>{newProductFormDataError.quantity && <ValidationError message={newProductFormDataError.quantity} />}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 }
