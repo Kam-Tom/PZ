@@ -36,6 +36,10 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
         setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         if (isCardNumberValid && isExpiryDateValid && isCvcValid && isEmailValid) {
             setNotification(true);
+            setCardNumber("");
+            setExpiryDate("");
+            setCvc("");
+            setEmail("");
         }
         console.log("Form submitted!");
     };
