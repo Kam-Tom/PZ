@@ -91,7 +91,8 @@ public class OrderListRepository : IOrderListRepository
             basket = new Order()
             {
                 User = user,
-                Status = Order.OrderStatusType.InBasket
+                Status = Order.OrderStatusType.InBasket,
+                OrderItems = new List<OrderItem>()
             };
             _ctx.Orders.Add(basket);
             _ctx.SaveChanges();
@@ -144,14 +145,46 @@ public class OrderListRepository : IOrderListRepository
         return orders;
     }
 
-    public void Remove(int productId, Order order)
+    public void Remove(Product product,int amount, Order order)
     {
-        var orderItems = order.OrderItems.Where(o => o.ProductId == productId).FirstOrDefault();
-        if(orderItems != null)
+        var orderItems = order.OrderItems.Where(o => o.ProductId == product.Id).FirstOrDefault();
+        if (orderItems == null)
+            return;
+        if (orderItems.Quantity > amount)
         {
-            order.OrderItems.Remove(orderItems);
-            _ctx.SaveChanges();
+            orderItems.Quantity -= amount;
+            orderItems.Cost -= product.Price * amount;
         }
+        else
+            order.OrderItems.Remove(orderItems);
+
+        _ctx.SaveChanges();
+
+
+    }
+
+    public void Buy(Order basket)
+    {
+        basket.Status = Order.OrderStatusType.Processing;
+
+        foreach (var orderItem in basket.OrderItems)
+        {
+            var product = _ctx.Products.Find(orderItem.ProductId);
+
+            if (product != null)
+            {
+                // Ensure that the product stock is sufficient before deducting
+                if (product.Stock >= orderItem.Quantity)
+                    product.Stock -= orderItem.Quantity;
+                else
+                    throw new InvalidOperationException("Insufficient stock for product: " + product.Name);
+            }
+            else
+                throw new InvalidOperationException("Product not found for ID: " + orderItem.ProductId);
+            
+        }
+
+        _ctx.SaveChanges();
     }
 
 }

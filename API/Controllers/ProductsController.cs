@@ -73,6 +73,7 @@ public class ProductController : ControllerBase
 
         return Ok();
     }
+
     //[HttpGet("{id}")]
     //public ActionResult<IEnumerable<Product>> Get([FromRoute] int id)
     //{

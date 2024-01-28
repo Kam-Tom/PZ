@@ -154,6 +154,14 @@ export async function getAll(url) {
     return results;
 }
 
+export async function buy() {
+    const options = getOptions('POST');
+
+    await axios.post(`https://localhost:7248/api/Shop/Buy`, null, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}
+
 export async function postNewProduct(product) {
     console.log(product)
     let formData = new FormData();

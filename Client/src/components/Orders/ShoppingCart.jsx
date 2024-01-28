@@ -11,15 +11,15 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
     }
     useEffect(() => {
         fetchFromDatabase();
-    }, [cartItems.length]);
+    }, []);
 
     const removeFromCart = async (productId) => {
-        await deleteElement(`https://localhost:7248/api/Shop?productId=${productId}&quantity=1`)
+        await deleteElement(`https://localhost:7248/api/Shop?productId=${productId}&amount=1`)
         fetchFromDatabase();
     };
 
     const removeAllFromCart = async (productId, quantity) => {
-        await deleteElement(`https://localhost:7248/api/Shop?productId=${productId}&quantity=${quantity}`)
+        await deleteElement(`https://localhost:7248/api/Shop?productId=${productId}&amount=${quantity}`)
         fetchFromDatabase();
     };
 
@@ -31,8 +31,8 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
             ) : (
                 <>
                     <ul className="cart-items-list"> 
-                        {cartItems?.items && cartItems.items.map((item) => (
-                            <OrderTile item={item} removeFromCart={removeFromCart} removeAllFromCart={() => removeAllFromCart(item.id, item.quantity)} />
+                        {cartItems?.items && cartItems.items.map((item,key) => (
+                            <OrderTile key={key} item={item} removeFromCart={removeFromCart} removeAllFromCart={() => removeAllFromCart(item.id, item.quantity)} />
                         ))}
                     </ul>
                 </>

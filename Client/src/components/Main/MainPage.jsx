@@ -28,7 +28,6 @@ function MainPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
-    const [a, setA] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: '' });
 
     async function fetch() {
@@ -38,7 +37,7 @@ function MainPage() {
 
     useEffect(() => {
         fetch();
-    }, [products.length]);
+    }, []);
 
     const handleCategorySelect = (category) => {
         setFilteredCategory(category);
@@ -148,7 +147,7 @@ function MainPage() {
                         <ShoppingCart 
                         cartItems={cartItems} setCartItems={setCartItems} 
                         />
-                        <PaymentForm cartTotal={cartItems.cost} />
+                        <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
                     </>
                 }
             />

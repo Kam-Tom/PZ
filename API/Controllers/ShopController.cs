@@ -29,19 +29,30 @@ public class ShopController : ControllerBase
             return BadRequest("User dont exist");
         var product = _productRepo.GetById(productId);
 
+        if (product == null)
+            return BadRequest("Product dont exist");
+
         if (!_orderRepo.Add(product,1,basket))
             return BadRequest("Can't add product");
         return Ok("Product added to basket");
     }
+
     [HttpDelete, Authorize]
-    public ActionResult RemoveFromCart(int productId)
+    public ActionResult RemoveFromCart([FromQuery] int productId,[FromQuery] int amount)
     {
         var email = User?.FindFirstValue(ClaimTypes.Email);
 
         var basket = _orderRepo.GetBasket(email);
         if (basket == null)
             return BadRequest("User dont exist");
-        _orderRepo.Remove(productId, basket);
+
+        Console.WriteLine("PRODUCT ID " + productId);
+
+        var product = _productRepo.GetById(productId);
+        if(product == null)
+            return BadRequest("Product dont exist");
+
+        _orderRepo.Remove(product, amount, basket);
 
         return Ok("Product removed from basket");
     }
@@ -60,5 +71,14 @@ public class ShopController : ControllerBase
         var orders = _orderRepo.GetAll(email);
         
         return Ok(orders);
+    }
+    [HttpPost("Buy"), Authorize]
+    public ActionResult Buy(int money)
+    {
+        var email = User?.FindFirstValue(ClaimTypes.Email);
+        var basket = _orderRepo.GetBasket(email);
+        //TMP: for now we just remove basket
+        _orderRepo.Buy(basket);
+        return Ok("Bought");
     }
 }

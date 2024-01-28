@@ -32,6 +32,6 @@ public class UsersController : ControllerBase
         else
             return BadRequest("User dont exist");
 
-        return Ok("Password reset successful");
+        return Ok("User deleted successful");
     }
 }

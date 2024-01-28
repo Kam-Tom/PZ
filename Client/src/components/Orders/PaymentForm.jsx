@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getAll, deleteElement } from "../../axios";
+import { getAll, buy } from "../../axios";
 import PropTypes from 'prop-types';
 import "./PaymentForm.css";
 
-const PaymentForm = ({ cartTotal }) => {
+const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
     const [paymentMethod, setPaymentMethod] = useState("card");
     const [cardNumber, setCardNumber] = useState("");
     const [expiryDate, setExpiryDate] = useState("");
@@ -24,10 +24,15 @@ const PaymentForm = ({ cartTotal }) => {
         fetch();
     }, [cartTotal]);
 
-    const handleSubmit = (event) => {
+    async function handleSubmit(event)
+    {
         event.preventDefault();
+        await buy();
+        cartTotal = []
+        setProducts(await getAll("https://localhost:7248/Product"));
+        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         console.log("Form submitted!");
-    };
+    }
 
     const handleCardNumberChange = (e) => {
         const formattedCardNumber = e.target.value.replace(/[^0-9]/g, "").slice(0, 16);
