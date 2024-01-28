@@ -68,7 +68,8 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
 }
 
 DataTable.propTypes = {
-    apiEndpoint: PropTypes.string.isRequired,
+    apiGetEndpoint: PropTypes.string.isRequired,
+    apiDeleteEndpoint: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.shape({
         className: PropTypes.string,
         header: PropTypes.string.isRequired,
