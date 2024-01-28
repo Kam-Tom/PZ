@@ -27,8 +27,8 @@ function LoginRegister() {
     const [isPasswordReset, setIsPasswordReset] = useState(false);
     const [nameError, setNameError] = useState(null);
     const [surNameError, setSurNameErorr] = useState(null);
-    const [emailError, setEmailError] = useState(null);
-    const [passwordError, serPasswordError] = useState(null);
+    const [emailError, setEmailError] = useState("Invalid email");
+    const [passwordError, serPasswordError] = useState("Invalid password. Its must be at least 8 characters max 15, at least one uppercase letter, one lowercase letter, one number and one special character");
 
     async function checkCaptcha(captchaRef) {
         const captchaValue = captchaRef.current.getValue();
@@ -98,18 +98,18 @@ function LoginRegister() {
             container.classList.add("active");
             setIsSignUp(true);
             setIsPasswordReset(false);
-            setEmailError(null);
-            serPasswordError(null);
-            setNameError(null);
-            setSurNameErorr(null);
+            setEmailError("Invalid email");
+            serPasswordError("Invalid password. Its must be at least 8 characters max 15, at least one uppercase letter, one lowercase letter, one number and one special character");
+            setNameError("Invalid name. Its must be at least 3 characters");
+            setSurNameErorr("Invalid surname. Its must be at least 3 characters");
         });
 
         loginBtn.addEventListener("click", () => {
             container.classList.remove("active");
             setIsSignUp(false);
             setIsPasswordReset(false);
-            setEmailError(null);
-            serPasswordError(null);
+            setEmailError("Invalid email");
+            serPasswordError("Invalid password. Its must be at least 8 characters max 15, at least one uppercase letter, one lowercase letter, one number and one special character");
             setNameError(null);
             setSurNameErorr(null);
         });
@@ -232,10 +232,10 @@ function LoginRegister() {
                 <div className="form-container sign-up">
                     <form>
                         <h1>Create Account</h1>
-                        <input type="text" name="name" placeholder="Name" onBlur={handleNameBlur} />
-                        <input type="text" name="surname" placeholder="Surname" onBlur={handleSurNameBlur} />
-                        <input type="email" name="email" placeholder="Email" onBlur={handleEmailBlur} />
-                        <input type="password" name="password" placeholder="Password" onBlur={handlePasswordBlur} />
+                        <input type="text" name="name" placeholder="Name" onChange={handleNameBlur} />
+                        <input type="text" name="surname" placeholder="Surname" onChange={handleSurNameBlur} />
+                        <input type="email" name="email" placeholder="Email" onChange={handleEmailBlur} />
+                        <input type="password" name="password" placeholder="Password" onChange={handlePasswordBlur} />
                         <br />
                         <ReCAPTCHA ref={ReCAPTCHA2} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
                         <button onClick={() => checkCaptcha(ReCAPTCHA2)}>Sign Up</button>
@@ -245,8 +245,8 @@ function LoginRegister() {
                 <div className="form-container sign-in">
                     <div className="login-container">
                         <h1>Sign In</h1>
-                        <input type="email" name="email" placeholder="Email" onBlur={handleEmailBlurLogin}/>
-                        <input type="password" name="password" placeholder="Password" onBlur={handlePasswordBlurLogin} />
+                        <input type="email" name="email" placeholder="Email" onChange={handleEmailBlurLogin}/>
+                        <input type="password" name="password" placeholder="Password" onChange={handlePasswordBlurLogin} />
                         <br />
                         <ReCAPTCHA ref={ReCAPTCHA1} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
                         <a href="#" onClick={handlePasswordReset}>Forget Your Password?</a>
