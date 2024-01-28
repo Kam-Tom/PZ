@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import "./Navbar.css";
 import AppNotification from "./AppNotification";
 import "./AppNotification.css";
+import { getRole } from "../../axios";
 
 function Navbar({ onSearch, notification, setNotification }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -35,9 +36,9 @@ function Navbar({ onSearch, notification, setNotification }) {
                 <Link to="/account">
                     <ion-icon name="person-outline"></ion-icon>
                 </Link>
-                <Link to="/admin">
+                {getRole() == "Admin" && <Link to="/admin">
                     <ion-icon name="construct-outline"></ion-icon>
-                </Link>
+                </Link>}
                 <Link to="/order">
                     <ion-icon name="cart-outline"></ion-icon>
                 </Link>

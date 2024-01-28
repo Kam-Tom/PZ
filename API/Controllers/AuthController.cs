@@ -70,7 +70,7 @@ public class AuthController : ControllerBase
 
         _repo.UpdateRefreshToken(user, refreshToken);
 
-        return Ok(token);
+        return Ok(new {token, role});
     }
 
     [HttpPost("verifyEmail")]

@@ -119,12 +119,18 @@ export async function postLogin(user) {
 
     await axios("https://localhost:7248/Auth/login", options)
         .then(response => {
-            localStorage.setItem("loginToken", response.data);
+            localStorage.setItem("loginToken", response.data.token);
+            let role = response.data.role == 1 ? "Admin" : "User";
+            localStorage.setItem("role", role);
             console.log(localStorage.getItem("loginToken"));
         })
         .catch(error => localStorage.setItem("loginToken", 'wrong'));
 
     console.log(localStorage.getItem("loginToken"))
+}
+
+export function getRole() {
+    return localStorage.getItem("role");
 }
 
 export async function deleteElement(url) {
