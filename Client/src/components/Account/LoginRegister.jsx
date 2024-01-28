@@ -270,25 +270,25 @@ function LoginRegister() {
                 </div>
         </div>
         {((isSignUp && (nameError || surNameError || emailError || passwordError)) ||
-(!isSignUp && (emailError || passwordError))) && (
-    isSignUp ? (
-        <div className="error-container right">
-            <table>
-                {nameError && <tr><td><ValidationError message={nameError} /></td></tr>}
-                {surNameError && <tr><td><ValidationError message={surNameError} /></td></tr>}
-                {emailError && <tr><td><ValidationError message={emailError} /></td></tr>}
-                {passwordError && <tr><td><ValidationError message={passwordError} /></td></tr>}
-            </table>
-        </div>
-    ) : (
-        <div className="error-container left">
-            <table>
-                {emailError && <tr><td><ValidationError message={emailError} /></td></tr>}
-                {passwordError && <tr><td><ValidationError message={passwordError} /></td></tr>}
-            </table>
-        </div>
-    )
-)}  
+        (!isSignUp && (emailError || passwordError))) && (
+            isSignUp ? (
+                <div className="error-container right">
+                    <table>
+                        {nameError && <tr><td><ValidationError message={nameError} /></td></tr>}
+                        {surNameError && <tr><td><ValidationError message={surNameError} /></td></tr>}
+                        {emailError && <tr><td><ValidationError message={emailError} /></td></tr>}
+                        {passwordError && <tr><td><ValidationError message={passwordError} /></td></tr>}
+                    </table>
+                </div>
+            ) : (
+                <div className="error-container left">
+                    <table>
+                        {emailError && <tr><td><ValidationError message={emailError} /></td></tr>}
+                        {passwordError && <tr><td><ValidationError message={passwordError} /></td></tr>}
+                    </table>
+                </div>
+            )
+        )}  
         </div>
     );
 }
