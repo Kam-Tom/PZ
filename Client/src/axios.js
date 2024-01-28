@@ -122,7 +122,7 @@ export async function postLogin(user) {
             localStorage.setItem("loginToken", response.data);
             console.log(localStorage.getItem("loginToken"));
         })
-        .catch(error => console.log('error', error));
+        .catch(error => localStorage.setItem("loginToken", 'wrong'));
 
     console.log(localStorage.getItem("loginToken"))
 }
