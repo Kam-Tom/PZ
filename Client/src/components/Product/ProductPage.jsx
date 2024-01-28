@@ -3,12 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./ProductPage.css";
 import { getAll, addToCart } from "../../axios";
 import PropTypes from 'prop-types';
+import AppNotification from "../Main/AppNotification";
 
 const ProductPage = ({ products } ) => {
     const { id } = useParams();
     const navigate = useNavigate();
 
     const [product, setProduct] = useState(null);
+    const [notification, setNotification] = useState(false);
+
     useEffect(() => {
         async function fetchFromDatabase() {
         setProduct(await getAll(`https://localhost:7248/Product/${parseInt(id)}`));
@@ -23,6 +26,11 @@ const ProductPage = ({ products } ) => {
 
     const { name, price, stock, imageUrls, description, category } = product;
     const isDiscounted = product.promotionPrice !== null && product.promotionPrice < price;
+
+    const handleAddToCart = async () => {
+        await addToCart(parseInt(id));
+        setNotification(true);
+    };
 
     return (
         
@@ -44,10 +52,11 @@ const ProductPage = ({ products } ) => {
                 <p className="product-detail-stock">Stock: {stock}</p>
                 <p className="product-detail-category">Category: {category}</p>
                 {stock > 0 ? (
-                    <button className="add-to-cart-btn" onClick={() => addToCart(parseInt(id))}>Add to cart</button>
+                    <button className="add-to-cart-btn" onClick={handleAddToCart}>Add to cart</button>
                 ) : (
                     <button className="out-of-stock-btn" disabled>Out of stock</button>
                 )}
+                {notification && <AppNotification message="Product added to cart" onClose={() => setNotification(false)} />}
                 <div className="product-detail-description">{description}</div>
             </div>
         </div>
