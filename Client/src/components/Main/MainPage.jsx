@@ -61,7 +61,7 @@ function MainPage() {
     const handleAddToCart = (productId) => {
         addToCart(productId)
             .then(() => {
-                setNotification({ show: true, message: 'Product added to cart successfully!' });
+                setNotification({ show: true, message: 'Product added to cart' });
             })
             .catch((error) => {
             });

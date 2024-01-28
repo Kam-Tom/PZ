@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import "./AddPromotionForm.css";
 import { postNewPromotion } from "../../axios.js";
+import ValidationError from "../Main/ValidNotification.jsx";
 
 function AddPromotionForm({ onAddPromotion, onClose }) {
     const [productName, setProductName] = useState("");
     const [productId, setProductId] = useState();
     const [discountAmount, setDiscountAmount] = useState("");
+    const [discountAmountError, setdiscountAmountError] = useState('Invalid discount. Its must be between 1 to 100');
+    const [productNameError, setProductNameError] = useState('Invalid product name. Its must be selected from the list');
 
     const [products, setProducts] = useState([]);
 
@@ -28,6 +31,11 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
     };
 
     const handleProductNameChange = (e) => {
+        if (!e.target.value) {
+            setProductNameError('Invalid product name. Its must be selected from the list');
+        } else {
+            setProductNameError(null);
+        }
         setProductName(e.target.value);
         let id = 0;
 
@@ -39,20 +47,36 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
     };
 
     const handleDiscountAmountChange = (e) => {
-        setDiscountAmount(e.target.value);
+        if (!validateDiscountAmount(e.target.value)) {
+            setdiscountAmountError('Invalid discount. Its must be between 1 to 100');
+        } else {
+            setdiscountAmountError(null);
+            setDiscountAmount(e.target.value);
+        }
+        
+
     };
 
     const handleSubmit = (e) => {
         console.log(productId);
         e.preventDefault();
-        postNewPromotion(productName, discountAmount, productId);
-        onAddPromotion(productName, discountAmount, productId);
-        setProductName("");
-        setDiscountAmount("");
-        onClose();
+        if(discountAmountError || productNameError){
+            alert("Invalid discount or product name");
+        }else{
+            postNewPromotion(productName, discountAmount, productId);
+            onAddPromotion(productName, discountAmount, productId);
+            setProductName("");
+            setDiscountAmount("");
+            onClose();
+        }
     };
 
+    function validateDiscountAmount(discountAmount) {
+        return discountAmount >= 1 && discountAmount <= 100;
+    }
+
     return (
+        <div className="parent-container">
         <div className="form-container promotion-form">
             <h1>Add Promotion</h1>
             <form onSubmit={handleSubmit}>
@@ -69,11 +93,27 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
                 </label>
                 <label>
                     Discount %:
-                    <input type="number" value={discountAmount} onChange={handleDiscountAmountChange} required />
+                    <input type="number"  onChange={handleDiscountAmountChange} required />
                 </label>
                 <br />
                 <button type="submit">Add</button>
             </form>
+        </div>
+        { (discountAmountError || productNameError) && (
+                <div className="error-container right">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>{productNameError && <ValidationError message={productNameError} />}</td>
+                            </tr>
+                            <tr>
+                                <td>{discountAmountError && <ValidationError message={discountAmountError} />}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 }

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getAll, buy } from "../../axios";
 import PropTypes from 'prop-types';
 import "./PaymentForm.css";
+import "../Main/AppNotification.css";
+import AppNotification from "../Main/AppNotification";
 
 const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
     const [paymentMethod, setPaymentMethod] = useState("card");
@@ -13,6 +15,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
     const [isCardNumberValid, setIsCardNumberValid] = useState(false);
     const [isCvcValid, setIsCvcValid] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(false);
+    const [notification, setNotification] = useState(false);
 
     const [cost, setCost] = useState(0);
     async function fetch() {
@@ -31,8 +34,15 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
         cartTotal = []
         setProducts(await getAll("https://localhost:7248/Product"));
         setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
+        if (isCardNumberValid && isExpiryDateValid && isCvcValid && isEmailValid) {
+            setNotification(true);
+            setCardNumber("");
+            setExpiryDate("");
+            setCvc("");
+            setEmail("");
+        }
         console.log("Form submitted!");
-    }
+    };
 
     const handleCardNumberChange = (e) => {
         const formattedCardNumber = e.target.value.replace(/[^0-9]/g, "").slice(0, 16);
@@ -82,36 +92,69 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
                     <div className="card-payment-form">
                         <label>
                             Card Number:
-                            <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Enter your card number" value={cardNumber} onChange={handleCardNumberChange} required />
+                            <input 
+                                type="text" 
+                                inputMode="numeric" 
+                                pattern="[0-9]*" 
+                                placeholder="Enter your card number" 
+                                value={cardNumber} 
+                                onChange={handleCardNumberChange} 
+                                className={!cardNumber || !isCardNumberValid ? 'invalid' : 'valid'} 
+                                required 
+                            />
                             {cardNumber && !isCardNumberValid && (
                                 <div className="error-message">Invalid card number</div>
                             )}
                         </label>
                         <label>
                             Expiry Date:
-                            <input type="text" pattern="[0-9/]*" placeholder="MM/YY" value={expiryDate} onChange={handleExpiryDateChange} required />
+                            <input 
+                                type="text" 
+                                pattern="[0-9/]*" 
+                                placeholder="MM/YY" 
+                                value={expiryDate} 
+                                onChange={handleExpiryDateChange} 
+                                className={!expiryDate || !isExpiryDateValid ? 'invalid' : 'valid'} 
+                                required 
+                            />
                             {expiryDate && !isExpiryDateValid && (
                                 <div className="error-message">Invalid expiration date</div>
                             )}
                         </label>
                         <label>
                             CVC:
-                            <input type="text" pattern="[0-9]*" placeholder="CVC" value={cvc} onChange={handleCvcChange} required />
+                            <input 
+                                type="text" 
+                                pattern="[0-9]*" 
+                                placeholder="CVC" 
+                                value={cvc} 
+                                onChange={handleCvcChange} 
+                                className={!cvc || !isCvcValid ? 'invalid' : 'valid'} 
+                                required 
+                            />
                             {cvc && !isCvcValid && (
                                 <div className="error-message">Invalid CVC</div>
                             )}
                         </label>
                         <label>
                             Email:
-                            <input type="email" placeholder="Enter your email" value={email} onChange={handleEmailChange} required />
+                            <input 
+                                type="email" 
+                                placeholder="Enter your email" 
+                                value={email} 
+                                onChange={handleEmailChange} 
+                                className={!email || !isEmailValid ? 'invalid' : 'valid'} 
+                                required 
+                            />
                             {email && !isEmailValid && (
                                 <div className="error-message">Invalid email</div>
                             )}
                         </label>
-                        <button type="submit" style={{ backgroundColor: "#e67e22" }}>Pay: {cartTotal} zł</button>
+                        <button type="submit">Pay: {cartTotal} zł</button>
                     </div>
                 )}
             </form>
+            {notification && <AppNotification message="Purchase successful!" onClose={() => setNotification(false)} />}
         </div>
     );
 };
