@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import "./Navbar.css";
+import AppNotification from "./AppNotification";
+import "./AppNotification.css";
 
-function Navbar({ onSearch }) {
+function Navbar({ onSearch, notification, setNotification }) {
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
@@ -39,6 +41,12 @@ function Navbar({ onSearch }) {
                 <Link to="/order">
                     <ion-icon name="cart-outline"></ion-icon>
                 </Link>
+                {notification.show && 
+                    <AppNotification 
+                        message={notification.message} 
+                        onClose={() => setNotification({ show: false, message: '' })} 
+                    />
+                }
             </nav>
         </header>
     );
@@ -46,6 +54,11 @@ function Navbar({ onSearch }) {
 
 Navbar.propTypes = {
     onSearch: PropTypes.func,
+    notification: PropTypes.shape({
+        show: PropTypes.bool,
+        message: PropTypes.string,
+    }),
+    setNotification: PropTypes.func,
 };
 
 export default Navbar;

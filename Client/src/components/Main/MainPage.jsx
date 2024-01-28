@@ -12,8 +12,6 @@ import ShoppingCart from "../Orders/ShoppingCart";
 import PaymentForm from "../Orders/PaymentForm";
 import { getAll, addToCart } from "../../axios";
 import ReviewsProduct from "../Product/ReviewsProduct";
-import AppNotification from "../Main/AppNotification";
-import './AppNotification.css';
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -80,7 +78,11 @@ function MainPage() {
                 path="/"
                 element={
                     <>
-                        <Navbar onSearch={handleSearch} />
+                        <Navbar 
+                        onSearch={handleSearch} 
+                        notification={notification} 
+                        setNotification={setNotification} 
+                        />
                         <div className="filter-and-product-container">
                             <ProductFilter
                                 categories={categories}
@@ -89,7 +91,6 @@ function MainPage() {
                             />
                         </div>
                         <div className="product-list-container">
-                            {notification.show && <AppNotification message={notification.message} onClose={() => setNotification({ show: false, message: '' })} />}
                             {productRows.map((row, rowIndex) => (
                                 <div key={rowIndex} className="product-list-row">
                                     {row.map((product) => (
@@ -106,7 +107,11 @@ function MainPage() {
                 path="/product/:id"
                 element={
                     <>
-                        <Navbar />
+                        <Navbar 
+                        onSearch={handleSearch} 
+                        notification={notification} 
+                        setNotification={setNotification} 
+                        />
                         <ProductPage products={products} />
                         <ReviewsProduct onAddReview={handleAddReview} />
                     </>
@@ -135,7 +140,11 @@ function MainPage() {
                 path="/order"
                 element={
                     <>
-                        <Navbar />
+                        <Navbar 
+                        onSearch={handleSearch} 
+                        notification={notification} 
+                        setNotification={setNotification} 
+                        />
                         <ShoppingCart 
                         cartItems={cartItems} setCartItems={setCartItems} 
                         />
