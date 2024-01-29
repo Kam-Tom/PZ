@@ -61,4 +61,12 @@ public class ReviewRepository : IReviewRepository
         _ctx.SaveChanges();
         return true;
     }
+    public bool Remove(int reviewId)
+    {
+        var review = _ctx.Reviews.Where(r => r.Id == reviewId).SingleOrDefault();
+
+        _ctx.Reviews.Remove(review);
+        _ctx.SaveChanges();
+        return true;
+    }
 }

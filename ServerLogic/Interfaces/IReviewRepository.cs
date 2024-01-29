@@ -12,4 +12,5 @@ public interface IReviewRepository
     void Add(int productId, User user, AddReviewDto request);
     IEnumerable<GetReviewDto> Get(int productId);
     bool Remove(int reviewId,User user);
+    bool Remove(int reviewId);
 }

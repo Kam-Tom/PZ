@@ -53,4 +53,13 @@ public class ReviewController : ControllerBase
         else
             return Ok("Review removed");
     }
+    [HttpDelete("Admin/{reviewId}"), Authorize(Roles = "Admin")]
+    public ActionResult AdminRemove([FromRoute] int reviewId)
+    {
+
+        if (!_repo.Remove(reviewId))
+            return BadRequest("Review dont exist");
+        else
+            return Ok("Review removed");
+    }
 }
