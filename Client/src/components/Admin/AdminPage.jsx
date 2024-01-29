@@ -8,6 +8,7 @@ import AddShippingMethodForm from "./AddShippingMethodForm";
 import ProductList from "./ProductList";
 import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
+import ReviewList from "./ReviewList";
 import { getAll } from "../../axios";
 
 function AdminPage({ onAddProduct }) {
@@ -18,6 +19,7 @@ function AdminPage({ onAddProduct }) {
     const [showAddShippingMethodForm, setShowAddShippingMethodForm] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showReviewList, setShowReviewList] = useState(false);
     // const [products, setProducts] = useState(null);
     // const [users, setUsers] = useState(null);
 
@@ -44,6 +46,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowReviewList(false);
         setShowAddPromotionForm(false);
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
@@ -54,6 +57,7 @@ function AdminPage({ onAddProduct }) {
         setShowList(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowReviewList(false);
         setShowAddPromotionForm(false);
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
@@ -64,6 +68,7 @@ function AdminPage({ onAddProduct }) {
         setShowList(false);
         setShowAddProductForm(false);
         setShowUserList(false);
+        setShowReviewList(false);
         setShowAddPromotionForm(false);
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
@@ -75,6 +80,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowReviewList(false);
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
     };
@@ -85,6 +91,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
         setShowUserList(false);
+        setShowReviewList(false);
         setShowAddPromotionForm(false);
         setSelectedProduct(null);
     };
@@ -92,9 +99,21 @@ function AdminPage({ onAddProduct }) {
     const showUserListFn = async () => {
         // setUsers(await getAll("https://localhost:7248/api/Users/Get"));
         setShowUserList(true);
+        setShowReviewList(false);
         setShowList(false);
         setShowAddProductForm(false);
         setShowAddCategoryForm(false);
+        setShowAddPromotionForm(false);
+        setShowAddShippingMethodForm(false);
+        setSelectedProduct(null);
+    };
+
+    const showReviewListFn = () => {
+        setShowReviewList(true);
+        setShowList(false);
+        setShowAddProductForm(false);
+        setShowAddCategoryForm(false);
+        setShowUserList(false);
         setShowAddPromotionForm(false);
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
@@ -131,6 +150,7 @@ function AdminPage({ onAddProduct }) {
                 onShowAddPromotionForm={showAddPromotionFormFn}
                 onShowAddShippingMethodForm={showAddShippingMethodFormFn}
                 onShowUserList={showUserListFn}
+                onShowReviewList={showReviewListFn}
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
@@ -146,6 +166,7 @@ function AdminPage({ onAddProduct }) {
             {showUserList && <UserList 
                 //users={users} 
             />}
+            {showReviewList && <ReviewList />}
         </div>
     );
 }

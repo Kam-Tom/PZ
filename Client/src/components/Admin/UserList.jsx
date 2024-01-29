@@ -2,17 +2,19 @@ import DataTable from './DataTable';
 import './DataTable.css';
 
 function UserList() {
-    const renderUserDetails = (data, onDelete) => (
-        <div className="user-details">
-            <div className="user-info">
-                <p>Username: {data.username}</p>
-                <p>Email: {data.email}</p>
+    const renderUserDetails = (data, onDelete) => {
+        return (
+            <div className="user-details">
+                <div className="user-info">
+                    <p>Username: {data.username}</p>
+                    <p>Email: {data.email}</p>
+                </div>
+                <div>
+                    <button className="delete-button" onClick={() => onDelete(data.id)}>Delete</button>
+                </div>
             </div>
-            <div>
-                <button onClick={() => onDelete(data.id)}>Delete</button>
-            </div>
-        </div>
-    );
+        );
+    };
 
     return (
         <DataTable 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import "./AdminMenu.css";
 
-function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionForm, onShowAddShippingMethodForm, onShowProductList, onShowAddCategoryForm, onShowUserList }) {
+function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionForm, onShowAddShippingMethodForm, onShowProductList, onShowAddCategoryForm, onShowUserList, onShowReviewList }) {
     return (
         <div className="admin-menu">
             <Link to="/" className="menu-item" onClick={onShowProducts}>
@@ -27,6 +27,9 @@ function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionFor
             <Link to="/admin" className="menu-item" onClick={onShowUserList}>
                 <ion-icon name="person-outline"></ion-icon>
             </Link>
+            <Link to="/admin" className="menu-item" onClick={onShowReviewList}>
+                <ion-icon name="book-outline"></ion-icon>
+            </Link>
         </div>
     );
 }
@@ -39,6 +42,7 @@ AdminMenu.propTypes = {
     onShowProductList: PropTypes.func.isRequired,
     onShowAddCategoryForm: PropTypes.func.isRequired,
     onShowUserList: PropTypes.func.isRequired,
+    onShowReviewList: PropTypes.func.isRequired
 };
 
 export default AdminMenu;
