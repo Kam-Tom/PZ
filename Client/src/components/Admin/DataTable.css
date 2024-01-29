@@ -109,3 +109,37 @@
 .data-details .data-info div button.delete-button:hover {
     background-color: #c0392b;
 }
+
+.review-details {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.review-details thead {
+    background-color: #E67E22;
+}
+
+.review-details td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    word-wrap: break-word;
+    max-width: 200px;
+    text-align: center;
+}
+
+.delete-button {
+    background-color: #f44336; /* Red */
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    opacity: 0.8;
+}

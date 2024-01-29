@@ -37,18 +37,28 @@ function ProductReviews({ produtId }) {
     }, []); 
     return (
         <>
-            {reviews.map((review) => (
-                <div className="review-details" key={review.id}>
-                    <div className="review-info">
-                        <p>Email: {review.author}</p>
-                        <p>Rating: {review.rating}</p>
-                        <p>Comment: {review.description}</p>
-                    </div>
-                    <div>
-                        <button className="delete-button" onClick={() => deleteReview(review)}>Delete</button>
-                    </div>
-                </div>
-            ))}
+            <table className="review-details">
+            <thead>
+                <tr>
+                    <td>Author</td>
+                    <td>Rating</td>
+                    <td>Comment</td>
+                </tr>
+            </thead>
+            <tbody>
+                {reviews.map((review, index) => (
+                    <React.Fragment key={index}>
+                        <tr className="data-list-item">
+                            <td>{review.author}</td>
+                            <td>{review.rating}</td>
+                            <td>{review.description}</td>
+                            <td><button className="delete-button" onClick={() => deleteReview(review)}>Delete</button></td>
+                        </tr>
+                    </React.Fragment>
+                ))}
+            </tbody>
+            </table>
+            
         </>
     );
 }
