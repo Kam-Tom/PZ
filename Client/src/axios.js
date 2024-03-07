@@ -214,3 +214,20 @@ export async function postNewReview(review) {
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }
+
+
+export async function postResetPassword(email){
+
+    console.log("Axios to jets : " + email);
+
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    };
+
+    await axios.post(`https://localhost:7248/Auth/forgotPassword`, email, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}

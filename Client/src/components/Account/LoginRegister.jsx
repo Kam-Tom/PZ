@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css"
 import ReCAPTCHA from "react-google-recaptcha";
-import { postNewUser, postLogin } from "../../axios.js"
+import { postNewUser, postLogin, postResetPassword } from "../../axios.js"
 import ValidationError from "../Main/ValidNotification.jsx";
 
 function LoginRegister() {
@@ -10,6 +10,10 @@ function LoginRegister() {
     const ReCAPTCHA2 = useRef();
     const ReCAPTCHA3 = useRef();
     const navigate = useNavigate();
+
+    const [resetFormData, setResetFormData] = useState({
+        email:"",
+    });
 
     const [loginFormData, setLoginFormData] = useState({
         email: "",
@@ -39,37 +43,52 @@ function LoginRegister() {
         } else {
             // make form submission
             console.log("weszlo");
-            if(captchaRef == ReCAPTCHA1) {
-                if(!loginFormData.email || !loginFormData.password) {
+            if (captchaRef == ReCAPTCHA1) {
+                if (!loginFormData.email || !loginFormData.password) {
                     confirm("Fill all fields");
                     event.preventDefault();
                 }
-                else{
-                console.log("Dane do logowania", loginFormData);
-                await postLogin(loginFormData);
-                const loginToken = localStorage.getItem("loginToken");      
-                if (loginToken != 'wrong') {
-                    alert("Form submission successful!");
-                    navigate("/");
-                }                
                 else {
-                    confirm("Wrong email or password!");
-                    event.preventDefault();
-                }
+                    console.log("Dane do logowania", loginFormData);
+                    await postLogin(loginFormData);
+                    const loginToken = localStorage.getItem("loginToken");
+                    if (loginToken != 'wrong') {
+                        alert("Form submission successful!");
+                        navigate("/");
+                    }
+                    else {
+                        confirm("Wrong email or password!");
+                        event.preventDefault();
+                    }
                 }
             }
-            else if(captchaRef == ReCAPTCHA2) {
-                if(!signupFormData.name || !signupFormData.surname || !signupFormData.email || !signupFormData.password) {
+            else if (captchaRef == ReCAPTCHA2) {
+                if (!signupFormData.name || !signupFormData.surname || !signupFormData.email || !signupFormData.password) {
                     confirm("Fill all fields");
                     event.preventDefault();
                 }
-                else{
-                console.log("Dane do rejestracji", signupFormData);
-                alert("Form submission successful!");
-                await postNewUser(signupFormData);
+                else {
+                    console.log("Dane do rejestracji", signupFormData);
+                    alert("Form submission successful!");
+                    await postNewUser(signupFormData);
                 }
             }
         }
+    }
+
+    async function resetPassword(captchaRef) {
+        event.preventDefault();
+        const captchaValue = captchaRef.current.getValue();
+        if (captchaValue && resetFormData.email != undefined) {
+            //console.log("TO JE EMAAAAAAAILLL" + resetFormData.email.toString());
+            await postResetPassword(resetFormData.email);
+
+            
+        }
+        else {
+            confirm("Wrong captcha or invalid data!");
+        }
+
     }
     //obsluga przyciskow
     //przy sign in
@@ -198,6 +217,16 @@ function LoginRegister() {
         }
     };
 
+    const handleEmailBlurReset = (e) => {
+        if (!validateEmail(e.target.value)) {
+            setEmailError('Invalid email');
+        } else {
+            const { name, value } = e.target;
+            setResetFormData((prevData) => ({ ...prevData, [name]: value }));
+            setEmailError(null);
+        }
+    };
+
     const handlePasswordBlurLogin = (e) => {
         if (!validatePassword(e.target.value)) {
             serPasswordError('Invalid password its must be at least 8 characters max 15, at least one uppercase letter, one lowercase letter, one number and one special character');
@@ -220,12 +249,12 @@ function LoginRegister() {
             {isPasswordReset ? (
                 <div className="form-container password-reset">
                     <form>
-                        <h1>Reset Password</h1>
-                        <input type="email" placeholder="Email" />
+                            <h1>Reset Password</h1>
+                            <input type="email" name="email" placeholder="Email" onChange={handleEmailBlurReset} />
                         <br />
                         <ReCAPTCHA ref={ReCAPTCHA3} sitekey="6Lf7OCQpAAAAAJTm_KnO8VH5y-9p2wXztc1gSKkR" />
-                        <a href="#" onClick={handleBackToLogin}>Back to Login</a>
-                        <button onClick={() => checkCaptcha(ReCAPTCHA3)}>Send Code</button>
+                            {/*<a href="#" onClick={handleBackToLogin}>Back to Login</a>*/}
+                            <button onClick={() => resetPassword(ReCAPTCHA3)}>Send Code</button>
                     </form>
                 </div>
             ) : isSignUp ? (

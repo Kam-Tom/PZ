@@ -139,7 +139,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("forgotPassword")]
-    public ActionResult ForgotPassword(string email)
+    public ActionResult ForgotPassword([FromBody]string email)
     {
         User? user = _repo.GetByEmail(email);
         if (user == null)
@@ -147,8 +147,8 @@ public class AuthController : ControllerBase
 
         var resetPasswordToken = _jwtService.GenerateSimpleToken(TimeSpan.FromHours(1));
 
+        Console.WriteLine("---------------AuthDZIALAALSLALSLA-------------");
         _repo.GenerateResetPassword(user, resetPasswordToken);
-
         return Ok("Password reset email sent successfully");
     }
 
