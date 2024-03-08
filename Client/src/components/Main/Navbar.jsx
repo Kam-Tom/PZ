@@ -19,6 +19,11 @@ function Navbar({ onSearch, notification, setNotification }) {
         navigate("/");
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("loginToken");
+        localStorage.removeItem("role");
+    };
+
     return (
         <header className="header">
             <Link to="/" className="logo" onClick={handleLogoClick}>
@@ -33,9 +38,15 @@ function Navbar({ onSearch, notification, setNotification }) {
                 />
             </div>
             <nav className="navbar">
-                <Link to="/account">
-                    <ion-icon name="person-outline"></ion-icon>
-                </Link>
+                {getRole() ? 
+                    <Link to="/profile">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </Link>
+                    :
+                    <Link to="/account">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </Link>
+                }
                 {getRole() == "Admin" && <Link to="/admin">
                     <ion-icon name="construct-outline"></ion-icon>
                 </Link>}
@@ -47,6 +58,11 @@ function Navbar({ onSearch, notification, setNotification }) {
                         message={notification.message} 
                         onClose={() => setNotification({ show: false, message: '' })} 
                     />
+                }
+                {getRole() &&
+                    <Link to="/" onClick={handleLogout}>
+                            <ion-icon name="log-out-outline"></ion-icon>
+                    </Link>
                 }
             </nav>
         </header>

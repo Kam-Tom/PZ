@@ -12,6 +12,8 @@ import ShoppingCart from "../Orders/ShoppingCart";
 import PaymentForm from "../Orders/PaymentForm";
 import { getAll, addToCart } from "../../axios";
 import ReviewsProduct from "../Product/ReviewsProduct";
+import OrderList from "../Account/OrderList";
+import ProfilePage from "../Account/ProfilePage";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -148,6 +150,15 @@ function MainPage() {
                         cartItems={cartItems} setCartItems={setCartItems} 
                         />
                         <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
+                    </>
+                }
+            />
+
+            <Route
+                path="/profile"
+                element={
+                    <>
+                        <ProfilePage />
                     </>
                 }
             />
