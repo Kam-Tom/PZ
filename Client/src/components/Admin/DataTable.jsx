@@ -47,7 +47,7 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
                                 <tr className={`data-list-item ${selectedData === dataItem ? "active" : ""}`} onClick={() => onSelectData(dataItem)}>
                                     {columns.map((column, index) => (
                                         <td key={index} className={column.className}>
-                                            {dataItem[column.field]}
+                                            {column.format ? column.format(dataItem[column.field]) : dataItem[column.field]}
                                         </td>
                                     ))}
                                 </tr>
@@ -74,6 +74,7 @@ DataTable.propTypes = {
         className: PropTypes.string,
         header: PropTypes.string.isRequired,
         field: PropTypes.string.isRequired,
+        format: PropTypes.func,
     })).isRequired,
     renderDetails: PropTypes.func.isRequired,
 };

@@ -4,6 +4,10 @@ import './OrderList.css';
 
 function OrderList() {
 
+    const addLeadingZeros = (num) => {
+        return num < 10 ? `0${num}` : num;
+    };
+
     const renderOrderDetails = (data, onDelete) => {
         return (
             <div className="product-details">
@@ -29,7 +33,10 @@ function OrderList() {
                 { header: 'OrderId', field: 'orderId', className: 'OrderId' },
                 { header: 'Cost', field: 'cost', className: 'Cost' },
                 { header: 'Status', field: 'status', className: 'Status' },
-                { header: 'Date', field: 'date', className: 'Date' }
+                { header: 'Date', field: 'date', className: 'Date', format: (date) => {
+                    const d = new Date(date);
+                    return `${d.getFullYear()}-${addLeadingZeros(d.getMonth() + 1)}-${addLeadingZeros(d.getDate())} ${addLeadingZeros(d.getHours())}:${addLeadingZeros(d.getMinutes())}:${addLeadingZeros(d.getSeconds())}`;
+                }},
             ]}
             renderDetails={renderOrderDetails}
         />
