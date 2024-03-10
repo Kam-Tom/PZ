@@ -64,6 +64,7 @@ public class ShopController : ControllerBase
 
         return Ok(basket);
     }
+    
     [HttpGet("GetAll"), Authorize]
     public ActionResult GetOrders()
     {
@@ -80,5 +81,13 @@ public class ShopController : ControllerBase
         //TMP: for now we just remove basket
         _orderRepo.Buy(basket);
         return Ok("Bought");
+    }
+
+    [HttpPut("Cancel"), Authorize]
+    public ActionResult Cancel(int id)
+    {
+        var basket = _orderRepo.GetOrder(id);
+        _orderRepo.Cancel(basket);
+        return Ok("Canceled");
     }
 }

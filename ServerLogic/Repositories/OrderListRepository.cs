@@ -100,6 +100,13 @@ public class OrderListRepository : IOrderListRepository
 
         return basket;
     }
+
+    public Order? GetOrder(int id)
+    {
+        var order = _ctx.Orders.Where(o => o.Id == id).Include(o => o.OrderItems).ThenInclude(i => i.Product).SingleOrDefault();
+        return order;
+    }
+
     public GetOrderDto GetBasketData(string email)
     {
         var user = _ctx.Users
@@ -175,7 +182,7 @@ public class OrderListRepository : IOrderListRepository
                 Date = o.Date,
                 Cost = o.OrderItems.Sum(i => i.Cost),
                 Status = o.Status.ToString(),
-                Items = o.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity })
+                Items = o.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity, Price = i.Product.Price })
             };
         });
         
@@ -221,6 +228,12 @@ public class OrderListRepository : IOrderListRepository
             
         }
 
+        _ctx.SaveChanges();
+    }
+
+    public void Cancel(Order order)
+    {
+        order.Status = Order.OrderStatusType.Canceled;
         _ctx.SaveChanges();
     }
 

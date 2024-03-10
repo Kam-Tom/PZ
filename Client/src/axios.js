@@ -168,6 +168,21 @@ export async function buy() {
         .catch(error => console.log('error', error));
 }
 
+export async function cancel(id) {
+    const options = getOptions('PUT');
+
+    let response;
+
+    try {
+        response = await axios.put(`https://localhost:7248/api/Shop/Cancel?id=${id}`, null, options);
+        console.log(response.data);
+    } catch (error) {
+        console.error('error', error);
+    }
+
+    return response;
+}
+
 export async function postNewProduct(product) {
     console.log(product)
     let formData = new FormData();

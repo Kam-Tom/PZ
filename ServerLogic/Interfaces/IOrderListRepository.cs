@@ -12,7 +12,9 @@ public interface IOrderListRepository
     public bool Add(Product product,int amount, Order order);
     public void Remove(Product product, int amount, Order order);
     public Order GetBasket(string email);
+    public Order GetOrder(int id);
     public void Buy(Order basket);
     public IEnumerable<GetOrderDto> GetAll(string email);
     public GetOrderDto GetBasketData(string email);
+    public void Cancel(Order order);
 }

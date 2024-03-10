@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import "./DataTable.css";
-import { deleteElement, getAll } from "../../axios";
+import { deleteElement, getAll, cancel } from "../../axios";
 
 function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails }) {
     const [data, setData] = useState([]);
@@ -30,6 +30,17 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
         }
     };
 
+    const cancelOrder = async (id) => {
+        const response = await cancel(id);
+
+        if (response && response.status === 200) {
+            setData(data.map(item => item.orderId === id ? { ...item, status: 'Canceled' } : item))
+            console.log('Canceled item');
+        } else {
+            console.error('Failed to cancel item');
+        }
+    };
+
     return (
         <div className="data-list-container">
             <div className="data-details-container">
@@ -54,7 +65,7 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
                                 {selectedData === dataItem && (
                                     <tr>
                                         <td colSpan={columns.length}>
-                                            {renderDetails(selectedData, handleDelete)}
+                                            {selectedData.orderId ?  renderDetails(selectedData, cancelOrder) : renderDetails(selectedData, handleDelete)}
                                         </td>
                                     </tr>
                                 )}
