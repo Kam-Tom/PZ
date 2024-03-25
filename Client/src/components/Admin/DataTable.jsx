@@ -9,6 +9,7 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
 
     async function fetchData() {
         let items = await getAll(apiGetEndpoint);
+        console.log(items);
         setData(items);
     }
     useEffect(() => {
@@ -80,7 +81,7 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
 
 DataTable.propTypes = {
     apiGetEndpoint: PropTypes.string.isRequired,
-    apiDeleteEndpoint: PropTypes.string.isRequired,
+    apiDeleteEndpoint: PropTypes.string,
     columns: PropTypes.arrayOf(PropTypes.shape({
         className: PropTypes.string,
         header: PropTypes.string.isRequired,

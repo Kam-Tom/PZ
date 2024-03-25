@@ -8,6 +8,7 @@ namespace ServerLogic.DTOs.Order;
 
 public class GetOrderDto
 {
+    public string Username { get; set; } = String.Empty;
     public int OrderId { get; set; }
     public string Status { get; set; }
     public DateTime Date { get; set; }

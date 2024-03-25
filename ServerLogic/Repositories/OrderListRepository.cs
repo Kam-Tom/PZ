@@ -237,4 +237,46 @@ public class OrderListRepository : IOrderListRepository
         _ctx.SaveChanges();
     }
 
+    public IEnumerable<GetOrderLiteDto> GetAllAsAdmin()
+    {
+        var orders = _ctx.Orders.Include(o => o.User).Include(o => o.OrderItems).ToList();
+        
+        var dtos = orders.Select(o =>
+        {
+            return new GetOrderLiteDto
+            {
+                OrderId = o.Id,
+                Date = o.Date,
+                Status = o.Status.ToString(),
+            };
+        });
+
+        return dtos;
+
+      
+    }
+
+    public void UpdateStatus(Order order, Order.OrderStatusType status)
+    {
+        order.Status = status;
+        _ctx.SaveChanges();
+    }
+
+    public GetOrderDto? GetDetails(int id)
+    {
+        var order = _ctx.Orders.Where(o => o.Id==id).Include(o => o.User).Include(o => o.OrderItems).ThenInclude(i=>i.Product).SingleOrDefault();
+
+        if (order == null)
+            return null;
+
+        return new GetOrderDto
+        {
+            OrderId = order.Id,
+            Username = order.User.Username,
+            Date = order.Date,
+            Cost = order.OrderItems.Sum(i => i.Cost),
+            Status = order.Status.ToString(),
+            Items = order.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity })
+        }; ;
+    }
 }

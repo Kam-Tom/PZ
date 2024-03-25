@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ServerLogic.DTOs.Order;
 using ServerLogic.Interfaces;
 using System.Security.Claims;
 
@@ -89,5 +91,27 @@ public class ShopController : ControllerBase
         var basket = _orderRepo.GetOrder(id);
         _orderRepo.Cancel(basket);
         return Ok("Canceled");
+    }
+    [HttpGet("GetAllAsAdmin"),Authorize(Roles = "Admin")]
+    public ActionResult GetAllAsAdmin()
+    {
+        var orders = _orderRepo.GetAllAsAdmin();
+        return Ok(orders);
+    }
+    [HttpGet("GetDetails"), Authorize(Roles = "Admin")]
+    public ActionResult GetDetails(int id)
+    {
+        var orders = _orderRepo.GetDetails(id);
+        return Ok(orders);
+    }
+    [HttpPut("UpdateStatus"),Authorize(Roles = "Admin")]
+    public ActionResult UpdateStatus([FromQuery]int id,[FromQuery] Order.OrderStatusType status)
+    {
+        
+        var order = _orderRepo.GetOrder(id);
+        if (order == null)
+            return BadRequest("Order dont exist");
+        _orderRepo.UpdateStatus(order,status);
+        return Ok("Updated");
     }
 }

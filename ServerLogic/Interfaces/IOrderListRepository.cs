@@ -13,8 +13,11 @@ public interface IOrderListRepository
     public void Remove(Product product, int amount, Order order);
     public Order GetBasket(string email);
     public Order GetOrder(int id);
+    public GetOrderDto? GetDetails(int id);
     public void Buy(Order basket);
     public IEnumerable<GetOrderDto> GetAll(string email);
+    public IEnumerable<GetOrderLiteDto> GetAllAsAdmin();
+    public void UpdateStatus(Order order,Order.OrderStatusType status);
     public GetOrderDto GetBasketData(string email);
     public void Cancel(Order order);
 }

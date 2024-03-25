@@ -63,6 +63,18 @@ export async function postNewCategory(category, subCategories) {
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }
+export async function updateOrderStatus(orderId, statusId) {
+    const url = `https://localhost:7248/api/Shop/UpdateStatus?id=${orderId}&status=${statusId}`;
+
+    const options = getOptions("PUT");
+
+    try {
+        const response = await axios.put(url, null, options);
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 export async function postNewShippingMethod(name, cost) {
     const data = {
