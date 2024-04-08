@@ -18,9 +18,10 @@ const ProductFilter = ({ categories, onSelectCategory, onFilterDiscounted }) => 
 
     return (
         <div className="product-filter">
+            <h2>Filter discounted products</h2>
+            <button onClick={handleDiscountedToggle} className={showDiscounted ? 'active' : ''}>Discounted</button>
             <h2>Filter by Category</h2>
             <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : ''}>All</button>
-            {/* <button onClick={handleDiscountedToggle} className={showDiscounted ? 'active' : ''}>Discounted</button> */}
             {categories.map((category, index) => (
                 <button key={index} onClick={() => handleCategoryChange(category)} className={selectedCategory === null ? 'active' : ''}>{category}</button>
             ))}

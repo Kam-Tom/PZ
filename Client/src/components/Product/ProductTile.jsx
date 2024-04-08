@@ -5,7 +5,7 @@ import { addToCart } from "../../axios"
 import PropTypes from 'prop-types';
 
 const ProductTile = ({ product, addToCart }) => {
-    const isDiscounted = product.promotionPrice !== null && product.promotionPrice < product.price;
+    const isDiscounted = product.promotionPrice !== null;
 
     return (
         <div className="product-tile">

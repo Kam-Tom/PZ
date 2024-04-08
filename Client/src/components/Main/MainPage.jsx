@@ -27,6 +27,7 @@ function TileArray(array, size) {
 function MainPage() {
     const navigate = useNavigate();
     const [filteredCategory, setFilteredCategory] = useState(null);
+    const [showDiscounted, setShowDiscounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
@@ -46,7 +47,7 @@ function MainPage() {
     };
 
     const handleDiscountedToggle = (showDiscounted) => {
-        setFilteredCategory(showDiscounted ? "Discounted" : null);
+        setShowDiscounted(showDiscounted ? true : false);
     };
 
     const handleSearch = (query) => {
@@ -55,7 +56,8 @@ function MainPage() {
 
     const filteredProducts = products
         .filter((product) => !filteredCategory || product.category === filteredCategory)
-        .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        .filter((product) => !showDiscounted || product.promotionPrice !== null);
 
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
