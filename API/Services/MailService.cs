@@ -7,50 +7,46 @@ namespace API.Services
 {
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailSettings;
-        public MailService(IOptions<MailSettings> mailSettingsOptions)
-        {
-            _mailSettings = mailSettingsOptions.Value;
-        }
-
         public bool SendMail(MailData mailData)
         {
+            MimeMessage message = new MimeMessage();
+
+            message.From.Add(new MailboxAddress("Dream Gadget", "dreamgadgetpz@gmail.com"));
+
+            message.To.Add(MailboxAddress.Parse(mailData.Email));
+
+            message.Subject = mailData.EmailSubject;
+
+            message.Body = new TextPart("plain")
+            {
+                Text = mailData.EmailBody
+            };
+
+            SmtpClient smtpClient = new SmtpClient();
+
             try
             {
-                using (MimeMessage emailMessage = new MimeMessage())
-                {
-                    MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
-                    emailMessage.From.Add(emailFrom);
-                    MailboxAddress emailTo = new MailboxAddress(mailData.EmailToName, mailData.EmailToId);
-                    emailMessage.To.Add(emailTo);
+                smtpClient.Connect("smtp.gmail.com", 465, true);
 
-                    emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", "cc@example.com"));
-                    emailMessage.Bcc.Add(new MailboxAddress("Bcc Receiver", "bcc@example.com"));
+                smtpClient.Authenticate("dreamgadgetpz@gmail.com", "qjcp osop jatp ruqb");
 
-                    emailMessage.Subject = mailData.EmailSubject;
+                smtpClient.Send(message);
 
-                    BodyBuilder emailBodyBuilder = new BodyBuilder();
-                    emailBodyBuilder.TextBody = mailData.EmailBody;
-
-                    emailMessage.Body = emailBodyBuilder.ToMessageBody();
-                    //this is the SmtpClient from the Mailkit.Net.Smtp namespace, not the System.Net.Mail one
-                    using (SmtpClient mailClient = new SmtpClient())
-                    {
-                        mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-                        mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                        mailClient.Send(emailMessage);
-                        mailClient.Disconnect(true);
-                    }
-                }
-
+                Console.WriteLine("Email sent");
                 return true;
+
             }
             catch (Exception ex)
             {
-                // Exception Details
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
                 return false;
             }
+            finally
+            {
+                smtpClient.Disconnect(true);
+                smtpClient.Dispose();
+            }
+            return false;
         }
     }
 }

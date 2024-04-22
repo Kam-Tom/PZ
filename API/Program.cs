@@ -10,6 +10,7 @@ using ServerLogic.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using API.Services;
+using API;
 
 
 
@@ -64,7 +65,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 //MailTrap
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailService>();
 
 #endregion
@@ -76,7 +76,7 @@ builder.Services.AddSingleton<IConfiguration>(configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB"), b => b.MigrationsAssembly("API"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB"));
 });
 #endregion
 
@@ -124,5 +124,10 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
+
+MailData mailData= new MailData();
+
+MailService mailService = new MailService();
+mailService.SendMail(mailData);
 #endregion
 
