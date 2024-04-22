@@ -1,3 +1,4 @@
+using API.Configuration;
 using DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -8,6 +9,7 @@ using ServerLogic.Interfaces;
 using ServerLogic.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using API.Services;
 
 
 
@@ -61,6 +63,9 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+//MailTrap
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddTransient<IMailService, MailService>();
 
 #endregion
 
