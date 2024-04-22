@@ -2,20 +2,70 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 40px;
     background-color: #f5f5f5;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    max-width: 1500px;
     margin: 0 auto;
+    font-size: 18px;
+    justify-content: center;
 }
 
 .user-profile h2 {
     color: #333;
     margin-bottom: 20px;
+    font-size: 24px;
 }
 
 .user-profile p {
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.user-profile .bold-text {
+    font-weight: bold;
+}
+
+.user-profile .subscribe-button,
+.user-profile .confirm-button {
+    font-weight: bold;
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.user-profile .confirm-button {
+    width: 80px;
+}
+
+.user-profile .subscribe-button.subscribed {
+    background-color: green;
+}
+
+.user-profile .confirm-button.yes {
+    background-color: red;
+}
+
+.user-profile .confirm-button.no {
+    background-color: green;
+}
+
+.user-profile .confirm-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-profile .confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
