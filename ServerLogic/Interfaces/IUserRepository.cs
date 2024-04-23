@@ -13,6 +13,7 @@ public interface IUserRepository
     public void GenerateResetPassword(User user, SimpleToken token);
     public void ResetPassword(User user,string newPassword);
     public void Delete(User user);
+    public void UpdateNewslatter(User user);
     public IEnumerable<UserDataDto> GetAllUsersData();
     public JwtService.UserRole GetUserRole(User user);
 }

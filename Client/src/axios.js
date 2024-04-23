@@ -258,3 +258,14 @@ export async function postResetPassword(email){
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }
+
+export async function changeSubscribe(userId) {
+
+    const url = `https://localhost:7248/api/Users/PutNewslatter?userId=${userId}`;
+
+    const options = getOptions('PUT');
+
+    await axios.put(url, null, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}

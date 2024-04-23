@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { getAll } from '../../axios';
+import { changeSubscribe } from '../../axios';
 import './ProfileInfo.css';
 
 function UserProfileInfo() {
     const [userInfo, setUserInfo] = useState(null);
-    const [newsletter, setNewsletter] = useState(false);
+    const [newsletter, setNewsletter] = useState(null);
     const [confirmUnsubscribe, setConfirmUnsubscribe] = useState(false);
         
     async function fetchFromDatabase() {
         let items = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
         console.log("TEST ",items);
         setUserInfo(items);
+        setNewsletter(items.newsletterSubscription);
     }
 
     useEffect(() => {
@@ -21,6 +23,7 @@ function UserProfileInfo() {
         if (newsletter) {
             setConfirmUnsubscribe(true);
         } else {
+            changeSubscribe(userInfo.id);
             setNewsletter(true);
         }
     };
@@ -28,6 +31,7 @@ function UserProfileInfo() {
     const handleUnsubscribeConfirm = (confirm) => {
         setConfirmUnsubscribe(false);
         if (confirm) {
+            changeSubscribe(userInfo.id);
             setNewsletter(false);
         }
     };

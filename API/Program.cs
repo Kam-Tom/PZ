@@ -124,10 +124,5 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
-
-MailData mailData= new MailData();
-
-MailService mailService = new MailService();
-mailService.SendMail(mailData);
 #endregion
 

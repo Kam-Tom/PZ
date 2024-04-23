@@ -101,4 +101,11 @@ public class UserRepository : IUserRepository
 
         return usersDto;
     }
+
+    public void UpdateNewslatter(User user)
+    {
+        user.NewsletterSubscription = !user.NewsletterSubscription;
+
+        _ctx.SaveChanges();
+    }
 }
