@@ -23,6 +23,7 @@
 
     <!--Projects References-->
   <ItemGroup>
+	<ProjectReference Include="..\DB\DB.csproj" />
     <ProjectReference Include="..\ServerLogic\ServerLogic.csproj" />
   </ItemGroup>
   <ItemGroup>

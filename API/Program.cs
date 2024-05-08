@@ -76,7 +76,7 @@ builder.Services.AddSingleton<IConfiguration>(configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDB"), x => x.MigrationsAssembly("DB"));
 });
 #endregion
 
