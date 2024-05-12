@@ -1,4 +1,5 @@
-﻿using DB.Models;
+﻿using API.Services;
+using DB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -82,6 +83,28 @@ public class ShopController : ControllerBase
         var basket = _orderRepo.GetBasket(email);
         //TMP: for now we just remove basket
         _orderRepo.Buy(basket);
+
+        //If buy is succesfull  
+
+        MailData mailData = new MailData();
+
+        MailService mailService = new MailService();
+
+        mailData.EmailReceiver = email;
+        mailData.EmailName = "Order Details";
+        mailData.EmailSubject = "Details of your order.";
+        mailData.EmailBody = "Here are the details of your order from day " + basket.Date + "\nItems in order:";
+
+        foreach(var item in basket.OrderItems)
+        {
+            mailData.EmailBody += "\n" + item.Product.Name;
+        }
+
+        mailData.EmailBody += "\nOrder id: " + basket.Id;
+        mailData.EmailBody += "\nThank you for purchase from DreamyGadget!";
+
+        mailService.SendMail(mailData);
+
         return Ok("Bought");
     }
 

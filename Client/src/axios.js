@@ -36,6 +36,17 @@ export async function postNewPromotion(productName, amount, productId) {
         .catch(error => console.log('error', error));
 
     await axios(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, options);
+
+    let emailBody = "Nowa promocja na " + productName + " o " + data.discount +"% taniej!"
+        + "\nPromocja od " + data.start + " do " + data.end
+        + "\n" + data.description;
+
+    var newsletter = {
+        title: data.name,
+        body: emailBody
+    }
+
+    putNewsletter(newsletter);
 }
 
 export async function postNewCategory(category, subCategories) {
@@ -270,14 +281,16 @@ export async function changeSubscribe(userId) {
         .catch(error => console.log('error', error));
 }
 
-export async function postNewsletter(newsletter) {
+export async function putNewsletter(newsletter) {
 
     const data = {
-        title: newsletter.title,
-        body: newsletter.body
+        EmailSubject: newsletter.title,
+        EmailBody: newsletter.body,
+        emailReceiver: "admin@admin.com",
+        emailName: "irrelevant"
     };
 
-    const url = 'https://localhost:7248/api/Users/PutNewsletter';
+    const url = 'https://localhost:7248/api/Newsletter/PutNewsletter';
 
     const options = getOptions('PUT');
 
