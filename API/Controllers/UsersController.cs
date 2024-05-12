@@ -48,10 +48,10 @@ public class UsersController : ControllerBase
         return Ok("User deleted successful");
     }
 
-    [HttpPut("PutNewslatter")]
-    public ActionResult PutNewslatter(int userId)
+    [HttpPut("PutSubscription")]
+    public ActionResult PutSubscription(int userId)
     {
-        Console.WriteLine("Newslatter Update");
+        Console.WriteLine("Subscription changed for user " + userId);
         var user = _repo.GetById(userId);
 
         if (user != null)
@@ -63,7 +63,7 @@ public class UsersController : ControllerBase
 
         MailService mailService = new MailService();
 
-        mailData.Email = user.Email;
+        mailData.EmailReceiver = user.Email;
         if(user.NewsletterSubscription == false)
         {
             mailData.EmailBody = "Anulowałeś swoją subskrybcję!" +
@@ -82,5 +82,29 @@ public class UsersController : ControllerBase
 
 
         return Ok("Subscription succesfull");
+    }
+
+    [HttpPut("PutNewsletter")]
+    public ActionResult PutNewsletter(MailData mailData)
+    {
+        Console.WriteLine("Sending Newsletter " + mailData.EmailSubject);
+
+        var users = _repo.GetAllEmailSubscriptions();
+
+        MailService mailService = new MailService();
+
+        mailData.EmailName = "DreamyGadget Newsletter";
+
+        foreach (var user in users)
+        {
+            if (user.NewsletterSubscription == true)
+            {
+                mailData.EmailReceiver = user.Email;
+
+                mailService.SendMail(mailData);
+            }
+        }
+
+        return Ok("Newsletter sent succesfully");
     }
 }

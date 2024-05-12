@@ -261,11 +261,27 @@ export async function postResetPassword(email){
 
 export async function changeSubscribe(userId) {
 
-    const url = `https://localhost:7248/api/Users/PutNewslatter?userId=${userId}`;
+    const url = `https://localhost:7248/api/Users/PutSubscription?userId=${userId}`;
 
     const options = getOptions('PUT');
 
     await axios.put(url, null, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}
+
+export async function postNewsletter(newsletter) {
+
+    const data = {
+        title: newsletter.title,
+        body: newsletter.body
+    };
+
+    const url = 'https://localhost:7248/api/Users/PutNewsletter';
+
+    const options = getOptions('PUT');
+
+    await axios.put(url, data, options)
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }

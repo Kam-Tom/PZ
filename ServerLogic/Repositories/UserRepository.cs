@@ -102,6 +102,20 @@ public class UserRepository : IUserRepository
         return usersDto;
     }
 
+    public IEnumerable<EmailSubscriptionDto> GetAllEmailSubscriptions()
+    {
+        var users = _ctx.Users.ToList();
+        var usersDto = users.Select(u =>
+        new EmailSubscriptionDto
+        {
+            Id = u.Id,
+            Email = u.Email,
+            NewsletterSubscription = u.NewsletterSubscription
+        });
+
+        return usersDto;
+    }
+
     public void UpdateNewslatter(User user)
     {
         user.NewsletterSubscription = !user.NewsletterSubscription;

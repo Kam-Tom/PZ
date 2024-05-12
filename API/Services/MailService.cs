@@ -13,7 +13,7 @@ namespace API.Services
 
             message.From.Add(new MailboxAddress("Dream Gadget", "dreamgadgetpz@gmail.com"));
 
-            message.To.Add(MailboxAddress.Parse(mailData.Email));
+            message.To.Add(MailboxAddress.Parse(mailData.EmailReceiver));
 
             message.Subject = mailData.EmailSubject;
 
@@ -32,7 +32,7 @@ namespace API.Services
 
                 smtpClient.Send(message);
 
-                Console.WriteLine("Email sent");
+                Console.WriteLine("Email sent " + mailData.EmailBody);
                 return true;
 
             }
