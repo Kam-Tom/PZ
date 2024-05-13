@@ -10,6 +10,7 @@ import AdminMenu from "./AdminMenu";
 import UserList from "./UserList";
 import ReviewList from "./ReviewList";
 import OrderList from "./OrderList";
+import StatsAdmin from "./StatsAdmin";
 import { getAll } from "../../axios";
 
 function AdminPage({ onAddProduct }) {
@@ -22,6 +23,7 @@ function AdminPage({ onAddProduct }) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showReviewList, setShowReviewList] = useState(false);
     const [showOrderList, setShowOrderList] = useState(false);
+    const [showStats, setShowStats] = useState(false);
     // const [products, setProducts] = useState(null);
     // const [users, setUsers] = useState(null);
 
@@ -53,6 +55,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
 
     const showAddProductFormFn = () => {
@@ -65,6 +68,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
 
     const showAddCategoryFormFn = () => {
@@ -77,6 +81,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
 
     const showAddPromotionFormFn = () => {
@@ -89,6 +94,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
 
     const showAddShippingMethodFormFn = () => {
@@ -101,6 +107,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddPromotionForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
 
     const showUserListFn = async () => {
@@ -114,6 +121,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
 
     const showReviewListFn = () => {
@@ -126,6 +134,7 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(false);
+        setShowStats(false);
     };
     const showOrderListFn = () => {
         setShowAddCategoryForm(false);
@@ -137,7 +146,22 @@ function AdminPage({ onAddProduct }) {
         setShowAddShippingMethodForm(false);
         setSelectedProduct(null);
         setShowOrderList(true);
+        setShowStats(false);
     };
+
+    const showStatsfn = () => {
+        setShowAddCategoryForm(false);
+        setShowList(false);
+        setShowAddProductForm(false);
+        setShowUserList(false);
+        setShowReviewList(false);
+        setShowAddPromotionForm(false);
+        setShowAddShippingMethodForm(false);
+        setSelectedProduct(null);
+        setShowOrderList(false);
+        setShowStats(true);
+    };
+
     const handleCloseAddCategoryForm = () => {
         setShowAddCategoryForm(false);
     };
@@ -164,6 +188,7 @@ function AdminPage({ onAddProduct }) {
                     setShowAddPromotionForm(false);
                     setShowAddShippingMethodForm(false);
                     setSelectedProduct(null);
+                    setShowStats(false);
                 }}
                 onShowAddCategoryForm={showAddCategoryFormFn}
                 onShowAddPromotionForm={showAddPromotionFormFn}
@@ -171,6 +196,7 @@ function AdminPage({ onAddProduct }) {
                 onShowUserList={showUserListFn}
                 onShowReviewList={showReviewListFn}
                 onShowOrderList={showOrderListFn}
+                onShowStats={showStatsfn}
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
@@ -188,6 +214,7 @@ function AdminPage({ onAddProduct }) {
             />}
             {showReviewList && <ReviewList />}
             {showOrderList && <OrderList />}
+            {showStats && <StatsAdmin />}
         </div>
     );
 }

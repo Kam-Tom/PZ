@@ -34,6 +34,7 @@ public class UserRepository : IUserRepository
             ShippingAddress = "",
             EmailVerified = false,
             VerificationToken = emailVerificationToken,
+            CreatedAt = DateTime.Now
         };
 
         _ctx.Users.Add(user);
@@ -97,6 +98,7 @@ public class UserRepository : IUserRepository
             ShippingAddress = u.ShippingAddress,
             EmailVerified = u.EmailVerified,
             NewsletterSubscription = u.NewsletterSubscription,
+            CreatedAt = u.CreatedAt
         });
 
         return usersDto;

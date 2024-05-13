@@ -20,4 +20,6 @@ public class UserDataDto
     public bool NewsletterSubscription { get; set; }
 
     public bool EmailVerified { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 }

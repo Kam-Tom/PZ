@@ -1,4 +1,6 @@
 ﻿#nullable disable warnings
+using System.Data;
+
 namespace DB.Models;
 
 public class User
@@ -30,4 +32,6 @@ public class User
     public string? ResetPasswordToken { get; set; }
 
     public DateTime? ResetPasswordTokenExpires { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 }

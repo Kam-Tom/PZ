@@ -114,7 +114,8 @@ export async function postNewUser(user) {
         surname: user.surname,
         email: user.email,
         password: user.password,
-        confirmPassword: user.password
+        confirmPassword: user.password,
+        createdAt : new Date().getDate(),
       }
       console.log("user do dodania", newUser);
     const url = "https://localhost:7248/Auth/register";
