@@ -17,7 +17,7 @@ body {
     left: 0;
     width: 100%;
     padding: 20px 200px 20px 150px;
-    background: #E67E22;
+    background: var(--navbar-color);
     display: flex;
     justify-content: space-between;
     align-items: center;

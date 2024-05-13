@@ -14,6 +14,8 @@ import { getAll, addToCart } from "../../axios";
 import ReviewsProduct from "../Product/ReviewsProduct";
 import OrderList from "../Account/OrderList";
 import ProfilePage from "../Account/ProfilePage";
+import { ThemeContext } from "../../ThemeContext.jsx";
+import "../../ThemeStyle.css";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -32,6 +34,8 @@ function MainPage() {
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: '' });
+    const { theme } = useContext(ThemeContext);
+    document.body.className = `${theme}-theme`;
 
     async function fetch() {
         setProducts(await getAll("https://localhost:7248/Product"));
@@ -76,103 +80,105 @@ function MainPage() {
     };
 
     return (
-        <Routes>
-            <Route
-                path="/"
-                element={
-                    <>
-                        <Navbar 
-                        onSearch={handleSearch} 
-                        notification={notification} 
-                        setNotification={setNotification} 
-                        />
-                        <div className="filter-and-product-container">
-                            <ProductFilter
-                                categories={categories}
-                                onSelectCategory={handleCategorySelect}
-                                onFilterDiscounted={handleDiscountedToggle}
+        <div className={`${theme}-theme`}>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <>
+                            <Navbar 
+                            onSearch={handleSearch} 
+                            notification={notification} 
+                            setNotification={setNotification} 
                             />
-                        </div>
-                        <div className="product-list-container">
-                            {productRows.map((row, rowIndex) => (
-                                <div key={rowIndex} className="product-list-row">
-                                    {row.map((product) => (
-                                        <ProductTile key={product.id} product={product} addToCart={handleAddToCart} />
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                }
-            />
+                            <div className="filter-and-product-container">
+                                <ProductFilter
+                                    categories={categories}
+                                    onSelectCategory={handleCategorySelect}
+                                    onFilterDiscounted={handleDiscountedToggle}
+                                />
+                            </div>
+                            <div className="product-list-container">
+                                {productRows.map((row, rowIndex) => (
+                                    <div key={rowIndex} className="product-list-row">
+                                        {row.map((product) => (
+                                            <ProductTile key={product.id} product={product} addToCart={handleAddToCart} />
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    }
+                />
 
-            <Route
-                path="/product/:id"
-                element={
-                    <>
-                        <Navbar 
-                        onSearch={handleSearch} 
-                        notification={notification} 
-                        setNotification={setNotification} 
-                        />
-                        <ProductPage products={products} />
-                        <ReviewsProduct onAddReview={handleAddReview} />
-                    </>
-                }
-            />
+                <Route
+                    path="/product/:id"
+                    element={
+                        <>
+                            <Navbar 
+                            onSearch={handleSearch} 
+                            notification={notification} 
+                            setNotification={setNotification} 
+                            />
+                            <ProductPage products={products} />
+                            <ReviewsProduct onAddReview={handleAddReview} />
+                        </>
+                    }
+                />
 
-            <Route
-                path="/account"
-                element={
-                    <>
-                        <LoginRegister />
-                    </>
-                }
-            />
+                <Route
+                    path="/account"
+                    element={
+                        <>
+                            <LoginRegister />
+                        </>
+                    }
+                />
 
-            <Route
-                path="/admin"
-                element={
-                    <>
-                        <AdminPage onAddProduct={fetch} />
-                    </>
-                }
-            />
+                <Route
+                    path="/admin"
+                    element={
+                        <>
+                            <AdminPage onAddProduct={fetch} />
+                        </>
+                    }
+                />
 
-            <Route
-                path="/order"
-                element={
-                    <>
-                        <Navbar 
-                        onSearch={handleSearch} 
-                        notification={notification} 
-                        setNotification={setNotification} 
-                        />
-                        <ShoppingCart 
-                        cartItems={cartItems} setCartItems={setCartItems} 
-                        />
-                        <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
-                    </>
-                }
-            />
+                <Route
+                    path="/order"
+                    element={
+                        <>
+                            <Navbar 
+                            onSearch={handleSearch} 
+                            notification={notification} 
+                            setNotification={setNotification} 
+                            />
+                            <ShoppingCart 
+                            cartItems={cartItems} setCartItems={setCartItems} 
+                            />
+                            <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
+                        </>
+                    }
+                />
 
-            <Route
-                path="/profile"
-                element={
-                    <>
-                        <ProfilePage />
-                    </>
-                }
-            />
-            
-            <Route
-                path="/*"
-                element={() => {
-                    navigate("/", { replace: true })
-                    return null;
-                }}
-            />
-        </Routes>
+                <Route
+                    path="/profile"
+                    element={
+                        <>
+                            <ProfilePage />
+                        </>
+                    }
+                />
+                
+                <Route
+                    path="/*"
+                    element={() => {
+                        navigate("/", { replace: true })
+                        return null;
+                    }}
+                />
+            </Routes>
+        </div>
     );
 }
 

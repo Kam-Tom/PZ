@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
+import "../../ThemeStyle.css";
 import "./Navbar.css";
 import AppNotification from "./AppNotification";
 import "./AppNotification.css";
 import { getRole } from "../../axios";
+import { ThemeContext } from "../../ThemeContext.jsx";
 
 function Navbar({ onSearch, notification, setNotification }) {
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+    const { theme, setTheme } = useContext(ThemeContext);
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -24,8 +27,17 @@ function Navbar({ onSearch, notification, setNotification }) {
         localStorage.removeItem("role");
     };
 
+    const handleThemeChange = () => {
+        console.log('Theme change triggered');
+        setTheme(prevTheme => {
+            const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+            document.body.className = newTheme;
+            return newTheme;
+        });
+    };
+
     return (
-        <header className="header">
+        <header className={`header ${theme}`}>
             <Link to="/" className="logo" onClick={handleLogoClick}>
                 DreamyGadget
             </Link>
@@ -64,6 +76,9 @@ function Navbar({ onSearch, notification, setNotification }) {
                             <ion-icon name="log-out-outline"></ion-icon>
                     </Link>
                 }
+                <Link to="#" className="navbar-icon" onClick={(event) => {event.preventDefault(); handleThemeChange();}}>
+                    <ion-icon name="moon-outline"></ion-icon>
+                </Link>
             </nav>
         </header>
     );
