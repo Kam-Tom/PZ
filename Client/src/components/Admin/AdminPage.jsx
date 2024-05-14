@@ -23,7 +23,7 @@ function AdminPage({ onAddProduct }) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showReviewList, setShowReviewList] = useState(false);
     const [showOrderList, setShowOrderList] = useState(false);
-    const [showStats, setShowStats] = useState(false);
+    const [showStats, setShowStats] = useState(true);
     // const [products, setProducts] = useState(null);
     // const [users, setUsers] = useState(null);
 

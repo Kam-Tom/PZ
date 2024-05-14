@@ -9,7 +9,6 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
 
     async function fetchData() {
         let items = await getAll(apiGetEndpoint);
-        console.log(items);
         setData(items);
     }
     useEffect(() => {
