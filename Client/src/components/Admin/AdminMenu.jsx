@@ -34,7 +34,7 @@ function AdminMenu({ onShowProducts, onShowAddProductForm, onShowAddPromotionFor
                 <ion-icon name="cube-outline"></ion-icon>
             </Link>
             <Link to="/admin" className="menu-item" onClick={onShowStats}>
-                <ion-icon name="cube-outline"></ion-icon>
+                <ion-icon name="bar-chart-outline"></ion-icon>
             </Link>
         </div>
     );
