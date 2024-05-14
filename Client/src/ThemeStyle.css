@@ -2,12 +2,14 @@
     --navbar-color: #e67e22;
     --background-gradient: linear-gradient(to right, #e2e2e2, #f7d8be);
     --text-color: black;
+    --product-tile-background: #ecf0f1;
 }
 
 .dark-theme {
     --navbar-color: #2e2e2e;
     --background-gradient: linear-gradient(to right, #4b4b4b, #1a1a1a);
     --text-color: #a8a8a8;
+    --product-tile-background: #202020;
 }
 
 body.light-theme, body.dark-theme {

@@ -1,7 +1,7 @@
 .product-tile {
     width: 325px;
     height: 325px;
-    background-color: #ecf0f1;
+    background-color: var(--product-tile-background);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
     padding: 20px;
