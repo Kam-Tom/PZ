@@ -1,0 +1,87 @@
+.files-upload-container {
+    background-color: #eee;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 95%;
+    overflow-y:scroll;
+}
+.files-upload-container ul{
+    list-style:none;
+
+}
+.files-upload-container ul li{
+    border-bottom:1px solid #ccc;
+    overflow-x:hidden;
+    text-overflow:ellipsis;
+}
+
+.files-upload-container ul li .file-name{
+    padding: 0;
+    margin-left:1rem;
+    font-size: 1.2rem;
+    cursor:pointer;
+}
+.files-upload-container ul li .file-name:hover{
+    color:#33A;
+}
+.files-upload-container ul li ion-icon:last-of-type{
+    color:#ff0000AA;
+    font-size:1.3rem;
+    cursor:pointer;
+}
+.files-upload-container ul li ion-icon:last-of-type:hover{
+    color:#ff0000FF;
+    font-size:1.3rem;
+}
+.files-upload-container .upload-label{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+}
+.files-upload-container .upload-label:hover{
+    color:#33A;
+}
+.files-upload-container .upload-label ion-icon{
+    font-size:2rem;
+}
+
+
+.files-upload-container {
+    position: relative;
+}
+
+.speech-bubble {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+    .speech-bubble::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent transparent #fff transparent;
+    }
+
+.file-item {
+    position: relative;
+}
+
+.file-description {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+}

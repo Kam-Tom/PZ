@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import "./AddProductForm.css";
 import { postNewProduct } from "../../axios";
 import ValidationError from "../Main/ValidNotification.jsx";
+import InputThumbnail from "./ProductForm/InputThumbnail";
+import InputFiles from "./ProductForm/InputFiles";
+import InputImages from "./ProductForm/InputImages";
 
 function AddProductForm({ onAddProduct }) {
     const [categories, setCategories] = useState([]);
+    const [vatTypes, setVatTypes] = useState([]);
 
     useEffect(() => {
         // Fetch categories from the server API
         fetchCategories();
+        setCategories([{"id": 1,"name": "Elektronika",},{"id": 2,"name": "Tablety",},{"id": 3,"name": "Telefony",}]);
+        setVatTypes([{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Incresed", "rates": 40 }]);
     }, []); // Empty dependency array ensures this effect runs once when the component mounts
 
     const fetchCategories = async () => {
@@ -31,9 +37,9 @@ function AddProductForm({ onAddProduct }) {
         price: "",
         description: "",
         quantity: "",
+        vatType: ""
     });
 
-    const [imagePreview, setImagePreview] = useState(null);
     const [newProductFormDataError, setNewProductFormDataError] = useState({
         productName: "Invalid product name. Its must be at least 3 characters",
         category: "Invalid category. Please select one from the list",
@@ -49,7 +55,7 @@ function AddProductForm({ onAddProduct }) {
 
     function validatePrice(price) {
         const regex = /^\d+(\.\d{1,2})?$/;
-        return regex.test(price) && parseFloat(price) > 0;;
+        return regex.test(price) && parseFloat(price) > 0;
     }
 
     function validateQuantity(quantity) {
@@ -94,17 +100,7 @@ function AddProductForm({ onAddProduct }) {
         }
 
 
-            
-
-        if (type === "file" && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }else if(type === "file" && !e.target.files[0]){
-            setImagePreview(null);
-        }   
+         
     };
 
     const addNewProduct = () => {
@@ -122,35 +118,47 @@ function AddProductForm({ onAddProduct }) {
             description: "",
             quantity: "",
         });
-        setImagePreview(null);
+
     }
     };
 
     return (
         <div className="parent-container">
-        <div className="form-container product-form">
-            <form>
-                <h1>Add New Product</h1>
-                <input type="text" name="productName" placeholder="Product Name" onChange={handleAddProductInputChange} />
-                <select name="category" onChange={handleAddProductInputChange} value={newProductFormData.category}>
+
+            <form className="product-form">
+                <h1 className="p-title">Add New Product</h1>
+                <input className="p-name" type="text" name="productName" placeholder="Product Name" onChange={handleAddProductInputChange} />
+
+                <select name="category" className="p-category"  onChange={handleAddProductInputChange} value={newProductFormData.category}>
                     <option value="" disabled>Select Category</option>
                     {categories.map((category) => (
                         <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                 </select>
-                <label htmlFor="image"></label>
-                <input type="file" name="image" accept="image/*" onChange={handleAddProductInputChange} />
-                {imagePreview && (
-                    <div className="image-preview">
-                        <img src={imagePreview} alt="Product Preview" />
-                    </div>
-                )}
-                <input type="number" name="price" placeholder="Price" onChange={handleAddProductInputChange}  />
-                <textarea name="description" placeholder="Description" onChange={handleAddProductInputChange} ></textarea>
-                <input type="number" name="quantity" placeholder="Quantity" onChange={handleAddProductInputChange}  />
-                <button type="button" onClick={addNewProduct}>Add Product</button>
+                <textarea name="description" className="p-desc" placeholder="Description" onChange={handleAddProductInputChange} ></textarea>
+                <InputThumbnail className="p-thumbnail" onChange={(_) => { console.log("ProductForm Added Thumbnail") }} />
+
+                <input type="number" name="price" className="p-netto" placeholder="Price" onChange={handleAddProductInputChange} />
+                <select name="vatType" className="p-vat" onChange={() => { } } value={newProductFormData.vatType}>
+                    <option value="" disabled>Select Vat Rate</option>
+                    {vatTypes.map((vatType) => (
+                        <option key={vatType.name} value={vatType.name}>{vatType.name}</option>
+                    ))}
+                </select>
+                <span className="p-brutto">{`Brutto: ${10} PLN`}</span>
+                <input type="number" name="quantity" className="p-quantity" placeholder="Quantity" onChange={handleAddProductInputChange} />
+
+
+                <InputImages className="p-images" onChange={(_) => { console.log("ProductForm Added Images") }} />
+                <InputFiles className="p-files" onChange={(_) => { console.log("ProductForm Changed Files") }} />
+
+
+                <button type="button" className="p-submit" onClick={addNewProduct}>Add Product</button>
             </form>
-        </div>
+ 
+
+
+
         { (newProductFormDataError.category || newProductFormDataError.productName || newProductFormDataError.image ||  newProductFormDataError.price || newProductFormDataError.description || newProductFormDataError.quantity) && (
                 <div className="error-container right">
                     <table>

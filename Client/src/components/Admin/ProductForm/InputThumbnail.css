@@ -1,0 +1,34 @@
+.thumbnail-upload-container {
+    display: flex;
+    flex-direction: column;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.thumbnail-upload-container .image-upload-label {
+    width: 200px;
+    height: 200px;
+    background-color:dimgrey;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.thumbnail-upload-container .image-preview {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    margin: 0;
+}
+.thumbnail-upload-container ion-icon {
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    color:white;
+    background-color:black;
+}
