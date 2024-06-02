@@ -208,14 +208,27 @@ export async function cancel(id) {
 }
 
 export async function postNewProduct(product) {
-    console.log(product)
     let formData = new FormData();
-    formData.append("name", product.productName);
+
+    formData.append("name", product.name);
     formData.append("categoryId", product.category);
-    formData.append("thumbnails", product.image);
-    formData.append("price", product.price);
-    formData.append("stock", product.quantity);
     formData.append("description", product.description);
+    formData.append("thumbnail", product.thumbnail);
+    formData.append("netto", product.netto);
+    formData.append("vatType", product.vatType);
+    formData.append("quantity", product.quantity);
+
+    // Append images one by one
+    product.images.forEach((image) => {
+        formData.append('images', image);
+    });
+
+    // Append files and descriptions one by one
+    product.files.forEach((file) => {
+        formData.append(`files`, file.file);
+        formData.append(`filesDescription`, file.description);
+    });
+
     const options = {
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("loginToken")}`

@@ -11,7 +11,7 @@ function InputThumbnail({ onChange, className }) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 setImage(e.target.result);
-                onChange(image);
+                onChange(file);
             }
             reader.readAsDataURL(file);
         }
@@ -41,6 +41,7 @@ function InputThumbnail({ onChange, className }) {
 }
 
 InputThumbnail.propTypes = {
+    className: PropTypes.string,
     onChange: PropTypes.func.isRequired,
 };
 

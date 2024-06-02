@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import "./AddProductForm.css";
-import { postNewProduct } from "../../axios";
+import { postNewProduct, getAll } from "../../axios";
 import ValidationError from "../Main/ValidNotification.jsx";
 import InputThumbnail from "./ProductForm/InputThumbnail";
 import InputFiles from "./ProductForm/InputFiles";
@@ -10,116 +10,76 @@ import InputImages from "./ProductForm/InputImages";
 function AddProductForm({ onAddProduct }) {
     const [categories, setCategories] = useState([]);
     const [vatTypes, setVatTypes] = useState([]);
+    const [product, setProduct] = useState({
+        name: "",
+        category: "",
+        description: "",
+        thumbnail: null,
+        images: null,
+        files: null,
+        netto: "",
+        vatType: "",
+        quantity: "",
+    });
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         // Fetch categories from the server API
-        fetchCategories();
-        setCategories([{"id": 1,"name": "Elektronika",},{"id": 2,"name": "Tablety",},{"id": 3,"name": "Telefony",}]);
-        setVatTypes([{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Incresed", "rates": 40 }]);
-    }, []); // Empty dependency array ensures this effect runs once when the component mounts
+        getAll('https://localhost:7248/categories/List').then((result) => setCategories(result));
+        setVatTypes([{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Increased", "rates": 40 }]);
+    }, []);
 
-    const fetchCategories = async () => {
-        try {
-            const response = await fetch('https://localhost:7248/categories/List');
-            const data = await response.json();
-            setCategories(data); // Assuming data is an array of category objects with 'Name' and 'Id' properties
-        } catch (error) {
-            console.error('Error fetching categories:', error);
+    const validateForm = () => {
+        const errors = {};
+
+        if (!product.name || product.name.length < 3) {
+            errors.name = "Product name must be at least 3 characters long.";
+        }
+        if (!product.category) {
+            errors.category = "Category is required.";
+        }
+        if (!product.description || product.description.length < 3) {
+            errors.description = "Description must be at least 3 characters long.";
+        }
+        if (!product.netto || isNaN(product.netto) || product.netto <= 0) {
+            errors.netto = "Netto must be a positive number.";
+        }
+        if (!product.vatType) {
+            errors.vatType = "VAT type is required.";
+        }
+        if (!product.quantity || isNaN(product.quantity) || product.quantity < 0) {
+            errors.quantity = "Quantity must be a non-negative number.";
+        }
+        if (!product.thumbnail) {
+            errors.quantity = "Thumbnail image is required.";
         }
 
-
+        return errors;
     };
 
-    const [newProductFormData, setNewProductFormData] = useState({
-        productName: "",
-        category: "",
-        image: "",
-        price: "",
-        description: "",
-        quantity: "",
-        vatType: ""
-    });
-
-    const [newProductFormDataError, setNewProductFormDataError] = useState({
-        productName: "Invalid product name. Its must be at least 3 characters",
-        category: "Invalid category. Please select one from the list",
-        image: "Invalid image. Please insert one",
-        price: "Invalid price. The price must be a positive number",
-        description: "Invalid description. Its must be at least 3 characters",
-        quantity: "Invalid quantity. The quantity must be a positive number and decimal numbers are not allowed",
-    });
-
-    function validateProductNameAndDescription(productName) {
-        return productName.length >= 3;
-    }
-
-    function validatePrice(price) {
-        const regex = /^\d+(\.\d{1,2})?$/;
-        return regex.test(price) && parseFloat(price) > 0;
-    }
-
-    function validateQuantity(quantity) {
-        return parseInt(quantity) > 0 && !quantity.includes(".");
-    }
-
-
-    const handleAddProductInputChange = (e) => {
-        const { name, value, type } = e.target;
-        if(name === "productName" || name === "description"){
-            if (!validateProductNameAndDescription(value)) {
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. Its must be at least 3 characters`}));
-            } else {
-                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
-            }
-        }else if(name === "price"){
-            if (!validatePrice(value)) {
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. The ${name} must be a positive number`}));
-            } else {
-                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
-            }
-        }else if(name === "quantity"){
-            if (!validateQuantity(value)) {
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. The ${name} must be a positive number and decimal numbers are not allowed`}));
-            } else {
-                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
-            }
-        }else if(name === "category"){
-            setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
-            setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
-        }else if(name === "image"){
-            if(!e.target.files[0]){
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: `Invalid ${name}. Please insert one`}));
-            }else{
-                setNewProductFormData((prevData) => ({...prevData, [name]: type === "file" ? e.target.files[0] : value, }));
-                console.log(e.target.files[0]);
-                setNewProductFormDataError((prevData) => ({...prevData, [name]: null}));
-            }
-        }
-
-
-         
+    const handleInputChange = (field, value) => {
+        setProduct({
+            ...product,
+            [field]: value,
+        });
     };
 
     const addNewProduct = () => {
-        if(newProductFormDataError.category || newProductFormDataError.productName || newProductFormDataError.image ||  newProductFormDataError.price || newProductFormDataError.description || newProductFormDataError.quantity){
-        confirm("Invalid product data. Please check the errors and try again");
-    }
-    else{
-        postNewProduct(newProductFormData);
-        onAddProduct(newProductFormData);
-        setNewProductFormData({
-            productName: "",
-            category: "",
-            image: "",
-            price: "",
-            description: "",
-            quantity: "",
-        });
+        const formErrors = validateForm();
+        if (Object.keys(formErrors).length === 0) {
+            postNewProduct(product).then(onAddProduct);
+        } else {
+            setErrors(formErrors);
+        }
+    };
 
-    }
+    const calculateBrutto = () => {
+        const vatRate = vatTypes.find((vatType) => vatType.name === product.vatType);
+        if (vatRate) {
+            const netto = parseFloat(product.netto);
+            return (netto + (netto * (vatRate.rates / 100))).toFixed(2);
+        }
+        return "";
     };
 
     return (
@@ -127,61 +87,45 @@ function AddProductForm({ onAddProduct }) {
 
             <form className="product-form">
                 <h1 className="p-title">Add New Product</h1>
-                <input className="p-name" type="text" name="productName" placeholder="Product Name" onChange={handleAddProductInputChange} />
+                <input className="p-name" type="text" name="name" placeholder="Product Name" onChange={(e) => { handleInputChange('name', e.target.value) }} />
 
-                <select name="category" className="p-category"  onChange={handleAddProductInputChange} value={newProductFormData.category}>
+                <select name="category" className="p-category" onChange={(e) => { handleInputChange('category', e.target.value) }} value={product.category}>
                     <option value="" disabled>Select Category</option>
                     {categories.map((category) => (
                         <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                 </select>
-                <textarea name="description" className="p-desc" placeholder="Description" onChange={handleAddProductInputChange} ></textarea>
-                <InputThumbnail className="p-thumbnail" onChange={(_) => { console.log("ProductForm Added Thumbnail") }} />
+                <textarea name="description" className="p-desc" placeholder="Description" onChange={(e) => { handleInputChange('description', e.target.value) }} ></textarea>
+                <InputThumbnail className="p-thumbnail" onChange={(data) => { handleInputChange('thumbnail',data) }} />
 
-                <input type="number" name="price" className="p-netto" placeholder="Price" onChange={handleAddProductInputChange} />
-                <select name="vatType" className="p-vat" onChange={() => { } } value={newProductFormData.vatType}>
+                <input type="number" name="netto" className="p-netto" placeholder="Netto" onChange={(e) => { handleInputChange('netto', e.target.value) }} />
+                <select name="vatType" className="p-vat" onChange={(e) => { handleInputChange('vatType', e.target.value) }} value={product.vatType}>
                     <option value="" disabled>Select Vat Rate</option>
                     {vatTypes.map((vatType) => (
                         <option key={vatType.name} value={vatType.name}>{vatType.name}</option>
                     ))}
                 </select>
-                <span className="p-brutto">{`Brutto: ${10} PLN`}</span>
-                <input type="number" name="quantity" className="p-quantity" placeholder="Quantity" onChange={handleAddProductInputChange} />
+                <span className="p-brutto">{`Brutto: ${calculateBrutto()} `}</span>
+                <input type="number" name="quantity" className="p-quantity" placeholder="Quantity" onChange={(e) => { handleInputChange('quantity', e.target.value) }} />
 
 
-                <InputImages className="p-images" onChange={(_) => { console.log("ProductForm Added Images") }} />
-                <InputFiles className="p-files" onChange={(_) => { console.log("ProductForm Changed Files") }} />
+                <InputImages className="p-images" onChange={(data) => { handleInputChange('images', data) }} />
+                <InputFiles className="p-files" onChange={(data) => { handleInputChange('files', data) }} />
 
 
                 <button type="button" className="p-submit" onClick={addNewProduct}>Add Product</button>
             </form>
  
 
-
-
-        { (newProductFormDataError.category || newProductFormDataError.productName || newProductFormDataError.image ||  newProductFormDataError.price || newProductFormDataError.description || newProductFormDataError.quantity) && (
+            {(Object.keys(errors).length > 0) && (
                 <div className="error-container right">
                     <table>
                         <tbody>
-                            <tr>
-                        <td>{newProductFormDataError.productName && <ValidationError message={newProductFormDataError.productName} />}</td>
-                            </tr>
-                            <tr>
-                        <td>{newProductFormDataError.category && <ValidationError message={newProductFormDataError.category} />}</td>
-                            </tr>
-                            <tr>
-                        <td>{newProductFormDataError.image && <ValidationError message={newProductFormDataError.image} />}</td>
-                            </tr>
-                            <tr>
-                        <td>{newProductFormDataError.price && <ValidationError message={newProductFormDataError.price} />}</td>
-                            </tr>
-                            <tr>
-                        <td>{newProductFormDataError.description && <ValidationError message={newProductFormDataError.description} />}</td>
-                            </tr>
-                            <tr>
-                        <td>{newProductFormDataError.quantity && <ValidationError message={newProductFormDataError.quantity} />}</td>
-                            </tr>
-
+                            {Object.entries(errors).map(([field, error]) => (
+                                <tr key={field}>
+                                    <td><ValidationError message={error} /></td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
