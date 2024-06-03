@@ -5,7 +5,7 @@ import { getAll, addToCart } from "../../axios";
 import PropTypes from 'prop-types';
 import AppNotification from "../Main/AppNotification";
 
-const ProductPage = ({ products } ) => {
+const ProductPage = ( ) => {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const ProductPage = ({ products } ) => {
 
     return (
         
-        <div className="product-detail-container">
+        <div className="product-detail-container" >
             <div className="product-detail-image-container">
             {imageUrls.map((image, index) => (
                 <img key={index} className="product-detail-image" src={`https://localhost:7248/Files/${image}`} alt={name} sizes="(max-height 1000px) 500px, 1000px" />
@@ -61,19 +61,6 @@ const ProductPage = ({ products } ) => {
             </div>
         </div>
     );
-};
-
-ProductPage.propTypes = {
-    products: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        stock: PropTypes.number.isRequired,
-        imageUrls: PropTypes.arrayOf(PropTypes.string),
-        description: PropTypes.string,
-        category: PropTypes.string.isRequired,
-        promotionPrice: PropTypes.number,
-    })).isRequired,
 };
 
 export default ProductPage;

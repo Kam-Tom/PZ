@@ -105,7 +105,7 @@ public class ApplicationDbContext : DbContext
 
             entity.ToTable("Products");
 
-            entity.Property(e => e.Price)
+            entity.Property(e => e.Netto)
                 .HasPrecision(10, 2);
 
             entity.Property(e => e.Name)

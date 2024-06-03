@@ -16,15 +16,16 @@ public class ProductDetailsDto
     public string Name { get; set; }
 
     public string Description { get; set; }
+    public string VatType { get; set; }
 
-    public decimal Price { get; set; }
+    public decimal Netto { get; set; }
 
-    public int Stock { get; set; }
+    public int Quantity { get; set; }
     public string Category { get; set; }
 
     public IEnumerable<string> FileUrls { get; set; }
-    public IEnumerable<string> FileDescs { get; set; }
+    public IEnumerable<string> FileDescriptions { get; set; }
 
     public IEnumerable<string> ImageUrls { get; set; }
-    public decimal? PromotionPrice { get; internal set; }
+    public decimal? PromotionNetto { get; internal set; }
 }

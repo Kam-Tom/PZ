@@ -15,17 +15,17 @@ const ProductTile = ({ product, addToCart }) => {
                     {isDiscounted ? (
                         <>
                             <p className="price">Price: <del>{product.price} zł</del></p>
-                            <p className="price">{(product.price * (100 - product.promotionPrice)) / 100} zł</p>
+                            <p className="price">{product.promotionPrice} zł</p>
                         </>
                     ) : (
                         <p className="price">Price: {product.price} zł</p>
                     )}
-                    <p className="stock">Stock: {product.stock}</p>
+                    <p className="stock">Stock: {product.quantity}</p>
                 </div>
                 <h3 className="product-name">{product.name}</h3>
                 <div className="buttons-container">
                     <Link to={`/product/${product.id}`} className="view-more-btn">View more</Link>
-                    {product.stock > 0 ? (
+                    {product.quantity > 0 ? (
                         <button className="cart-btn" onClick={() => addToCart(product.id)}>
                             <ion-icon name="cart-outline"></ion-icon>
                         </button>
@@ -42,9 +42,9 @@ ProductTile.propTypes = {
     product: PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        promotionPrice: PropTypes.number,
-        stock: PropTypes.number.isRequired,
+        price: PropTypes.string.isRequired,
+        promotionPrice: PropTypes.string,
+        quantity: PropTypes.number.isRequired,
         thumbnailUrl: PropTypes.string.isRequired,
     }).isRequired,
     addToCart: PropTypes.func.isRequired,

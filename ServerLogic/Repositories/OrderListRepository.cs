@@ -58,22 +58,22 @@ public class OrderListRepository : IOrderListRepository
 
         if(orderItems == null)
         {
-            if (product.Stock < amount)
+            if (product.Quantity < amount)
                 return false;
             order.OrderItems.Add(new OrderItem
             {
                 Product = product,
-                Cost = amount * product.Price,
+                Cost = amount * product.Netto,
                 Quantity = amount
             });
         }
         else
         {
-            if (product.Stock < amount+orderItems.Quantity)
+            if (product.Quantity < amount+orderItems.Quantity)
                 return false;
 
             orderItems.Quantity += amount;
-            orderItems.Cost += amount * product.Price;
+            orderItems.Cost += amount * product.Netto;
         }
 
         _ctx.SaveChanges();
@@ -138,7 +138,7 @@ public class OrderListRepository : IOrderListRepository
                 Quantity = i.Quantity,
                 ImageUrl = i.Product.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Id = i.Product.Id,
-                Price = i.Product.Price,
+                Price = i.Product.Netto,
                 PromotionPrice = getProductPromitonCost(i)
             })
 
@@ -152,9 +152,9 @@ public class OrderListRepository : IOrderListRepository
         {
             Promotion? promotion = o.Product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault();
             if (promotion != null)
-                total += (o.Product.Price * (100 - promotion.Discount) / 100) * o.Quantity;
+                total += (o.Product.Netto * (100 - promotion.Discount) / 100) * o.Quantity;
             else 
-                total += o.Product.Price * o.Quantity;
+                total += o.Product.Netto * o.Quantity;
         }
 
         return total;
@@ -165,7 +165,7 @@ public class OrderListRepository : IOrderListRepository
 
         Promotion? promotion = items.Product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault();
         if (promotion != null)
-            total = (items.Product.Price * (100 - promotion.Discount) / 100);
+            total = (items.Product.Netto * (100 - promotion.Discount) / 100);
 
         return total;
     }
@@ -182,7 +182,7 @@ public class OrderListRepository : IOrderListRepository
                 Date = o.Date,
                 Cost = o.OrderItems.Sum(i => i.Cost),
                 Status = o.Status.ToString(),
-                Items = o.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity, Price = i.Product.Price })
+                Items = o.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity, Price = i.Product.Netto })
             };
         });
         
@@ -197,7 +197,7 @@ public class OrderListRepository : IOrderListRepository
         if (orderItems.Quantity > amount)
         {
             orderItems.Quantity -= amount;
-            orderItems.Cost -= product.Price * amount;
+            orderItems.Cost -= product.Netto * amount;
         }
         else
             order.OrderItems.Remove(orderItems);
@@ -218,8 +218,8 @@ public class OrderListRepository : IOrderListRepository
             if (product != null)
             {
                 // Ensure that the product stock is sufficient before deducting
-                if (product.Stock >= orderItem.Quantity)
-                    product.Stock -= orderItem.Quantity;
+                if (product.Quantity >= orderItem.Quantity)
+                    product.Quantity -= orderItem.Quantity;
                 else
                     throw new InvalidOperationException("Insufficient stock for product: " + product.Name);
             }

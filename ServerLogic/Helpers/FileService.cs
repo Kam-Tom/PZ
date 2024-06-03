@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace ServerLogic.Helpers;
 public class FileService
@@ -20,9 +22,20 @@ public class FileService
         return (bytes, contentType, Path.GetFileName(filepath));
 
     }
+
+    public string ResizeImage(string filename, int width = 400, int height = 400)
+    {
+        var exactpath = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\Files", filename);
+        using (Image image = Image.Load(exactpath))
+        {
+            image.Mutate(x => x.Resize(width, height));
+            image.Save(exactpath);
+        }
+
+        return filename;
+    }
     public string Write(IFormFile file)
     {
-
         string filename = "";
         try
         {

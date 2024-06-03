@@ -32,13 +32,32 @@ function MainPage() {
     const [showDiscounted, setShowDiscounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
+    let vatRates;
     const [cartItems, setCartItems] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: '' });
     const { theme } = useContext(ThemeContext);
     document.body.className = `${theme}-theme`;
 
     async function fetch() {
-        setProducts(await getAll("https://localhost:7248/Product"));
+        vatRates = [{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Increased", "rates": 40 }];
+        let productData = await getAll("https://localhost:7248/Product");
+
+        productData = productData.map(p => {
+            const vatRate = vatRates.find(v => v.name === p.vatType).rates;
+            const price = (p.netto + p.netto * (vatRate / 100)).toFixed(2);
+            const promotionNetto = (p.promotionNetto + p.promotionNetto * (vatRate / 100)).toFixed(2);
+
+            return {
+                id: p.id,
+                name: p.name,
+                price: price,
+                promotionPrice: p.promotionNetto !== null ? promotionNetto : null,
+                quantity: p.quantity,
+                thumbnailUrl: p.thumbnailUrl,
+            }
+        });
+        setProducts(productData);
+        
         setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
         }
 

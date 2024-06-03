@@ -28,32 +28,31 @@ public class ProductRepository : IProductRepository
 
         Product product = new Product()
         {
-            Name = request.Name,
-            VAT = request.VAT,
-            Stock = request.Stock,
-            CategoryId = request.CategoryId,
-            Description = request.Description,
-            Hidden = request.Hidden,
-            Price = request.Price,
+          Name = request.Name,
+          CategoryId = request.CategoryId,
+          Description = request.Description,
+          Netto = request.Netto,
+          VatType = request.VatType,
+          Quantity = request.Quantity,
+          Hidden = request.Hidden
         };
 
+
         var files = new List<ProductFile>();
-        if(request.Files != null)
-            for(int i = 0; i < request.Files.Count; i++)
-            {
-                files.Add(CreateProductFiles(request.Files[i], request.FilesDesc[i]));
-            }
+        if (request.Files != null)
+        for (int i = 0; i < request.Files.Count; i++)
+        {
+            files.Add(CreateProductFile(request.Files[i], request.FilesDescription[i]));
+        }
         var images = new List<ProductImage>();
-        if(request.Thumbnails != null)
-            for (int i = 0; i < request.Thumbnails.Count; i++)
-            {
-                images.Add(CreateProductImages(request.Thumbnails[i], true));
-            }
-        if(request.Images != null)
-            for (int i = 0; i < request.Images.Count; i++)
-            {
-                images.Add(CreateProductImages(request.Images[i]));
-            }
+
+        //Add thumbnail at start of list
+        images.Add(CreateProductImage(request.Thumbnail, true));
+
+        for (int i = 0; i < request.Images.Count; i++)
+        {
+            images.Add(CreateProductImage(request.Images[i]));
+        }
 
         product.Images = images;
         product.Files = files;
@@ -61,21 +60,26 @@ public class ProductRepository : IProductRepository
         _ctx.Products.Add(product);
 
         _ctx.SaveChanges();
-        
+
     }
 
-    ProductFile CreateProductFiles(IFormFile file,string desc)
+    ProductFile CreateProductFile(IFormFile file, string desc)
     {
         string path = _files.Write(file);
+        if(desc == null)
+            desc = file.FileName;
         return new ProductFile()
         {
             Description = desc,
             FilePath = path
         };
     }
-    ProductImage CreateProductImages(IFormFile img,bool isThumbnail = false)
+    ProductImage CreateProductImage(IFormFile img,bool isThumbnail = false)
     {
         string path = _files.Write(img);
+        if(isThumbnail)
+            path = _files.ResizeImage(path);
+
         return new ProductImage()
         {
             IsThumbnail = isThumbnail,
@@ -92,7 +96,7 @@ public class ProductRepository : IProductRepository
 
     public IEnumerable<ProductMinatureDto> GetMinaturesAll()
     {
-        var products = _ctx.Products.Include(p => p.Images).Include(p => p.Promotions).ToList();
+        var products = _ctx.Products.Include(p => p.Images).Include(p => p.Promotions).Where(p=>p.Hidden == false).ToList();
 
         var productDtos = products.Select(p =>
         {
@@ -100,10 +104,11 @@ public class ProductRepository : IProductRepository
             {
                 Id = p.Id,
                 Name = p.Name,
-                Stock = p.Stock,
-                Price = p.Price,
-                PromotionPrice = p.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath,
+                Quantity = p.Quantity,
+                Netto = p.Netto,
+                VatType = p.VatType,
+                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                ThumbnailUrl = p.Images.Where(i=>i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
         }).ToList();
@@ -118,12 +123,13 @@ public class ProductRepository : IProductRepository
         var productDto = new ProductDetailsDto()
         {
             Id = product.Id,
-            Stock = product.Stock,
+            Quantity = product.Quantity,
             Description = product.Description,
             Name = product.Name,
-            Price = product.Price,
+            Netto = product.Netto,
+            VatType = product.VatType,
             Category = _ctx.Categories.Where(i => i.Id == product.CategoryId).FirstOrDefault().Name,
-            PromotionPrice = product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+            PromotionNetto = product.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
         };
 
         if(product.Images != null)
@@ -132,7 +138,7 @@ public class ProductRepository : IProductRepository
         if (product.Files != null)
         { 
             productDto.FileUrls = product.Files.Select(f => f.FilePath);
-            productDto.FileDescs = product.Files.Select(f => f.Description);
+            productDto.FileDescriptions = product.Files.Select(f => f.Description);
         }
 
         return productDto;
@@ -158,7 +164,7 @@ public class ProductRepository : IProductRepository
 
     public IEnumerable<ProductMinatureDto> GetMinaturesByName(string name)
     {
-        var products = _ctx.Products.Where(p => p.Name.Contains(name)).Include(p => p.Images).Include(p => p.Promotions).ToList();
+        var products = _ctx.Products.Where(p => p.Name.Contains(name)).Include(p => p.Images).Include(p => p.Promotions).Where(p => p.Hidden == false).ToList();
 
         var productDtos = products.Select(p =>
         {
@@ -166,10 +172,11 @@ public class ProductRepository : IProductRepository
             {
                 Id = p.Id,
                 Name = p.Name,
-                Stock = p.Stock,
-                Price = p.Price,
-                PromotionPrice = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+                Quantity = p.Quantity,
+                Netto = p.Netto,
+                VatType = p.VatType,
+                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath
             };
         }).ToList();
 
@@ -178,7 +185,7 @@ public class ProductRepository : IProductRepository
 
     public IEnumerable<ProductMinatureDto> GetMinaturesByCategory(int categoryId)
     {
-        var products = _ctx.Products.Include(p => p.Images).Include(p=>p.Promotions).ToList();
+        var products = _ctx.Products.Include(p => p.Images).Include(p=>p.Promotions).Where(p => p.Hidden == false).ToList();
 
         var productDtos = products.Where(p => p.CategoryId == categoryId).Select(p =>
         {
@@ -186,10 +193,11 @@ public class ProductRepository : IProductRepository
             {
                 Id = p.Id,
                 Name = p.Name,
-                Stock = p.Stock,
-                Price = p.Price,
-                PromotionPrice = p.Promotions?.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+                Quantity = p.Quantity,
+                Netto = p.Netto,
+                VatType = p.VatType,
+                PromotionNetto = p.Promotions?.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath
             };
         }).ToList();
 
@@ -203,16 +211,18 @@ public class ProductRepository : IProductRepository
         if(promotion == null)
             return Enumerable.Empty<ProductMinatureDto>();
 
-        var productDtos = promotion.Products.Select(p =>
+        var productDtos = promotion.Products.Where(p=>p.Hidden == false).Select(p =>
         {
+
             return new ProductMinatureDto()
             {
                 Id = p.Id,
                 Name = p.Name,
-                Stock = p.Stock,
-                Price = p.Price,
-                PromotionPrice = promotion.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath
+                Quantity = p.Quantity,
+                Netto = p.Netto,
+                VatType = p.VatType,
+                PromotionNetto = promotion.Discount,
+                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath
             };
         }).ToList();
 
@@ -229,11 +239,12 @@ public class ProductRepository : IProductRepository
             {
                 Id = p.Id,
                 Name = p.Name,
-                Stock = p.Stock,
-                Price = p.Price,
+                Quantity = p.Quantity,
+                Netto = p.Netto,
+                VatType = p.VatType,
                 Description = p.Description,
-                PromotionPrice = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
-                ThumbnailUrl = p.Images.Where(i => i.IsThumbnail).FirstOrDefault().ImagePath, 
+                Hidden = p.Hidden,
+                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
                 Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
         }).ToList();

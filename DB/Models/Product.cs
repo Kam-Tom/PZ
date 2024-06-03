@@ -11,17 +11,14 @@ public class Product
 
     public string Description { get; set; }
 
-    public decimal Price { get; set; }
+    public decimal Netto { get; set; }
+    public string VatType { get; set; }
 
-    public int Stock { get; set; }
+    public int Quantity { get; set; }
 
     public int CategoryId { get; set; }
 
     public Category Category { get; set; }
-
-    [Range(0,100)]
-    [Precision(3, 1)]
-    public decimal VAT { get; set; }
 
     public bool Hidden { get; set; }
 
