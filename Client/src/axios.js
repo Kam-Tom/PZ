@@ -221,12 +221,12 @@ export async function postNewProduct(product) {
     formData.append("quantity", product.quantity);
 
     // Append images one by one
-    product.images.forEach((image) => {
+    product.images?.forEach((image) => {
         formData.append('images', image);
     });
 
     // Append files and descriptions one by one
-    product.files.forEach((file) => {
+    product.files?.forEach((file) => {
         formData.append(`files`, file.file);
         formData.append(`filesDescription`, file.description);
     });
