@@ -15,7 +15,7 @@ const ProductPage = ( ) => {
     useEffect(() => {
         async function fetchFromDatabase() {
         setProduct(await getAll(`https://localhost:7248/Product/${parseInt(id)}`));
-        }z
+        }
         fetchFromDatabase();
     }, []);
 
