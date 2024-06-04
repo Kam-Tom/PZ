@@ -110,8 +110,8 @@ function MainPage() {
                 : product.price;
             return (!minPrice || finalPrice >= minPrice) && (!maxPrice || finalPrice <= maxPrice);
         })
-        .filter((product) => !inStock || product.stock > 0)
-        .filter((product) => !outOfStock || product.stock === 0)
+        .filter((product) => !inStock || product.quantity > 0)
+        .filter((product) => !outOfStock || product.quantity === 0)
         .filter((product) => !showDiscounted || product.promotionPrice !== null)
         .sort((a, b) => {
             switch (sortType) {
