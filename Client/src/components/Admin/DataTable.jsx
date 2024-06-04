@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import "./DataTable.css";
 import { deleteElement, getAll, cancel } from "../../axios";
 
-function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails }) {
+function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails, refresh }) {
     const [data, setData] = useState([]);
     const [selectedData, setSelectedData] = useState(null);
 
@@ -13,7 +13,7 @@ function DataTable({ apiGetEndpoint,apiDeleteEndpoint, columns, renderDetails })
     }
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [refresh]);
 
     const onSelectData = (dataItem) => {
         setSelectedData(selectedData === dataItem ? null : dataItem);

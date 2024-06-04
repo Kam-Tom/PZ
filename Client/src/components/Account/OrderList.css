@@ -11,9 +11,22 @@
     padding: 10px 0;
 }
 
-.cancel-button-container {
+.buttons-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+}
+
+.re-add-to-cart-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
 .cancel-button {
@@ -28,3 +41,5 @@
     margin: 4px 2px;
     cursor: pointer;
 }
+
+
