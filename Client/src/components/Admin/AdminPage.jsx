@@ -110,7 +110,7 @@ function AdminPage({ onAddProduct }) {
         setShowStats(false);
     };
 
-    const showUserListFn = async () => {
+    const showUserListFn = () => {
         // setUsers(await getAll("https://localhost:7248/api/Users/Get"));
         setShowUserList(true);
         setShowReviewList(false);
@@ -188,6 +188,8 @@ function AdminPage({ onAddProduct }) {
                     setShowAddPromotionForm(false);
                     setShowAddShippingMethodForm(false);
                     setSelectedProduct(null);
+                    setShowOrderList(false);
+                    setShowReviewList(false);
                     setShowStats(false);
                 }}
                 onShowAddCategoryForm={showAddCategoryFormFn}

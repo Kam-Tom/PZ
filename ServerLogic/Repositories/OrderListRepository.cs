@@ -182,7 +182,7 @@ public class OrderListRepository : IOrderListRepository
                 Date = o.Date,
                 Cost = o.OrderItems.Sum(i => i.Cost),
                 Status = o.Status.ToString(),
-                Items = o.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity, Price = i.Product.Netto })
+                Items = o.OrderItems.Select(i => new OrderItemDto() { Id=i.Product.Id,Name = i.Product.Name, Quantity = i.Quantity, Price = i.Product.Netto })
             };
         });
         
