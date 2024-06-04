@@ -30,6 +30,33 @@
     transition: background-color 0.3s ease;
 }
   
+.product-filter button.active {
+    background-color: #d35400;
+}
+
+.product-filter button:not(.active):hover {
+    background-color: #d35400;
+}
+
 .product-filter button:hover {
     background-color: #d35400;
+}
+
+.product-filter input[type="number"] {
+    width: 45%;
+    padding: 5px;
+    margin: 5px 2.5%;
+    border: 1px solid #e67e22;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+.product-filter input[type="number"]::-webkit-inner-spin-button,
+.product-filter input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

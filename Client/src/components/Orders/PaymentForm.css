@@ -1,27 +1,30 @@
 .payment-form-container {
-    max-width: 45%;
-    margin: 50px auto;
+    margin: 50px auto 50px 60px;
     padding: 30px;
     border-radius: 10px;
     overflow-y: auto;
     max-height: 800px;
-    position: relative;
-    float: right;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: absolute;
+    right: 25%;
+    top: 10%;
+    float: right;
 }
 
-.payment-method-radio {
-    margin-bottom: 30px;
-}
-
+.payment-method-selection,
+.blik-payment-form,
 .card-payment-form {
     margin-top: 30px;
+    width: 320px;
 }
 
-.card-payment-form input {
+.payment-method-selection input,
+.blik-payment-form input,
+.payment-method-selection button,
+.blik-payment-form button {
     width: 100%;
     padding: 15px;
     margin-bottom: 20px;
@@ -32,13 +35,32 @@
     transition: border-color 0.3s ease;
 }
 
-.card-payment-form label {
+.payment-method-radio {
+    margin-bottom: 30px;
+}
+
+.card-payment-form input,
+.blik-payment-form input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.card-payment-form label,
+.blik-payment-form label {
     display: block;
     margin-bottom: 15px;
     font-size: 16px;
 }
 
-.card-payment-form button {
+.card-payment-form button,
+.blik-payment-form button,
+.payment-method-selection button {
     background-color: #e67e22;
     color: #fff;
     padding: 18px;
@@ -47,21 +69,28 @@
     cursor: pointer;
     font-size: 18px;
     transition: background-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.card-payment-form button:hover {
+.payment-method-selection button {
+    margin-bottom: 20px;
+}
+
+.payment-method-selection button:hover,
+.card-payment-form button:hover,
+.blik-payment-form button:hover {
     background-color: #d34500;
 }
 
-.card-payment-form input.invalid {
+.card-payment-form input.invalid,
+.blik-payment-form input.invalid{
     font-size: 16px;
-}
-
-.card-payment-form input.invalid {
     border-color: #e74c3c;
 }
 
-.card-payment-form input.valid {
+.card-payment-form input.valid,
+.blik-payment-form input.valid {
     border-color: #2ecc71;
 }
 
@@ -69,4 +98,17 @@
     color: #e74c3c;
     font-size: 16px;
     margin-top: 5px;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 1001;
+}
+
+.orange-arrow ion-icon {
+    color: #E67E22;
 }

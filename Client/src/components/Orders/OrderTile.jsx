@@ -1,11 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
+import "./OrderTile.css";
 
 const OrderTile = ({ item, removeFromCart, removeAllFromCart }) => {
     const isDiscounted = item.promotionPrice !== null && item.promotionPrice < item.price;
 
     return (
-        <li key={item.id} className="product-tile">
+        <li key={item.id} className="order-tile">
             <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
             <div className="product-info">
                 <div className="price-stock-container">

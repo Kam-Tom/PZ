@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import "./ProductFilter.css";
 
-const ProductFilter = ({ categories, onSelectCategory, onFilterDiscounted }) => {
+const ProductFilter = ({ categories, onSelectCategory, onFilterDiscounted, onFilterPriceRange, onFilterStock }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [showDiscounted, setShowDiscounted] = useState(false);
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [stockFilter, setStockFilter] = useState('all');
+    const [isDiscounted, setIsDiscounted] = useState(false);
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
@@ -12,19 +15,66 @@ const ProductFilter = ({ categories, onSelectCategory, onFilterDiscounted }) => 
     };
 
     const handleDiscountedToggle = () => {
-        setShowDiscounted(!showDiscounted);
-        onFilterDiscounted(!showDiscounted);
+        setIsDiscounted(true);
+        onFilterDiscounted(true);
+    };
+
+    const handleAllToggle = () => {
+        setIsDiscounted(false);
+        onFilterDiscounted(false);
+    };
+
+    const handlePriceChange = () => {
+        onFilterPriceRange([Number(minPrice), Number(maxPrice)]);
+    };
+
+    const handleStockFilterChange = (filter) => {
+        setStockFilter(filter);
+        switch (filter) {
+            case 'inStock':
+                onFilterStock(true, false);
+                break;
+            case 'outOfStock':
+                onFilterStock(false, true);
+                break;
+            case 'all':
+            default:
+                onFilterStock(undefined, undefined);
+                break;
+        }
+    };
+
+    const handleReset = () => {
+        setSelectedCategory(null);
+        setMinPrice('');
+        setMaxPrice('');
+        setStockFilter('all');
+        setIsDiscounted(false);
+        onSelectCategory(null);
+        onFilterDiscounted(false);
+        onFilterPriceRange([undefined, undefined]);
+        onFilterStock(undefined, undefined);
     };
 
     return (
         <div className="product-filter">
             <h2>Filter discounted products</h2>
-            <button onClick={handleDiscountedToggle} className={showDiscounted ? 'active' : ''}>Discounted</button>
-            <h2>Filter by Category</h2>
-            <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : ''}>All</button>
-            {categories.map((category, index) => (
-                <button key={index} onClick={() => handleCategoryChange(category)} className={selectedCategory === null ? 'active' : ''}>{category}</button>
-            ))}
+                <button onClick={handleAllToggle} className={!isDiscounted ? 'active' : ''}>All</button>
+                <button onClick={handleDiscountedToggle} className={isDiscounted ? 'active' : ''}>Discounted</button>
+            <h2>Filter by category</h2>
+                <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : ''}>All</button>
+                    {categories.map((category, index) => (
+                        <button key={index} onClick={() => handleCategoryChange(category)} className={selectedCategory === category ? 'active' : ''}>{category}</button>
+                    ))}
+            <h2>Filter by price range</h2>
+                <input type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} onBlur={handlePriceChange} placeholder="Min price" />
+                <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} onBlur={handlePriceChange} placeholder="Max price" />
+            <h2>Filter by stock</h2>
+                <button onClick={() => handleStockFilterChange('all')} className={stockFilter === 'all' ? 'active' : ''}>All</button>
+                <button onClick={() => handleStockFilterChange('inStock')} className={stockFilter === 'inStock' ? 'active' : ''}>In Stock</button>
+                <button onClick={() => handleStockFilterChange('outOfStock')} className={stockFilter === 'outOfStock' ? 'active' : ''}>Out of Stock</button>
+            <h2>Reset filters</h2>
+                <button onClick={handleReset}>Reset filters</button>
         </div>
     );
 };
@@ -33,6 +83,8 @@ ProductFilter.propTypes = {
     categories: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSelectCategory: PropTypes.func.isRequired,
     onFilterDiscounted: PropTypes.func.isRequired,
+    onFilterPriceRange: PropTypes.func.isRequired,
+    onFilterStock: PropTypes.func.isRequired,
 };
 
 export default ProductFilter;

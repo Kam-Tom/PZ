@@ -1,0 +1,11 @@
+.checkout-container {
+    display: flex;
+}
+
+.shopping-cart-container {
+    max-width: 50%;
+}
+
+.payment-form-container {
+    max-width: 50%;
+}

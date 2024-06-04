@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 const ProductTile = ({ product, addToCart }) => {
     const isDiscounted = product.promotionPrice !== null;
+    const discountedPrice = isDiscounted ? (product.price * (100 - product.promotionPrice)) / 100 : product.price;
 
     return (
         <div className="product-tile">
@@ -15,7 +16,7 @@ const ProductTile = ({ product, addToCart }) => {
                     {isDiscounted ? (
                         <>
                             <p className="price">Price: <del>{product.price} zł</del></p>
-                            <p className="price">{(product.price * (100 - product.promotionPrice)) / 100} zł</p>
+                            <p className="price">{discountedPrice} zł</p>
                         </>
                     ) : (
                         <p className="price">Price: {product.price} zł</p>

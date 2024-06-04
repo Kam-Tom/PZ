@@ -6,7 +6,7 @@ import "../Main/AppNotification.css";
 import AppNotification from "../Main/AppNotification";
 
 const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
-    const [paymentMethod, setPaymentMethod] = useState("card");
+    const [paymentMethod, setPaymentMethod] = useState(null);
     const [cardNumber, setCardNumber] = useState("");
     const [expiryDate, setExpiryDate] = useState("");
     const [cvc, setCvc] = useState("");
@@ -15,6 +15,8 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
     const [isCardNumberValid, setIsCardNumberValid] = useState(false);
     const [isCvcValid, setIsCvcValid] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(false);
+    const [blikCode, setBlikCode] = useState("");
+    const [isBlikCodeValid, setIsBlikCodeValid] = useState(false);
     const [notification, setNotification] = useState(false);
 
     const [cost, setCost] = useState(0);
@@ -34,14 +36,14 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
         cartTotal = []
         setProducts(await getAll("https://localhost:7248/Product"));
         setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
+        setCardNumber("");
+        setExpiryDate("");
+        setCvc("");
+        setEmail("");
+        setBlikCode("");
         if (isCardNumberValid && isExpiryDateValid && isCvcValid && isEmailValid) {
             setNotification(true);
-            setCardNumber("");
-            setExpiryDate("");
-            setCvc("");
-            setEmail("");
         }
-        console.log("Form submitted!");
     };
 
     const handleCardNumberChange = (e) => {
@@ -84,76 +86,129 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
         setIsEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(enteredEmail));
     };
 
+    const handleBlikCodeChange = (e) => {
+        const formattedBlikCode = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+        setBlikCode(formattedBlikCode);
+        setIsBlikCodeValid(formattedBlikCode.length === 6);
+    };
+
     return (
         <div className="payment-form-container">
+            {paymentMethod && (
+                <div className="back-button orange-arrow" onClick={() => setPaymentMethod(null)}>
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </div>
+            )}
             <h2>Payment Form</h2>
-            <form onSubmit={handleSubmit}>
-                {paymentMethod === "card" && (
-                    <div className="card-payment-form">
-                        <label>
-                            Card Number:
-                            <input 
-                                type="text" 
-                                inputMode="numeric" 
-                                pattern="[0-9]*" 
-                                placeholder="Enter your card number" 
-                                value={cardNumber} 
-                                onChange={handleCardNumberChange} 
-                                className={!cardNumber || !isCardNumberValid ? 'invalid' : 'valid'} 
-                                required 
-                            />
-                            {cardNumber && !isCardNumberValid && (
-                                <div className="error-message">Invalid card number</div>
-                            )}
-                        </label>
-                        <label>
-                            Expiry Date:
-                            <input 
-                                type="text" 
-                                pattern="[0-9/]*" 
-                                placeholder="MM/YY" 
-                                value={expiryDate} 
-                                onChange={handleExpiryDateChange} 
-                                className={!expiryDate || !isExpiryDateValid ? 'invalid' : 'valid'} 
-                                required 
-                            />
-                            {expiryDate && !isExpiryDateValid && (
-                                <div className="error-message">Invalid expiration date</div>
-                            )}
-                        </label>
-                        <label>
-                            CVC:
-                            <input 
-                                type="text" 
-                                pattern="[0-9]*" 
-                                placeholder="CVC" 
-                                value={cvc} 
-                                onChange={handleCvcChange} 
-                                className={!cvc || !isCvcValid ? 'invalid' : 'valid'} 
-                                required 
-                            />
-                            {cvc && !isCvcValid && (
-                                <div className="error-message">Invalid CVC</div>
-                            )}
-                        </label>
-                        <label>
-                            Email:
-                            <input 
-                                type="email" 
-                                placeholder="Enter your email" 
-                                value={email} 
-                                onChange={handleEmailChange} 
-                                className={!email || !isEmailValid ? 'invalid' : 'valid'} 
-                                required 
-                            />
-                            {email && !isEmailValid && (
-                                <div className="error-message">Invalid email</div>
-                            )}
-                        </label>
-                        <button type="submit">Pay: {cartTotal} zł</button>
-                    </div>
-                )}
-            </form>
+            {!paymentMethod ? (
+                <div className="payment-method-selection">
+                    <button onClick={() => setPaymentMethod("card")}>Pay with Card</button>
+                    <button onClick={() => setPaymentMethod("blik")}>Pay with Blik</button>
+                </div>
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    {paymentMethod === "card" && (
+                        <div className="card-payment-form">
+                            <label>
+                                Card Number:
+                                <input 
+                                    type="text" 
+                                    inputMode="numeric" 
+                                    pattern="[0-9]*" 
+                                    placeholder="Enter your card number" 
+                                    value={cardNumber} 
+                                    onChange={handleCardNumberChange} 
+                                    className={!cardNumber || !isCardNumberValid ? 'invalid' : 'valid'} 
+                                    required 
+                                />
+                                {cardNumber && !isCardNumberValid && (
+                                    <div className="error-message">Invalid card number</div>
+                                )}
+                            </label>
+                            <label>
+                                Expiry Date:
+                                <input 
+                                    type="text" 
+                                    pattern="[0-9/]*" 
+                                    placeholder="MM/YY" 
+                                    value={expiryDate} 
+                                    onChange={handleExpiryDateChange} 
+                                    className={!expiryDate || !isExpiryDateValid ? 'invalid' : 'valid'} 
+                                    required 
+                                />
+                                {expiryDate && !isExpiryDateValid && (
+                                    <div className="error-message">Invalid expiration date</div>
+                                )}
+                            </label>
+                            <label>
+                                CVC:
+                                <input 
+                                    type="text" 
+                                    pattern="[0-9]*" 
+                                    placeholder="CVC" 
+                                    value={cvc} 
+                                    onChange={handleCvcChange} 
+                                    className={!cvc || !isCvcValid ? 'invalid' : 'valid'} 
+                                    required 
+                                />
+                                {cvc && !isCvcValid && (
+                                    <div className="error-message">Invalid CVC</div>
+                                )}
+                            </label>
+                            <label>
+                                Email:
+                                <input 
+                                    type="email" 
+                                    placeholder="Enter your email" 
+                                    value={email} 
+                                    onChange={handleEmailChange} 
+                                    className={!email || !isEmailValid ? 'invalid' : 'valid'} 
+                                    required 
+                                />
+                                {email && !isEmailValid && (
+                                    <div className="error-message">Invalid email</div>
+                                )}
+                            </label>
+                            <button type="submit">Pay: {cartTotal} zł</button>
+                        </div>
+                    )}
+                    {paymentMethod === "blik" && (
+                        <div className="blik-payment-form">
+                            <label>
+                                Email:
+                                <input 
+                                    type="email" 
+                                    placeholder="Enter your email" 
+                                    value={email} 
+                                    onChange={handleEmailChange} 
+                                    className={!email || !isEmailValid ? 'invalid' : 'valid'} 
+                                    required 
+                                />
+                                {email && !isEmailValid && (
+                                    <div className="error-message">Invalid email</div>
+                                )}
+                            </label>
+                            <label>
+                                Blik Code:
+                                <input 
+                                    type="text" 
+                                    inputMode="numeric" 
+                                    pattern="[0-9]*" 
+                                    placeholder="Enter your Blik code" 
+                                    value={blikCode} 
+                                    onChange={handleBlikCodeChange} 
+                                    className={!blikCode || !isBlikCodeValid ? 'invalid' : 'valid'} 
+                                    required 
+                                />
+                                {blikCode && !isBlikCodeValid && (
+                                    <div className="error-message">Invalid Blik code</div>
+                                )}
+                            </label>
+                            <button type="submit">Pay: {cartTotal} zł</button>
+                        </div>
+                    )}
+                </form>
+            )}
             {notification && <AppNotification message="Purchase successful!" onClose={() => setNotification(false)} />}
         </div>
     );
