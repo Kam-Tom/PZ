@@ -9,9 +9,9 @@ public class AddProductDto
     [Required] public int CategoryId { get; set; }
     [Required] public string Description { get; set; }
     public IFormFile Thumbnail { get; set; }
-    public List<IFormFile> Images { get; set; }
-    public List<IFormFile> Files { get; set; }
-    public List<string> FilesDescription { get; set; }
+    public List<IFormFile> Images { get; set; } = new List<IFormFile>();
+    public List<IFormFile> Files { get; set; } = new List<IFormFile>();
+    public List<string> FilesDescription { get; set; } = new List<string>();
     public decimal Netto { get; set; }
     public string VatType { get; set; }
     public int Quantity { get; set; }

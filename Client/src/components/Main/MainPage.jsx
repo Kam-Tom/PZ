@@ -66,6 +66,7 @@ function MainPage() {
                 quantity: p.quantity,
                 thumbnailUrl: p.thumbnailUrl,
                 reviews: p.reviews,
+                category: p.category,
             }
         });
         setProducts(productData);
