@@ -34,7 +34,9 @@ public class UserRepository : IUserRepository
             ShippingAddress = "",
             EmailVerified = false,
             VerificationToken = emailVerificationToken,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.Now,
+            Currency = "PLN",
+            NumOfProductOnPage = "8",
         };
 
         _ctx.Users.Add(user);
@@ -98,7 +100,9 @@ public class UserRepository : IUserRepository
             ShippingAddress = u.ShippingAddress,
             EmailVerified = u.EmailVerified,
             NewsletterSubscription = u.NewsletterSubscription,
-            CreatedAt = u.CreatedAt
+            CreatedAt = u.CreatedAt,
+            Currency = u.Currency,
+            NumOfProductOnPage = u.NumOfProductOnPage
         });
 
         return usersDto;
@@ -121,6 +125,14 @@ public class UserRepository : IUserRepository
     public void UpdateNewslatter(User user)
     {
         user.NewsletterSubscription = !user.NewsletterSubscription;
+
+        _ctx.SaveChanges();
+    }
+
+    public void ChangeOptions(User user, string currency, string numOfProductOnPage)
+    {
+        user.Currency = currency;
+        user.NumOfProductOnPage = numOfProductOnPage;
 
         _ctx.SaveChanges();
     }

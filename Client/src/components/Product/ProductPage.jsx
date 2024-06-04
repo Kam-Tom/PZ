@@ -5,7 +5,7 @@ import { getAll, addToCart } from "../../axios";
 import PropTypes from 'prop-types';
 import AppNotification from "../Main/AppNotification";
 
-const ProductPage = ( ) => {
+const ProductPage = ({ products, currencyRate, currency } ) => {
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -44,10 +44,10 @@ const ProductPage = ( ) => {
                 <h2 className="product-detail-name">{name}</h2>
                 {isDiscounted ? (
                     <>
-                        <p className="product-detail-price">Price: <del>{price} zł</del> {(price * (100 - product.promotionPrice)) / 100} zł</p>
+                        <p className="product-detail-price">Price: <del>{(price / currencyRate).toFixed(2)} {currency}</del> {((price * (100 - product.promotionPrice)) / 100)*currencyRate} {currency}</p>
                     </>
                 ) : (
-                    <p className="product-detail-price">Price: {price} zł</p>
+                    <p className="product-detail-price">Price: {(price / currencyRate).toFixed(2)} {currency}</p>
                 )}
                 <p className="product-detail-stock">Stock: {stock}</p>
                 <p className="product-detail-category">Category: {category}</p>

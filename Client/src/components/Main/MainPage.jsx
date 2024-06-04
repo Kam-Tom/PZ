@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes, { func } from 'prop-types';
 
 import Navbar from "./Navbar";
 import LoginRegister from "../Account/LoginRegister";
@@ -18,6 +18,7 @@ import { ThemeContext } from "../../ThemeContext.jsx";
 import ProductSorter from "../Product/ProductSorter.jsx";
 import "../../ThemeStyle.css";
 import "../Orders/CartAndForm.css";
+import axios from "axios";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -43,6 +44,9 @@ function MainPage() {
     const [aReviews, setAReviews] = useState([]);
     const [bReviews, setBReviews] = useState([]);
     const [sortType, setSortType] = useState(null);
+    const [userInfo, setUserInfo] = useState(null);
+    const [rate, setRate] = useState(1);
+    const [currency, setCurrency] = useState("zł"); 
 
     const { theme } = useContext(ThemeContext);
     document.body.className = `${theme}-theme`;
@@ -50,11 +54,13 @@ function MainPage() {
     async function fetch() {
         vatRates = [{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Increased", "rates": 40 }];
         let productData = await getAll("https://localhost:7248/Product");
+        let items = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
+        setUserInfo(items);
         for (const product of productData) {
             product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
         }
         productData = productData.map(p => {
-            const vatRate = vatRates.find(v => v.name === p.vatType).rates;
+            const vatRate = vatRates.find(v => v.name === p.vatType).rates ;
             const price = (p.netto + p.netto * (vatRate / 100)).toFixed(2);
             const promotionNetto = (p.promotionNetto + p.promotionNetto * (vatRate / 100)).toFixed(2);
 
@@ -66,6 +72,7 @@ function MainPage() {
                 quantity: p.quantity,
                 thumbnailUrl: p.thumbnailUrl,
                 reviews: p.reviews,
+                category: p.category,
             }
         });
         setProducts(productData);
@@ -93,12 +100,50 @@ function MainPage() {
         setSortType(type);
     };
 
+    
+
     function averageRating(reviews) {
         if (reviews.length === 0) {
             return 0;
         }
         const sum = reviews.reduce((a, b) => a + b.rating, 0);
         return sum / reviews.length;
+    }
+
+    useEffect(() => {
+        async function fetchCurrencyRate() {
+            if (!userInfo) {
+                setRate(1);
+                return;
+            }
+            let currency = userInfo.currency;
+            if (currency === "zł") {
+                setCurrency("zł");
+                setRate(1.0);
+            } else if (currency === "$") {
+                const rate = await getCurrencyRate("USD");
+                setCurrency("$");
+                setRate(rate);
+            } else if (currency === "€") {
+                const rate = await getCurrencyRate("EUR");
+                setCurrency("€");
+                setRate(rate);
+            } else {
+                setRate(4.0); // default rate for other currencies
+            }
+        }
+    
+        fetchCurrencyRate();
+    }, [userInfo]);
+    
+    async function getCurrencyRate(currencyCode) {
+        try {
+            const response = await axios.get(`https://api.allorigins.win/raw?url=http://api.nbp.pl/api/exchangerates/rates/A/${currencyCode}/?format=json`);
+            return response.data.rates[0].mid;
+        } catch (error) {
+            console.error(`Error while fetching currency rate: ${error}`);
+            return 1; // return default rate in case of error
+        }
     }
 
     const filteredAndSortedProducts = products
@@ -140,6 +185,13 @@ function MainPage() {
             .catch((error) => {
             });
     };
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = (userInfo && Number(userInfo.numOfProductOnPage) || 4)/4;
+    const totalPages = Math.ceil(productRows.length / productsPerPage);
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
 
     const handleAddReview = (newReview) => {
         setReviews([...reviews, newReview]);
@@ -155,6 +207,8 @@ function MainPage() {
         setOutOfStock(outOfStock);
     };
 
+    //var rate = currencyF();
+    //var currency = userInfo && userInfo.currency || "zł";
     return (
         <div className={`${theme}-theme`}>
             <Routes>
@@ -178,14 +232,24 @@ function MainPage() {
                                 />
                                 <ProductSorter onSort={handleSort} />
                             </div>
-                            <div className="product-list-container">
-                                {productRows.map((row, rowIndex) => (
-                                    <div key={rowIndex} className="product-list-row">
-                                        {row.map((product) => (
-                                            <ProductTile key={product.id} product={product} addToCart={handleAddToCart}/>
-                                        ))}
-                                    </div>
-                                ))}
+                            <div>
+                                <div className="product-list-container">
+                                    {productRows.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage).map((row, rowIndex) => (
+                                        <div key={rowIndex} className="product-list-row">
+                                            {row.map((product) => (
+                                                <ProductTile key={product.id} product={product} addToCart={handleAddToCart} isDiscounted={product.promotionPrice !== null} currencyRate={rate} currency={currency} />
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="pagination" style={{ position: 'absolute', bottom: '0', width: '100%' }}>
+                                    {currentPage > 1 && <button style={{ fontSize: '15px', padding: '10px', margin: '5px' }} onClick={() => handlePageChange(currentPage - 1)}>{"<"}</button>}
+                                    {[...Array(totalPages)].map((_, i) => (
+                                        <button style={{ fontSize: '15px', padding: '10px', margin: '5px' }} key={i} onClick={() => handlePageChange(i + 1)}>{i + 1}</button>
+                                    ))}
+                                    {currentPage < totalPages && <button style={{ fontSize: '15px', padding: '10px', margin: '5px' }} onClick={() => handlePageChange(currentPage + 1)}>{">"}</button>}
+                                </div>
                             </div>
                         </>
                     }
@@ -200,7 +264,7 @@ function MainPage() {
                             notification={notification} 
                             setNotification={setNotification} 
                             />
-                            <ProductPage products={products} />
+                            <ProductPage products={products}  currencyRate={rate} currency={currency} />
                             <ReviewsProduct onAddReview={handleAddReview} />
                         </>
                     }
@@ -235,9 +299,9 @@ function MainPage() {
                             />
                             <div className="checkout-container">
                                 <ShoppingCart 
-                                cartItems={cartItems} setCartItems={setCartItems} 
+                                cartItems={cartItems} setCartItems={setCartItems} currencyRate={rate} currency={currency}
                                 />
-                                <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
+                                <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} currencyRate={rate} currency={currency}/>
                             </div>
                         </>
                     }
@@ -269,7 +333,7 @@ MainPage.propTypes = {
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
         price: PropTypes.string.isRequired,
-        stock: PropTypes.number.isRequired,
+        quantity: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,

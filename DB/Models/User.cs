@@ -34,4 +34,8 @@ public class User
     public DateTime? ResetPasswordTokenExpires { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public string? Currency { get; set; }
+
+    public string? NumOfProductOnPage { get; set; }
 }

@@ -107,4 +107,18 @@ public class UsersController : ControllerBase
 
         return Ok("Newsletter sent succesfully");
     }
+
+    [HttpPut("ChangeOptions"), Authorize]
+    public ActionResult ChangeOptions(string currency, string numOfProductOnPage)
+    {
+        var email = User?.FindFirstValue(ClaimTypes.Email);
+        var user = _repo.GetByEmail(email);
+
+        if (user != null)
+            _repo.ChangeOptions(user, currency, numOfProductOnPage);
+        else
+            return BadRequest("User dont exist");
+
+        return Ok("Options changed successful");
+    }
 }
