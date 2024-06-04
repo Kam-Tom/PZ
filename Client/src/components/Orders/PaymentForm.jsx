@@ -5,7 +5,7 @@ import "./PaymentForm.css";
 import "../Main/AppNotification.css";
 import AppNotification from "../Main/AppNotification";
 
-const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
+const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, currency }) => {
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [cardNumber, setCardNumber] = useState("");
     const [expiryDate, setExpiryDate] = useState("");
@@ -169,7 +169,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
                                     <div className="error-message">Invalid email</div>
                                 )}
                             </label>
-                            <button type="submit">Pay: {cartTotal} zł</button>
+                            <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency}</button>
                         </div>
                     )}
                     {paymentMethod === "blik" && (
@@ -204,7 +204,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems }) => {
                                     <div className="error-message">Invalid Blik code</div>
                                 )}
                             </label>
-                            <button type="submit">Pay: {cartTotal} zł</button>
+                            <button type="submit">Pay: {(cartTotal/ currencyRate).toFixed(2)} {currency}</button>
                         </div>
                     )}
                 </form>

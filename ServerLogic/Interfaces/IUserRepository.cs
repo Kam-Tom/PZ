@@ -14,6 +14,7 @@ public interface IUserRepository
     public void ResetPassword(User user,string newPassword);
     public void Delete(User user);
     public void UpdateNewslatter(User user);
+    public void ChangeOptions(User user, string currency, string numOfProductOnPage);
     public IEnumerable<UserDataDto> GetAllUsersData();
     public IEnumerable<EmailSubscriptionDto> GetAllEmailSubscriptions();
     public JwtService.UserRole GetUserRole(User user);

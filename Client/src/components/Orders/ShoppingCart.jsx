@@ -4,7 +4,7 @@ import { getAll, deleteElement } from "../../axios";
 import "./ShoppingCart.css";
 import OrderTile from "./OrderTile";
 
-const ShoppingCart = ({ cartItems, setCartItems }) => {
+const ShoppingCart = ({ cartItems, setCartItems, currencyRate, currency }) => {
     async function fetchFromDatabase() {
         let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
         console.log("TEST ",items);
@@ -33,7 +33,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                 <>
                     <ul className="cart-items-list"> 
                         {cartItems?.items && cartItems.items.map((item,key) => (
-                            <OrderTile key={key} item={item} removeFromCart={removeFromCart} removeAllFromCart={() => removeAllFromCart(item.id, item.quantity)} />
+                            <OrderTile key={key} item={item} currencyRate={currencyRate} currency={currency} removeFromCart={removeFromCart} removeAllFromCart={() => removeAllFromCart(item.id, item.quantity)} />
                         ))}
                     </ul>
                 </>

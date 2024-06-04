@@ -4,7 +4,8 @@ import "./ProductTile.css";
 import { addToCart } from "../../axios"
 import PropTypes from 'prop-types';
 
-const ProductTile = ({ product, addToCart }) => {
+
+const ProductTile = ({ product, addToCart, currencyRate, currency }) => {
     const isDiscounted = product.promotionPrice !== null;
 
     return (
@@ -14,11 +15,11 @@ const ProductTile = ({ product, addToCart }) => {
                 <div className="price-stock-container">
                     {isDiscounted ? (
                         <>
-                            <p className="price">Price: <del>{product.price} zł</del></p>
-                            <p className="price">{product.promotionPrice} zł</p>
+                            <p className="price">Price: <del>{(product.price / currencyRate).toFixed(2)} {currency}</del></p>
+                            <p className="price">{(product.promotionPrice / currencyRate).toFixed(2)} {currency}</p>
                         </>
                     ) : (
-                        <p className="price">Price: {product.price} zł</p>
+                        <p className="price">Price: {(product.price/ currencyRate).toFixed(2)} {currency} </p>
                     )}
                     <p className="stock">Stock: {product.quantity}</p>
                 </div>
@@ -43,7 +44,7 @@ ProductTile.propTypes = {
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
         price: PropTypes.string.isRequired,
-        promotionPrice: PropTypes.string,
+        promotionPrice: PropTypes.number,
         quantity: PropTypes.number.isRequired,
         thumbnailUrl: PropTypes.string.isRequired,
     }).isRequired,

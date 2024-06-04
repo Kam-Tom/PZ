@@ -116,6 +116,8 @@ export async function postNewUser(user) {
         password: user.password,
         confirmPassword: user.password,
         createdAt : new Date().getDate(),
+        currency: "PLN",
+        numOfProductOnPage : "8",
       }
       console.log("user do dodania", newUser);
     const url = "https://localhost:7248/Auth/register";
@@ -309,6 +311,16 @@ export async function putNewsletter(newsletter) {
     const options = getOptions('PUT');
 
     await axios.put(url, data, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}
+
+export async function changeOptions(currency, numOfProductOnPage) {
+    const url = `https://localhost:7248/api/Users/ChangeOptions?currency=${currency}&numOfProductOnPage=${numOfProductOnPage}`;
+
+    const options = getOptions('PUT');
+
+    await axios.put(url, null, options)
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }

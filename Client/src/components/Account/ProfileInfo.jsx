@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAll } from '../../axios';
+import { getAll, changeOptions} from '../../axios';
 import { changeSubscribe } from '../../axios';
 import './ProfileInfo.css';
 
@@ -19,6 +19,8 @@ function UserProfileInfo() {
         fetchFromDatabase();
     }, []);
 
+    
+
     const handleSubscribeClick = () => {
         if (newsletter) {
             setConfirmUnsubscribe(true);
@@ -34,6 +36,29 @@ function UserProfileInfo() {
             changeSubscribe(userInfo.id);
             setNewsletter(false);
         }
+    };
+
+    function handleCurrencyChange(event) {
+        setUserInfo({
+            ...userInfo,
+            currency: event.target.value,
+        });
+        
+    };
+    function handleCurrencyChange2(event) {
+        setUserInfo({
+            ...userInfo,
+            numOfProductOnPage: event.target.value
+        });
+    };
+    const handleSubmitClick = async () => {
+        console.log(userInfo);
+        userInfo.currency = document.getElementById('selectbox1').value;
+        userInfo.numOfProductOnPage = document.getElementById('selectbox2').value;
+        console.log(userInfo);
+        await changeOptions( userInfo.currency, userInfo.numOfProductOnPage);
+        await fetchFromDatabase(); 
+
     };
 
     if (!userInfo) {
@@ -61,6 +86,27 @@ function UserProfileInfo() {
                         </div>
                     </>
                 )}
+            </div>
+            <div className="selectboxes">
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                <p style={{margin: '0 30px 0 0'}}>Select your waluta:</p>
+                <select id="selectbox1" value={userInfo.currency || "zł"} onChange={handleCurrencyChange}>
+                    <option value="zł">zł</option>
+                    <option value="$">$</option>
+                    <option value="€">€</option>
+                    {/* Dodaj więcej opcji według potrzeb */}
+                </select>
+                </div>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                <p style={{margin: '0 30px 0 0'}}>Select your ilość na stronie:</p>
+                <select id="selectbox2" value={userInfo.numOfProductOnPage || "8"} onChange={handleCurrencyChange2}>
+                    <option value="8">8</option>
+                    <option value="12">12</option>
+                    <option value="16">16</option>
+                    {/* Dodaj więcej opcji według potrzeb */}
+                </select>
+                </div>
+                <button onClick={handleSubmitClick}>Save</button>
             </div>
         </div>
     );
