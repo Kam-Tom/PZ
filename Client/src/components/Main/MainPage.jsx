@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 
@@ -16,6 +16,7 @@ import OrderList from "../Account/OrderList";
 import ProfilePage from "../Account/ProfilePage";
 import { ThemeContext } from "../../ThemeContext.jsx";
 import "../../ThemeStyle.css";
+import "../Orders/CartAndForm.css";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -24,7 +25,6 @@ function TileArray(array, size) {
     }
     return tilesArray;
 }
-
 
 function MainPage() {
     const navigate = useNavigate();
@@ -35,6 +35,10 @@ function MainPage() {
     let vatRates;
     const [cartItems, setCartItems] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: '' });
+    const [minPrice, setMinPrice] = useState(null);
+    const [maxPrice, setMaxPrice] = useState(null);
+    const [inStock, setInStock] = useState(false);
+    const [outOfStock, setOutOfStock] = useState(false);
     const { theme } = useContext(ThemeContext);
     document.body.className = `${theme}-theme`;
 
@@ -59,7 +63,7 @@ function MainPage() {
         setProducts(productData);
         
         setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
-        }
+    }
 
     useEffect(() => {
         fetch();
@@ -69,8 +73,8 @@ function MainPage() {
         setFilteredCategory(category);
     };
 
-    const handleDiscountedToggle = (showDiscounted) => {
-        setShowDiscounted(showDiscounted ? true : false);
+    const handleDiscountedToggle = (isDiscounted) => {
+        setShowDiscounted(isDiscounted);
     };
 
     const handleSearch = (query) => {
@@ -80,11 +84,19 @@ function MainPage() {
     const filteredProducts = products
         .filter((product) => !filteredCategory || product.category === filteredCategory)
         .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        .filter((product) => {
+            const finalPrice = product.promotionPrice !== null 
+                ? product.promotionPrice
+                : product.price;
+            return (!minPrice || finalPrice >= minPrice) && (!maxPrice || finalPrice <= maxPrice);
+        })
+        .filter((product) => !inStock || product.quantity > 0)
+        .filter((product) => !outOfStock || product.quantity === 0)
         .filter((product) => !showDiscounted || product.promotionPrice !== null);
 
     const productRows = TileArray(filteredProducts, 4);
     const categories = Array.from(new Set(products.map((product) => product.category)));
-      
+
     const handleAddToCart = (productId) => {
         addToCart(productId)
             .then(() => {
@@ -96,6 +108,16 @@ function MainPage() {
 
     const handleAddReview = (newReview) => {
         setReviews([...reviews, newReview]);
+    };
+
+    const handlePriceRangeFilter = ([min, max]) => {
+        setMinPrice(min);
+        setMaxPrice(max);
+    };
+
+    const handleStockFilter = (inStock, outOfStock) => {
+        setInStock(inStock);
+        setOutOfStock(outOfStock);
     };
 
     return (
@@ -115,13 +137,16 @@ function MainPage() {
                                     categories={categories}
                                     onSelectCategory={handleCategorySelect}
                                     onFilterDiscounted={handleDiscountedToggle}
+                                    onFilterPriceRange={handlePriceRangeFilter}
+                                    onFilterStock={handleStockFilter}
+                                    showDiscounted={showDiscounted}
                                 />
                             </div>
                             <div className="product-list-container">
                                 {productRows.map((row, rowIndex) => (
                                     <div key={rowIndex} className="product-list-row">
                                         {row.map((product) => (
-                                            <ProductTile key={product.id} product={product} addToCart={handleAddToCart} />
+                                            <ProductTile key={product.id} product={product} addToCart={handleAddToCart}/>
                                         ))}
                                     </div>
                                 ))}
@@ -172,10 +197,12 @@ function MainPage() {
                             notification={notification} 
                             setNotification={setNotification} 
                             />
-                            <ShoppingCart 
-                            cartItems={cartItems} setCartItems={setCartItems} 
-                            />
-                            <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
+                            <div className="checkout-container">
+                                <ShoppingCart 
+                                cartItems={cartItems} setCartItems={setCartItems} 
+                                />
+                                <PaymentForm cartTotal={cartItems.cost} setProducts={setProducts} setCartItems={setCartItems} />
+                            </div>
                         </>
                     }
                 />
