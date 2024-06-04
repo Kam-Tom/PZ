@@ -19,6 +19,7 @@ import ProductSorter from "../Product/ProductSorter.jsx";
 import "../../ThemeStyle.css";
 import "../Orders/CartAndForm.css";
 import axios from "axios";
+import MailPage from "../Account/MailPage";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -323,6 +324,22 @@ function MainPage() {
                         return null;
                     }}
                 />
+                <Route
+                    path="/mail"
+                    element={
+                        <>
+                            <Navbar
+                                onSearch={handleSearch}
+                                notification={notification}
+                                setNotification={setNotification}
+                            />
+                            <div className="mail-page-container">
+                                <MailPage></MailPage>
+                            </div>
+                        </>
+                    }
+                />
+
             </Routes>
         </div>
     );

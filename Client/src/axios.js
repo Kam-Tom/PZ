@@ -314,13 +314,31 @@ export async function putNewsletter(newsletter) {
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }
-
 export async function changeOptions(currency, numOfProductOnPage) {
     const url = `https://localhost:7248/api/Users/ChangeOptions?currency=${currency}&numOfProductOnPage=${numOfProductOnPage}`;
 
     const options = getOptions('PUT');
 
     await axios.put(url, null, options)
+        .then(response => console.log(response.data))
+        .catch(error => console.log('error', error));
+}
+export async function postQuestionMail(mail) {
+
+    const data = {
+        EmailSubject: mail.subject,
+        EmailBody: mail.body,
+        EmailReceiver: "dreamgadgetpz@gmail.com",
+        EmailName: "UserQuestion"
+    };
+
+    console.log(data)
+
+    const url = 'https://localhost:7248/api/Mail/SendMail';
+
+    const options = getOptions('POST');
+
+    await axios.post(url, data, options)
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
 }
