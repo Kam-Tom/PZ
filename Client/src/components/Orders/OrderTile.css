@@ -1,6 +1,6 @@
 .order-tile {
     width: 325px;
-    height: 325px;
+    height: 425px;
     background-color: var(--product-tile-background);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
