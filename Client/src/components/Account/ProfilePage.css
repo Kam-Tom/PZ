@@ -20,3 +20,22 @@
 .menu button:hover {
     background-color: #0056b3;
 }
+.selectboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.selectbox {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+    .selectbox p {
+        margin: 0;
+    }
+
+.selectboxes button {
+    margin-top: 20px;
+}

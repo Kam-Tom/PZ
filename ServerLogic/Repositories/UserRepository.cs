@@ -129,11 +129,14 @@ public class UserRepository : IUserRepository
         _ctx.SaveChanges();
     }
 
-    public void ChangeOptions(User user, string currency, string numOfProductOnPage)
+    public void ChangeOptions(User user, UserInfoDto userInfo)
     {
-        user.Currency = currency;
-        user.NumOfProductOnPage = numOfProductOnPage;
+        user.Currency = userInfo.Currency;
+        user.NumOfProductOnPage = userInfo.NumOfProductOnPage;
+        user.BruttoNetto = userInfo.BruttoNetto;
+
 
         _ctx.SaveChanges();
     }
+
 }

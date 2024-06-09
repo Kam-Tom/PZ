@@ -5,6 +5,7 @@ using ServerLogic.Helpers;
 using ServerLogic.Interfaces;
 using System.Security.Claims;
 using API.Services;
+using ServerLogic.DTOs.User;
 
 namespace API.Controllers;
 
@@ -108,14 +109,14 @@ public class UsersController : ControllerBase
         return Ok("Newsletter sent succesfully");
     }
 
-    [HttpPut("ChangeOptions"), Authorize]
-    public ActionResult ChangeOptions(string currency, string numOfProductOnPage)
+    [HttpPatch("ChangeOptions"), Authorize]
+    public ActionResult ChangeOptions(UserInfoDto userInfo)
     {
         var email = User?.FindFirstValue(ClaimTypes.Email);
         var user = _repo.GetByEmail(email);
 
         if (user != null)
-            _repo.ChangeOptions(user, currency, numOfProductOnPage);
+            _repo.ChangeOptions(user, userInfo);
         else
             return BadRequest("User dont exist");
 

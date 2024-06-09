@@ -38,4 +38,5 @@ public class User
     public string? Currency { get; set; }
 
     public string? NumOfProductOnPage { get; set; }
+    public string BruttoNetto { get; set; }
 }

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { getAll, changeOptions} from '../../axios';
+import { useEffect, useState } from 'react';
+import { getAll, update } from '../../axios';
 import { changeSubscribe } from '../../axios';
 import './ProfileInfo.css';
 
@@ -7,19 +7,24 @@ function UserProfileInfo() {
     const [userInfo, setUserInfo] = useState(null);
     const [newsletter, setNewsletter] = useState(null);
     const [confirmUnsubscribe, setConfirmUnsubscribe] = useState(false);
-        
+
     async function fetchFromDatabase() {
-        let items = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
-        console.log("TEST ",items);
-        setUserInfo(items);
-        setNewsletter(items.newsletterSubscription);
+        let user = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
+        setUserInfo(user);
+        setNewsletter(user.newsletterSubscription);
     }
 
     useEffect(() => {
         fetchFromDatabase();
     }, []);
 
-    
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setUserInfo((prevUserInfo) => ({
+            ...prevUserInfo,
+            [name]: value
+        }));
+    };
 
     const handleSubscribeClick = () => {
         if (newsletter) {
@@ -38,27 +43,12 @@ function UserProfileInfo() {
         }
     };
 
-    function handleCurrencyChange(event) {
-        setUserInfo({
-            ...userInfo,
-            currency: event.target.value,
-        });
-        
-    };
-    function handleCurrencyChange2(event) {
-        setUserInfo({
-            ...userInfo,
-            numOfProductOnPage: event.target.value
-        });
-    };
     const handleSubmitClick = async () => {
-        console.log(userInfo);
         userInfo.currency = document.getElementById('selectbox1').value;
         userInfo.numOfProductOnPage = document.getElementById('selectbox2').value;
-        console.log(userInfo);
-        await changeOptions( userInfo.currency, userInfo.numOfProductOnPage);
-        await fetchFromDatabase(); 
-
+        userInfo.bruttoNetto = document.getElementById('selectbox3').value;
+        await update('https://localhost:7248/api/Users/ChangeOptions',userInfo);
+        await fetchFromDatabase();
     };
 
     if (!userInfo) {
@@ -87,24 +77,34 @@ function UserProfileInfo() {
                     </>
                 )}
             </div>
+
+            <hr />
+
             <div className="selectboxes">
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                <p style={{margin: '0 30px 0 0'}}>Select your waluta:</p>
-                <select id="selectbox1" value={userInfo.currency || "zł"} onChange={handleCurrencyChange}>
-                    <option value="zł">zł</option>
-                    <option value="$">$</option>
-                    <option value="€">€</option>
-                    {/* Dodaj więcej opcji według potrzeb */}
-                </select>
+                <div className="selectbox">
+                    <p>Select your currency:</p>
+                    <select id="selectbox1" name="currency" value={userInfo.currency || "zł"} onChange={handleInputChange}>
+                        <option value="zł">zł</option>
+                        <option value="$">$</option>
+                        <option value="€">€</option>
+                        {/* Dodaj więcej opcji według potrzeb */}
+                    </select>
                 </div>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                <p style={{margin: '0 30px 0 0'}}>Select your ilość na stronie:</p>
-                <select id="selectbox2" value={userInfo.numOfProductOnPage || "8"} onChange={handleCurrencyChange2}>
-                    <option value="8">8</option>
-                    <option value="12">12</option>
-                    <option value="16">16</option>
-                    {/* Dodaj więcej opcji według potrzeb */}
-                </select>
+                <div className="selectbox">
+                    <p>Select your amount on webside:</p>
+                    <select id="selectbox2" name="numOfProductOnPage" value={userInfo.numOfProductOnPage || "8"} onChange={handleInputChange}>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                        {/* Dodaj więcej opcji według potrzeb */}
+                    </select>
+                </div>
+                <div className="selectbox">
+                    <p>Select brutto/netto:</p>
+                    <select id="selectbox3" name="bruttoNetto" value={userInfo.bruttoNetto || "brutto"} onChange={handleInputChange}>
+                        <option value="brutto">Brutto</option>
+                        <option value="netto">Netto</option>
+                    </select>
                 </div>
                 <button onClick={handleSubmitClick}>Save</button>
             </div>
