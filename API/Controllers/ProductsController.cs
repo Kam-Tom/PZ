@@ -73,6 +73,17 @@ public class ProductController : ControllerBase
 
         return Ok();
     }
+    [HttpPatch("{id}"), Authorize(Roles = "Admin")]
+    public ActionResult Update([FromRoute] int id, [FromBody] UpdateProductDto request)
+    {
+        var product = _repo.GetById(id);
+        if (product == null)
+            return BadRequest("Product dont exist");
+
+        _repo.Update(product, request);
+
+        return Ok();
+    }
 
     //[HttpGet("{id}")]
     //public ActionResult<IEnumerable<Product>> Get([FromRoute] int id)

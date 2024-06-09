@@ -1,0 +1,88 @@
+.product-details {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info p {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.product-info hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 10px 0;
+}
+
+.delete-button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
+/* Custom checkbox */
+.product-info input[type="checkbox"] {
+    display: none;
+}
+
+.product-info label, .product-info span {
+    position: relative;
+
+    display: inline-block;
+    color: #ff6a00;
+    width:15%;
+    font-weight:600;
+    font-size: 16px;
+}
+.product-info label {
+    cursor: pointer;
+}
+    .product-info label:after {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ddd;
+        border-radius: 3px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: border 0.3s ease-in-out;
+    }
+
+.product-info input[type="checkbox"]:checked + label:after {
+    border-color: #444;
+}
+
+.product-info input[type="checkbox"]:checked + label:before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 10px;
+    border: solid #444;
+    border-width: 0 2px 2px 0;
+    position: absolute;
+    right: 7px;
+    top: 3px;
+    transform: rotate(45deg);
+}

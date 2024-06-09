@@ -86,6 +86,21 @@ export async function updateOrderStatus(orderId, statusId) {
         console.error('Error:', error);
     }
 }
+export async function update(url, data, method="PATCH") {
+
+    const options = getOptions(method);
+    options.data = data;
+
+    try {
+        const response = await axios(url, options);
+        console.log(response);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+
+
+}
 
 export async function postNewShippingMethod(name, cost) {
     const data = {

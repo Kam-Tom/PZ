@@ -251,4 +251,25 @@ public class ProductRepository : IProductRepository
 
         return productDtos;
     }
+
+    public void Update(Product product, UpdateProductDto request)
+    {
+        var productType = typeof(Product);
+        var requestType = typeof(UpdateProductDto);
+
+        foreach (var property in requestType.GetProperties())
+        {
+            var value = property.GetValue(request);
+            if (value != null)
+            {
+                var productProperty = productType.GetProperty(property.Name);
+                if (productProperty != null)
+                {
+                    productProperty.SetValue(product, value);
+                }
+            }
+        }
+
+        _ctx.SaveChanges();
+    }
 }

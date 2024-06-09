@@ -15,5 +15,6 @@ public interface IProductRepository
     public void Add(AddProductDto request);
     public void Delete(Product product);
     public IEnumerable<GetProductDto> GetAll();
+    void Update(Product product, UpdateProductDto request);
 }
 
