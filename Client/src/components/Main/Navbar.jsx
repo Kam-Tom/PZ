@@ -79,6 +79,10 @@ function Navbar({ onSearch, notification, setNotification }) {
                 <Link to="#" className="navbar-icon" onClick={(event) => {event.preventDefault(); handleThemeChange();}}>
                     <ion-icon name="moon-outline"></ion-icon>
                 </Link>
+                {getRole() &&
+                    <Link to="/mail">
+                        <ion-icon name="help-outline"></ion-icon>
+                    </Link>}
             </nav>
         </header>
     );
