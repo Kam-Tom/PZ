@@ -53,7 +53,8 @@ function MainPage() {
     document.body.className = `${theme}-theme`;
 
     async function fetch() {
-        vatRates = [{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Increased", "rates": 40 }];
+        vatRates = await getAll("https://localhost:7248/Vat");
+
         let productData = await getAll("https://localhost:7248/Product");
         let items = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
         setUserInfo(items);
@@ -61,7 +62,7 @@ function MainPage() {
             product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
         }
         productData = productData.map(p => {
-            const vatRate = vatRates.find(v => v.name === p.vatType).rates ;
+            const vatRate = vatRates.find(v => v.Name === p.vatType).Rate ;
             const price = (p.netto + p.netto * (vatRate / 100)).toFixed(2);
             const promotionNetto = (p.promotionNetto + p.promotionNetto * (vatRate / 100)).toFixed(2);
 

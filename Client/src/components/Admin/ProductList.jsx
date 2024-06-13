@@ -11,13 +11,12 @@ function ProductList() {
         const fetchData = async () => {
             // Replace with your actual API call
             let productData = await getAll('https://localhost:7248/Product/Admin');
-            //const vatRates = await getAll('https://localhost:7248/VatType/pl');
-            const vatRates = [{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Increased", "rates": 40 }];
+            const vatRates = await getAll("https://localhost:7248/Vat");
             for (const product of productData) {
                 product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
             }
             productData = productData.map(p => {
-                const vatRate = vatRates.find(v => v.name === p.vatType).rates;
+                const vatRate = vatRates.find(v => v.Name === p.vatType).Rate;
                 const price = (p.netto * (1 + vatRate / 100)).toFixed(2);
                 const promotionPrice = (p.promotionNetto * (1 + vatRate / 100)).toFixed(2);
 

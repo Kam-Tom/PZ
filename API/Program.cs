@@ -92,6 +92,7 @@ builder.Services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>(
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<HttpClient>();
 
 #endregion
 

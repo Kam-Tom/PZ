@@ -26,7 +26,7 @@ function AddProductForm({ onAddProduct }) {
     useEffect(() => {
         // Fetch categories from the server API
         getAll('https://localhost:7248/categories/List').then((result) => setCategories(result));
-        setVatTypes([{ "name": "Zero", "rates": 0 }, { "name": "Normal", "rates": 23 }, { "name": "Increased", "rates": 40 }]);
+        getAll("https://localhost:7248/Vat").then((result) => setVatTypes(result));
     }, []);
 
     const validateForm = () => {
@@ -74,10 +74,10 @@ function AddProductForm({ onAddProduct }) {
     };
 
     const calculateBrutto = () => {
-        const vatRate = vatTypes.find((vatType) => vatType.name === product.vatType);
+        const vatRate = vatTypes.find((vatType) => vatType.Name === product.vatType);
         if (vatRate) {
-            const netto = parseFloat(product.netto);
-            return (netto + (netto * (vatRate.rates / 100))).toFixed(2);
+            const netto = parseFloat(product.netto) || 0;
+            return (netto + (netto * (vatRate.Rate / 100))).toFixed(2);
         }
         return "";
     };
@@ -102,7 +102,7 @@ function AddProductForm({ onAddProduct }) {
                 <select name="vatType" className="p-vat" onChange={(e) => { handleInputChange('vatType', e.target.value) }} value={product.vatType}>
                     <option value="" disabled>Select Vat Rate</option>
                     {vatTypes.map((vatType) => (
-                        <option key={vatType.name} value={vatType.name}>{vatType.name}</option>
+                        <option key={vatType.Name} value={vatType.Name}>{vatType.Name}</option>
                     ))}
                 </select>
                 <span className="p-brutto">{`Brutto: ${calculateBrutto()} `}</span>
