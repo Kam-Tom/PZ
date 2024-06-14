@@ -11,8 +11,6 @@ import ProductFilter from "../Product/ProductFilter";
 import ShoppingCart from "../Orders/ShoppingCart";
 import PaymentForm from "../Orders/PaymentForm";
 import { getAll, addToCart } from "../../axios";
-import ReviewsProduct from "../Product/ReviewsProduct";
-import OrderList from "../Account/OrderList";
 import ProfilePage from "../Account/ProfilePage";
 import { ThemeContext } from "../../ThemeContext.jsx";
 import ProductSorter from "../Product/ProductSorter.jsx";
@@ -20,6 +18,7 @@ import "../../ThemeStyle.css";
 import "../Orders/CartAndForm.css";
 import axios from "axios";
 import MailPage from "../Account/MailPage";
+import "./MainPage.css";
 
 function TileArray(array, size) {
     const tilesArray = [];
@@ -35,15 +34,12 @@ function MainPage() {
     const [showDiscounted, setShowDiscounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
-    let vatRates;
     const [cartItems, setCartItems] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: '' });
     const [minPrice, setMinPrice] = useState(null);
     const [maxPrice, setMaxPrice] = useState(null);
     const [inStock, setInStock] = useState(false);
     const [outOfStock, setOutOfStock] = useState(false);
-    const [aReviews, setAReviews] = useState([]);
-    const [bReviews, setBReviews] = useState([]);
     const [sortType, setSortType] = useState(null);
     const [rate, setRate] = useState(1);
     const [currency, setCurrency] = useState("zł"); 
@@ -58,7 +54,7 @@ function MainPage() {
         await fetchProducts();
     }
     async function fetchProducts() {
-        vatRates = await getAll("https://localhost:7248/Vat");
+        const vatRates = await getAll("https://localhost:7248/Vat");
 
         let productData = await getAll("https://localhost:7248/Product");
 
@@ -204,10 +200,6 @@ function MainPage() {
         setCurrentPage(newPage);
     };
 
-    const handleAddReview = (newReview) => {
-        setReviews([...reviews, newReview]);
-    };
-
     const handlePriceRangeFilter = ([min, max]) => {
         setMinPrice(min);
         setMaxPrice(max);
@@ -221,7 +213,7 @@ function MainPage() {
     //var rate = currencyF();
     //var currency = userInfo && userInfo.currency || "zł";
     return (
-        <div className={`${theme}-theme`}>
+        <div className={`main-page ${theme}-theme`}>
             <Routes>
                 <Route
                     path="/"
@@ -276,7 +268,6 @@ function MainPage() {
                             setNotification={setNotification} 
                             />
                             <ProductPage products={products}  currencyRate={rate} currency={currency} />
-                            <ReviewsProduct onAddReview={handleAddReview} />
                         </>
                     }
                 />

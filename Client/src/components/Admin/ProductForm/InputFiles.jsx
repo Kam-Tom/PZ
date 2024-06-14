@@ -21,8 +21,17 @@ function InputFiles({ className, onChange }) {
         const containerRect = containerRef.current.getBoundingClientRect();
         const scrollTop = containerRef.current.scrollTop;
         const scrollLeft = containerRef.current.scrollLeft;
-        const top = clientY - containerRect.top + scrollTop;
-        const left = clientX - containerRect.left + scrollLeft;
+        let top = clientY - containerRect.top + scrollTop;
+        let left = clientX - containerRect.left + scrollLeft;
+
+        if (top < 0) {
+            top = -top;
+        }
+        if (left < 0) {
+            left = -left;
+        }
+
+
         setBubblePosition({ top, left });
         setShowBubble(true);
         setCurrentFileIndex(index);

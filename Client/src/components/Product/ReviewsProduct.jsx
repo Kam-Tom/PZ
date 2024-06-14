@@ -53,7 +53,7 @@ const ReviewsProduct = ({  onAddReview }) => {
 
     return (
         <div className="ReviewsProduct">
-            <h1>Reviews</h1>
+            <h1>Reviews: {reviews.length}</h1>
             <button className="add-review-btn" onClick={openModal}>Add Review</button>
             <div>
                 {reviews.map((review, index) => (

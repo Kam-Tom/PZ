@@ -1,0 +1,6 @@
+
+@media screen and (min-resolution: 120dpi) {
+    .main-page {
+        zoom: 0.8;
+    }
+}
