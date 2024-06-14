@@ -3,7 +3,7 @@ import { getAll, update } from '../../axios';
 import { changeSubscribe } from '../../axios';
 import './ProfileInfo.css';
 
-function UserProfileInfo() {
+function UserProfileInfo({ onSettingChange }) {
     const [userInfo, setUserInfo] = useState(null);
     const [newsletter, setNewsletter] = useState(null);
     const [confirmUnsubscribe, setConfirmUnsubscribe] = useState(false);
@@ -49,6 +49,7 @@ function UserProfileInfo() {
         userInfo.bruttoNetto = document.getElementById('selectbox3').value;
         await update('https://localhost:7248/api/Users/ChangeOptions',userInfo);
         await fetchFromDatabase();
+        onSettingChange();
     };
 
     if (!userInfo) {

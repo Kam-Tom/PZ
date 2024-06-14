@@ -6,9 +6,10 @@ import ValidationError from "../Main/ValidNotification.jsx";
 
 function AddPromotionForm({ onAddPromotion, onClose }) {
     const [productName, setProductName] = useState("");
+    const [productNetto, setProductNetto] = useState(0);
     const [productId, setProductId] = useState();
     const [discountAmount, setDiscountAmount] = useState("");
-    const [discountAmountError, setdiscountAmountError] = useState('Invalid discount. Its must be between 1 to 100');
+    const [discountAmountError, setdiscountAmountError] = useState('Invalid discount');
     const [productNameError, setProductNameError] = useState('Invalid product name. Its must be selected from the list');
 
     const [products, setProducts] = useState([]);
@@ -37,18 +38,23 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
             setProductNameError(null);
         }
         setProductName(e.target.value);
+
         let id = 0;
 
         for (let p of products) {
             if (e.target.value == p.name)
+            {
                 id = p.id;
+                setProductNetto(p.netto);
+            }
         }
+
         setProductId(id);
     };
 
     const handleDiscountAmountChange = (e) => {
         if (!validateDiscountAmount(e.target.value)) {
-            setdiscountAmountError('Invalid discount. Its must be between 1 to 100');
+            setdiscountAmountError('Invalid discount');
         } else {
             setdiscountAmountError(null);
             setDiscountAmount(e.target.value);
@@ -72,7 +78,7 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
     };
 
     function validateDiscountAmount(discountAmount) {
-        return discountAmount >= 1 && discountAmount <= 100;
+        return discountAmount >= 0;
     }
 
     return (
@@ -90,9 +96,10 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
                             </option>
                         ))}
                     </select>
-                </label>
+                    </label>
+                <p>Netto: {productNetto}</p>
                 <label>
-                    Discount %:
+                    Discount Price:
                     <input type="number"  onChange={handleDiscountAmountChange} required />
                 </label>
                 <br />

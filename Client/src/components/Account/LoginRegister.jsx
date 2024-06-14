@@ -5,7 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { postNewUser, postLogin, postResetPassword } from "../../axios.js"
 import ValidationError from "../Main/ValidNotification.jsx";
 
-function LoginRegister() {
+function LoginRegister({ onLogin }) {
     const ReCAPTCHA1 = useRef();
     const ReCAPTCHA2 = useRef();
     const ReCAPTCHA3 = useRef();
@@ -54,6 +54,7 @@ function LoginRegister() {
                     const loginToken = localStorage.getItem("loginToken");
                     if (loginToken != 'wrong') {
                         alert("Form submission successful!");
+                        onLogin();
                         navigate("/");
                     }
                     else {

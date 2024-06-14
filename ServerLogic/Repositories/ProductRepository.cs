@@ -107,7 +107,7 @@ public class ProductRepository : IProductRepository
                 Quantity = p.Quantity,
                 Netto = p.Netto,
                 VatType = p.VatType,
-                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.NewNetto).FirstOrDefault()?.NewNetto,
                 ThumbnailUrl = p.Images.Where(i=>i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
@@ -129,7 +129,7 @@ public class ProductRepository : IProductRepository
             Netto = product.Netto,
             VatType = product.VatType,
             Category = _ctx.Categories.Where(i => i.Id == product.CategoryId).FirstOrDefault().Name,
-            PromotionNetto = product.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+            PromotionNetto = product.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.NewNetto).FirstOrDefault()?.NewNetto,
         };
 
         if(product.Images != null)
@@ -175,7 +175,7 @@ public class ProductRepository : IProductRepository
                 Quantity = p.Quantity,
                 Netto = p.Netto,
                 VatType = p.VatType,
-                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.NewNetto).FirstOrDefault()?.NewNetto,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath
             };
         }).ToList();
@@ -196,7 +196,7 @@ public class ProductRepository : IProductRepository
                 Quantity = p.Quantity,
                 Netto = p.Netto,
                 VatType = p.VatType,
-                PromotionNetto = p.Promotions?.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionNetto = p.Promotions?.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.NewNetto).FirstOrDefault()?.NewNetto,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath
             };
         }).ToList();
@@ -207,7 +207,7 @@ public class ProductRepository : IProductRepository
     public IEnumerable<ProductMinatureDto> GetMinaturesByPromotion(int promotionId)
     {
 
-        var promotion = _ctx.Promotions.Where(p => p.Id == promotionId).Where(p=> (p.Start < DateTime.Now && p.End > DateTime.Now)).Include(p => p.Products).ThenInclude(p => p.Images).OrderByDescending(p => p.Discount).FirstOrDefault();
+        var promotion = _ctx.Promotions.Where(p => p.Id == promotionId).Where(p=> (p.Start < DateTime.Now && p.End > DateTime.Now)).Include(p => p.Products).ThenInclude(p => p.Images).OrderByDescending(p => p.NewNetto).FirstOrDefault();
         if(promotion == null)
             return Enumerable.Empty<ProductMinatureDto>();
 
@@ -221,7 +221,7 @@ public class ProductRepository : IProductRepository
                 Quantity = p.Quantity,
                 Netto = p.Netto,
                 VatType = p.VatType,
-                PromotionNetto = promotion.Discount,
+                PromotionNetto = promotion.NewNetto,
                 ThumbnailUrl = p.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath
             };
         }).ToList();
@@ -244,7 +244,7 @@ public class ProductRepository : IProductRepository
                 VatType = p.VatType,
                 Description = p.Description,
                 Hidden = p.Hidden,
-                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.Discount).FirstOrDefault()?.Discount,
+                PromotionNetto = p.Promotions.Where(p => (p.Start < DateTime.Now && p.End > DateTime.Now)).OrderByDescending(p => p.NewNetto).FirstOrDefault()?.NewNetto,
                 Category = _ctx.Categories.Where(i => i.Id == p.CategoryId).FirstOrDefault().Name,
             };
         }).ToList();

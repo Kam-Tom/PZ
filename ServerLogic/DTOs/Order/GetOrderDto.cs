@@ -23,6 +23,7 @@ public class OrderItemDto
     public string Name { get; set; }
     public string ImageUrl { get; set; }
     public int Quantity { get; set; }
-    public decimal Price { get; set; }
-    public decimal? PromotionPrice { get; set; }
+    public decimal Netto { get; set; }
+    public decimal? PromotionNetto { get; set; }
+    public string VatType { get; set; }
 }

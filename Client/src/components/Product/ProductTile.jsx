@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 const ProductTile = ({ product, addToCart, currencyRate, currency }) => {
     const isDiscounted = product.promotionPrice !== null;
+    const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
 
     return (
         <div className="product-tile">
@@ -14,12 +15,18 @@ const ProductTile = ({ product, addToCart, currencyRate, currency }) => {
             <div className="product-info">
                 <div className="price-stock-container">
                     {isDiscounted ? (
-                        <>
+                        <div className="price-price-container">
+                            
                             <p className="price">Price: <del>{(product.price / currencyRate).toFixed(2)} {currency}</del></p>
-                            <p className="price">{(product.promotionPrice / currencyRate).toFixed(2)} {currency}</p>
-                        </>
+                            <p className="price">{(product.promotionPrice / currencyRate).toFixed(2)} {currency}
+                                {isNetto && <span>+Vat</span>}
+                                </p>
+                            
+
+                        </div>
                     ) : (
-                        <p className="price">Price: {(product.price/ currencyRate).toFixed(2)} {currency} </p>
+                            <p className="price">Price: {(product.price / currencyRate).toFixed(2)} {currency}
+                                {isNetto && <span>+Vat</span>}                            </p>
                     )}
                     <p className="stock">Stock: {product.quantity}</p>
                 </div>

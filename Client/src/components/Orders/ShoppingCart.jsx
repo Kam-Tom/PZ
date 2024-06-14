@@ -7,7 +7,27 @@ import OrderTile from "./OrderTile";
 const ShoppingCart = ({ cartItems, setCartItems, currencyRate, currency }) => {
     async function fetchFromDatabase() {
         let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
-        console.log("TEST ",items);
+        let vatRates = await getAll("https://localhost:7248/Vat");
+        let bruttoCost = 0;
+        const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
+        for (const item of items.items)
+        {
+            const vatRate = vatRates.find(v => v.Name === item.vatType).Rate;
+            const price = (item.netto * (1 + vatRate / 100)).toFixed(2);
+            const promotionPrice = (item.promotionNetto * (1 + vatRate / 100)).toFixed(2);
+
+            if (!isNetto) {
+                item.price = price;
+                item.promotionPrice = item.promotionNetto !== undefined ? promotionPrice : null;
+            }
+            else {
+                item.price = item.netto;
+                item.promotionPrice = item.promotionNetto !== undefined ? item.promotionNetto : null;
+            }
+
+            bruttoCost += item.promotionPrice !== null ? item.promotionPrice * item.quantity : item.price * item.quantity;
+        }
+        items.bruttoCost = bruttoCost;
         setCartItems(items);
     }
     useEffect(() => {

@@ -138,8 +138,9 @@ public class OrderListRepository : IOrderListRepository
                 Quantity = i.Quantity,
                 ImageUrl = i.Product.Images.Where(i => i.IsThumbnail == true).FirstOrDefault().ImagePath,
                 Id = i.Product.Id,
-                Price = i.Product.Netto,
-                PromotionPrice = getProductPromitonCost(i)
+                Netto = i.Product.Netto,
+                VatType = i.Product.VatType,
+                PromotionNetto = getProductPromitonCost(i)
             })
 
         };
@@ -150,9 +151,9 @@ public class OrderListRepository : IOrderListRepository
         decimal total = 0;
         foreach (var o in order.OrderItems) 
         {
-            Promotion? promotion = o.Product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault();
+            Promotion? promotion = o.Product.Promotions.OrderByDescending(p => p.NewNetto).FirstOrDefault();
             if (promotion != null)
-                total += (o.Product.Netto * (100 - promotion.Discount) / 100) * o.Quantity;
+                total += promotion.NewNetto * o.Quantity;
             else 
                 total += o.Product.Netto * o.Quantity;
         }
@@ -163,9 +164,9 @@ public class OrderListRepository : IOrderListRepository
     {
         decimal? total = null;
 
-        Promotion? promotion = items.Product.Promotions.OrderByDescending(p => p.Discount).FirstOrDefault();
+        Promotion? promotion = items.Product.Promotions.OrderByDescending(p => p.NewNetto).FirstOrDefault();
         if (promotion != null)
-            total = (items.Product.Netto * (100 - promotion.Discount) / 100);
+            total = promotion.NewNetto;
 
         return total;
     }
@@ -182,7 +183,7 @@ public class OrderListRepository : IOrderListRepository
                 Date = o.Date,
                 Cost = o.OrderItems.Sum(i => i.Cost),
                 Status = o.Status.ToString(),
-                Items = o.OrderItems.Select(i => new OrderItemDto() { Id=i.Product.Id,Name = i.Product.Name, Quantity = i.Quantity, Price = i.Product.Netto })
+                Items = o.OrderItems.Select(i => new OrderItemDto() { Id=i.Product.Id,Name = i.Product.Name, VatType = i.Product.VatType, Quantity = i.Quantity, Netto = i.Product.Netto })
             };
         });
         
@@ -276,7 +277,7 @@ public class OrderListRepository : IOrderListRepository
             Date = order.Date,
             Cost = order.OrderItems.Sum(i => i.Cost),
             Status = order.Status.ToString(),
-            Items = order.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity })
+            Items = order.OrderItems.Select(i => new OrderItemDto() { Name = i.Product.Name, Quantity = i.Quantity, VatType = i.Product.VatType })
         }; ;
     }
 }

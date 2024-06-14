@@ -6,6 +6,7 @@ import "../Main/AppNotification.css";
 import AppNotification from "../Main/AppNotification";
 
 const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, currency }) => {
+    const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [cardNumber, setCardNumber] = useState("");
     const [expiryDate, setExpiryDate] = useState("");
@@ -19,15 +20,6 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
     const [isBlikCodeValid, setIsBlikCodeValid] = useState(false);
     const [notification, setNotification] = useState(false);
 
-    const [cost, setCost] = useState(0);
-    async function fetch() {
-        let v = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
-        setCost(v.cost);
-        console.log(v);
-    }
-    useEffect(() => {
-        fetch();
-    }, [cartTotal]);
 
     async function handleSubmit(event)
     {
@@ -169,7 +161,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                                     <div className="error-message">Invalid email</div>
                                 )}
                             </label>
-                            <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency}</button>
+                                <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency} {isNetto && "+VAT" }</button>
                         </div>
                     )}
                     {paymentMethod === "blik" && (
@@ -204,7 +196,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                                     <div className="error-message">Invalid Blik code</div>
                                 )}
                             </label>
-                            <button type="submit">Pay: {(cartTotal/ currencyRate).toFixed(2)} {currency}</button>
+                                <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency}  {isNetto && "+VAT"}</button>
                         </div>
                     )}
                 </form>

@@ -26,7 +26,7 @@ public class PromotionRepository : IPromotionRepository
             Start = request.Start,
             End = request.End,
             Description = request.Description,
-            Discount = request.Discount,
+            NewNetto = request.Discount,
             Name = request.Name
         };
 
@@ -59,7 +59,7 @@ public class PromotionRepository : IPromotionRepository
                 End = p.End,
                 Description = p.Description,
                 Id = p.Id,
-                Discount = p.Discount,
+                Discount = p.NewNetto,
                 ItemCount = p.Products.Count()
             };
         }).ToList();

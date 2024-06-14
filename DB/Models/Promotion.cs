@@ -8,10 +8,7 @@ public class Promotion
 
     public string Name { get; set; }
 
-
-    [Precision(3, 1)]
-    [Range(0,100)]
-    public decimal Discount { get; set; }
+    public decimal NewNetto { get; set; }
 
     public DateTime Start { get; set; }
 

@@ -1,6 +1,6 @@
 .product-tile {
     width: 325px;
-    height: 325px;
+    height: 425px;
     background-color: var(--product-tile-background);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
@@ -27,12 +27,19 @@
 
 .product-tile .price-stock-container {
     display: flex;
+    flex-direction:column;
+    justify-content: space-evenly;
+    margin-bottom: 2px;
+}
+.product-tile .price-price-container {
+    display: flex;
     justify-content: space-evenly;
     margin-bottom: 2px;
 }
 
 .product-tile .price,
 .product-tile .stock {
+    position:relative;
     margin: 0;
     font-size: 14px;
 }
@@ -115,4 +122,12 @@
     transform: translateX(-50%);
     top: 100px;
     z-index: 1;
+}
+
+.VatTag {
+    color: #ff6a00;
+    position: absolute;
+    top: -0.75rem;
+    right: -1.75rem;
+    font-weight: bold;
 }

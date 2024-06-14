@@ -4,7 +4,7 @@ import OrderList from "./OrderList";
 import ProfileMenu from "./ProfileMenu";
 import ProfileInfo from "./ProfileInfo";
 
-function ProfilePage() {
+function ProfilePage({ onSettingChange }) {
     const [showProfileInfo, setShowProfileInfo] = useState(true);
     const [showOrderList, setShowOrderList] = useState(false);
 
@@ -22,7 +22,7 @@ function ProfilePage() {
         <div className="userprofilecontainer">
             <ProfileMenu onShowProfileInfoFn={showProfileInfoFn} onShowOrderListFn={showOrderListFn} />
             {showOrderList && <OrderList />}
-            {showProfileInfo && <ProfileInfo />}
+            {showProfileInfo && <ProfileInfo onSettingChange={onSettingChange} />}
         </div>
     );
 }

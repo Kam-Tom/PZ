@@ -45,32 +45,41 @@ function MainPage() {
     const [aReviews, setAReviews] = useState([]);
     const [bReviews, setBReviews] = useState([]);
     const [sortType, setSortType] = useState(null);
-    const [userInfo, setUserInfo] = useState(null);
     const [rate, setRate] = useState(1);
     const [currency, setCurrency] = useState("zł"); 
+
+    let userInfo;
 
     const { theme } = useContext(ThemeContext);
     document.body.className = `${theme}-theme`;
 
-    async function fetch() {
+    async function fetchData() {
+        await fetchUserData();
+        await fetchProducts();
+    }
+    async function fetchProducts() {
         vatRates = await getAll("https://localhost:7248/Vat");
 
         let productData = await getAll("https://localhost:7248/Product");
-        let items = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
-        setUserInfo(items);
+
+
+
         for (const product of productData) {
             product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
         }
         productData = productData.map(p => {
             const vatRate = vatRates.find(v => v.Name === p.vatType).Rate ;
-            const price = (p.netto + p.netto * (vatRate / 100)).toFixed(2);
-            const promotionNetto = (p.promotionNetto + p.promotionNetto * (vatRate / 100)).toFixed(2);
-
+            let price = (p.netto + p.netto * (vatRate / 100)).toFixed(2);
+            let promotionPrice = (p.promotionNetto + p.promotionNetto * (vatRate / 100)).toFixed(2);
+            if (userInfo.bruttoNetto === "netto") {
+                price = p.netto;
+                promotionPrice = p.promotionNetto;
+            }
             return {
                 id: p.id,
                 name: p.name,
                 price: price,
-                promotionPrice: p.promotionNetto !== null ? promotionNetto : null,
+                promotionPrice: p.promotionNetto !== null ? promotionPrice : null,
                 quantity: p.quantity,
                 thumbnailUrl: p.thumbnailUrl,
                 reviews: p.reviews,
@@ -81,9 +90,34 @@ function MainPage() {
         
         setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
     }
+    async function fetchUserData() {
+        userInfo = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
+
+        sessionStorage.setItem("bruttoNetto", userInfo.bruttoNetto || "brutto");
+        if (!userInfo) {
+            setRate(1);
+            return;
+        }
+        let currency = userInfo.currency;
+        if (currency === "zł") {
+            setCurrency("zł");
+            setRate(1.0);
+        } else if (currency === "$") {
+            const rate = await getCurrencyRate("USD");
+            setCurrency("$");
+            setRate(rate);
+        } else if (currency === "€") {
+            const rate = await getCurrencyRate("EUR");
+            setCurrency("€");
+            setRate(rate);
+        } else {
+            setRate(4.0); // default rate for other currencies
+        }
+    }
+
 
     useEffect(() => {
-        fetch();
+        fetchData();
     }, []);
 
     const handleCategorySelect = (category) => {
@@ -112,32 +146,7 @@ function MainPage() {
         return sum / reviews.length;
     }
 
-    useEffect(() => {
-        async function fetchCurrencyRate() {
-            if (!userInfo) {
-                setRate(1);
-                return;
-            }
-            let currency = userInfo.currency;
-            if (currency === "zł") {
-                setCurrency("zł");
-                setRate(1.0);
-            } else if (currency === "$") {
-                const rate = await getCurrencyRate("USD");
-                setCurrency("$");
-                setRate(rate);
-            } else if (currency === "€") {
-                const rate = await getCurrencyRate("EUR");
-                setCurrency("€");
-                setRate(rate);
-            } else {
-                setRate(4.0); // default rate for other currencies
-            }
-        }
-    
-        fetchCurrencyRate();
-    }, [userInfo]);
-    
+
     async function getCurrencyRate(currencyCode) {
         try {
             const response = await axios.get(`https://api.allorigins.win/raw?url=http://api.nbp.pl/api/exchangerates/rates/A/${currencyCode}/?format=json`);
@@ -276,7 +285,7 @@ function MainPage() {
                     path="/account"
                     element={
                         <>
-                            <LoginRegister />
+                            <LoginRegister onLogin={fetchData} />
                         </>
                     }
                 />
@@ -285,7 +294,7 @@ function MainPage() {
                     path="/admin"
                     element={
                         <>
-                            <AdminPage onAddProduct={fetch} />
+                            <AdminPage onAddProduct={fetchData} />
                         </>
                     }
                 />
@@ -313,7 +322,7 @@ function MainPage() {
                     path="/profile"
                     element={
                         <>
-                            <ProfilePage />
+                            <ProfilePage onSettingChange={ fetchData } />
                         </>
                     }
                 />
