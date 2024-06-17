@@ -5,6 +5,7 @@ import PropTypes, { func } from 'prop-types';
 import Navbar from "./Navbar";
 import LoginRegister from "../Account/LoginRegister";
 import ResetPassword from "../Account/ResetPassword";
+import EmailVerification from "../Account/EmailVerification"
 import AdminPage from "../Admin/AdminPage";
 import ProductTile from "../Product/ProductTile";
 import ProductPage from "../Product/ProductPage";
@@ -346,6 +347,13 @@ function MainPage() {
                     path="/resetpassword"
                     element=<>
                         <ResetPassword></ResetPassword>
+                    </>
+                />
+
+                <Route
+                    path="/emailverification"
+                    element=<>
+                        <EmailVerification></EmailVerification>
                     </>
                 />
 

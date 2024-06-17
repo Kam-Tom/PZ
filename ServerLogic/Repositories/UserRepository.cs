@@ -37,6 +37,7 @@ public class UserRepository : IUserRepository
             CreatedAt = DateTime.Now,
             Currency = "PLN",
             NumOfProductOnPage = "8",
+            BruttoNetto = "brutto"
         };
 
         _ctx.Users.Add(user);
