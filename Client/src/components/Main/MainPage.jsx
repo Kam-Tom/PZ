@@ -64,14 +64,6 @@ function MainPage() {
         let productData = await getAll("https://localhost:7248/Product");
 
         let cart = await getAll("https://localhost:7248/api/Shop/GetBasket");
-        let cost = cart.cost;
-        cart.items.map((item) => {
-            const product = productData.find((p) => p.id === item.id);
-            if (!product || product.quantity < item.quantity) {
-                cost -= item.netto * item.quantity;
-            }
-        });
-        cart.cost = cost;
 
         for (const product of productData) {
             product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
@@ -96,6 +88,16 @@ function MainPage() {
             }
         });
         setProducts(productData);
+
+        let cost = cart.cost;
+        cart.items.map((item) => {
+            const product = productData.find((p) => p.id === item.id);
+            if (!product || product.quantity < item.quantity) {
+                cost -= item.netto * item.quantity;
+            }
+        });
+        cart.cost = cost;
+        
         setCartItems(cart);
     }
     async function fetchUserData() {
