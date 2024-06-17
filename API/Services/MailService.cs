@@ -32,7 +32,7 @@ namespace API.Services
 
                 smtpClient.Send(message);
 
-                Console.WriteLine("Email sent " + mailData.EmailBody);
+                Console.WriteLine("Email sent " + mailData.EmailName);
                 return true;
 
             }

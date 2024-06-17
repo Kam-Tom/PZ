@@ -347,8 +347,6 @@ export async function postQuestionMail(mail) {
         EmailName: "UserQuestion"
     };
 
-    console.log(data)
-
     const url = 'https://localhost:7248/api/Mail/SendMail';
 
     const options = getOptions('POST');
@@ -356,4 +354,52 @@ export async function postQuestionMail(mail) {
     await axios.post(url, data, options)
         .then(response => console.log(response.data))
         .catch(error => console.log('error', error));
+}
+
+export async function putNewPassword(DTOResetPassword) {
+
+    const data = {
+        email: DTOResetPassword.email,
+        resetPasswordToken: DTOResetPassword.token,
+        password: DTOResetPassword.password,
+        confirmPassword: DTOResetPassword.confirmPassword
+    }
+
+    let resultError = null;
+
+    const url = 'https://localhost:7248/Auth/resetPassword';
+
+    const options = {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    };
+
+    await axios.put(url, data, options)
+        .then(response => console.log(response.data))
+        .catch(error => {
+            console.log('error', error);
+            resultError = error;
+        });
+
+    return resultError;
+}
+
+export async function getByEmail(email) {
+
+    const options = getOptions('GET');
+
+    let results;
+
+    const url = 'https://localhost:7248/api/Users/GetByGivenEmail';
+
+    await axios.get(url, { params: { email } }, options)
+        .then(response => {
+            console.log(response.data);
+            results = response.data;
+        })
+        .catch(error => console.log('error', error));
+
+    return results
 }

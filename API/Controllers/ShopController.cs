@@ -97,7 +97,7 @@ public class ShopController : ControllerBase
 
         foreach(var item in basket.OrderItems)
         {
-            mailData.EmailBody += "\n" + item.Product.Name;
+            mailData.EmailBody += "\n" + item.Product.Name + " quantity: " + item.Quantity + " price: " + item.Cost;
         }
 
         mailData.EmailBody += "\nOrder id: " + basket.Id;

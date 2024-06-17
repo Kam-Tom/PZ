@@ -1,4 +1,5 @@
-﻿using Azure.Core;
+﻿using API.Services;
+using Azure.Core;
 using DB.Models;
 using Microsoft.AspNetCore.Mvc;
 using ServerLogic.DTOs.User;
@@ -147,19 +148,39 @@ public class AuthController : ControllerBase
 
         var resetPasswordToken = _jwtService.GenerateSimpleToken(TimeSpan.FromHours(1));
 
-        Console.WriteLine("---------------AuthDZIALAALSLALSLA-------------");
         _repo.GenerateResetPassword(user, resetPasswordToken);
+
+        MailData mailData = new MailData();
+
+        string url = String.Format("https://localhost:5173/resetpassword/?email={0}&token={1}", email, resetPasswordToken.Token);
+
+        mailData.EmailReceiver = email;
+        mailData.EmailName = "Password Reset";
+        mailData.EmailSubject = "Password Reset Request";
+        mailData.EmailBody = "Hello!\n" +
+            "There was a password reset request for your account. If it's not you who requested it...\n" +
+            "well, somebody knows your e-mail, otherwise here is your reset password link\n" +
+            url;
+
+        MailService mailService = new MailService();
+
+        mailService.SendMail(mailData);
+
         return Ok("Password reset email sent successfully");
     }
 
-    [HttpPost("resetPassword")]
-    public ActionResult ResetPassword(ResetPasswordDto request)
+    [HttpPut("resetPassword")]
+    public ActionResult ResetPassword([FromBody]ResetPasswordDto request)
     {
+        request.ResetPasswordToken.Replace(" ", "+");
+
         User? user = _repo.GetByEmail(request.Email);
         if (user == null)
             return BadRequest("User not found");
         if (user.ResetPasswordToken != request.ResetPasswordToken)
+        {
             return BadRequest("Invalid token");
+        }
         if(user.ResetPasswordTokenExpires < DateTime.Now)
             return BadRequest("Token expired");
 
