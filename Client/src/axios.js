@@ -159,7 +159,7 @@ export async function postLogin(user) {
     };
 
     let errorResponse = null;
-
+    console.log("Axios to jets : " + data);
     await axios("https://localhost:7248/Auth/login", options)
         .then(response => {
             localStorage.setItem("loginToken", response.data.token);

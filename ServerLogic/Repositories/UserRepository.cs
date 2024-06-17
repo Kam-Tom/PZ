@@ -103,7 +103,10 @@ public class UserRepository : IUserRepository
             NewsletterSubscription = u.NewsletterSubscription,
             CreatedAt = u.CreatedAt,
             Currency = u.Currency,
-            NumOfProductOnPage = u.NumOfProductOnPage
+            NumOfProductOnPage = u.NumOfProductOnPage,
+            ProdPromotion = u.ProdPromotion,
+            ProdDatePromotion = u.ProdDatePromotion,
+            ProdValuePromotion = u.ProdValuePromotion
         });
 
         return usersDto;
@@ -136,6 +139,15 @@ public class UserRepository : IUserRepository
         user.NumOfProductOnPage = userInfo.NumOfProductOnPage;
         user.BruttoNetto = userInfo.BruttoNetto;
 
+
+        _ctx.SaveChanges();
+    }
+
+    public void ChangeProdPromotion(User user, UserInfoDto userInfo)
+    {
+        user.ProdPromotion = userInfo.ProdPromotion;
+        user.ProdDatePromotion = userInfo.ProdDatePromotion;
+        user.ProdValuePromotion = userInfo.ProdValuePromotion;
 
         _ctx.SaveChanges();
     }

@@ -48,6 +48,8 @@ function MainPage() {
     const [sortType, setSortType] = useState(null);
     const [rate, setRate] = useState(1);
     const [currency, setCurrency] = useState("zł"); 
+    const [productsPerPage, setProductsPerPage] = useState(2);
+    const [prodPromotion, setProdPromotion] = useState([]);
 
     let userInfo;
 
@@ -71,6 +73,7 @@ function MainPage() {
         }
         productData = productData.map(p => {
             const vatRate = vatRates.find(v => v.Name === p.vatType).Rate ;
+            //const vatRate = 23;
             let price = (p.netto + p.netto * (vatRate / 100)).toFixed(2);
             let promotionPrice = (p.promotionNetto + p.promotionNetto * (vatRate / 100)).toFixed(2);
             if (userInfo.bruttoNetto === "netto") {
@@ -96,6 +99,10 @@ function MainPage() {
             if (!product || product.quantity < item.quantity) {
                 cost -= item.netto * item.quantity;
             }
+            if(product.id == Number(userInfo.prodPromotion)) {
+                cost -= item.netto - (item.netto * ((100 - Number(userInfo.prodValuePromotion))/100));
+                console.log(item.netto - (item.netto * ((100 - Number(userInfo.prodValuePromotion))/100)));
+            }
         });
         cart.cost = cost;
         
@@ -107,9 +114,11 @@ function MainPage() {
         sessionStorage.setItem("bruttoNetto", userInfo.bruttoNetto || "brutto");
         if (!userInfo) {
             setRate(1);
+            setProductsPerPage(2);
             return;
         }
         let currency = userInfo.currency;
+        setProductsPerPage((Number(userInfo.numOfProductOnPage))/4);
         if (currency === "zł") {
             setCurrency("zł");
             setRate(1.0);
@@ -122,7 +131,7 @@ function MainPage() {
             setCurrency("€");
             setRate(rate);
         } else {
-            setRate(4.0); // default rate for other currencies
+            setRate(1.0); // default rate for other currencies
         }
     }
 
@@ -213,6 +222,7 @@ function MainPage() {
         });
 
     const productRows = TileArray(filteredAndSortedProducts, 4);
+
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
     const handleAddToCart = (productId) => {
@@ -224,16 +234,16 @@ function MainPage() {
             });
     };
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = (userInfo && Number(userInfo.numOfProductOnPage) || 4)/4;
-    const totalPages = Math.ceil(productRows.length / productsPerPage);
+    
+    const totalPages = Math.ceil(productRows.length / 2);
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
 
     const handlePriceRangeFilter = ([min, max]) => {
-        setMinPrice(min);
-        setMaxPrice(max);
+        setMinPrice(min* rate);
+        setMaxPrice(max* rate);
     };
 
     const handleStockFilter = (inStock, outOfStock) => {
@@ -241,8 +251,7 @@ function MainPage() {
         setOutOfStock(outOfStock);
     };
 
-    //var rate = currencyF();
-    //var currency = userInfo && userInfo.currency || "zł";
+
     return (
         <div className={`main-page ${theme}-theme`}>
             <Routes>
@@ -344,7 +353,7 @@ function MainPage() {
                     path="/profile"
                     element={
                         <>
-                            <ProfilePage onSettingChange={ fetchData } />
+                            <ProfilePage onSettingChange={ fetchData } listProduct = {products} rate = {rate} />
                         </>
                     }
                 />
@@ -374,16 +383,20 @@ function MainPage() {
 
                 <Route
                     path="/resetpassword"
-                    element=<>
+                    element={
+                    <>
                         <ResetPassword></ResetPassword>
                     </>
+                    }
                 />
 
                 <Route
                     path="/emailverification"
-                    element=<>
+                    element={
+                    <>
                         <EmailVerification></EmailVerification>
                     </>
+                    }
                 />
 
             </Routes>

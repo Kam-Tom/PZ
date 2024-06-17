@@ -19,6 +19,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
     const [blikCode, setBlikCode] = useState("");
     const [isBlikCodeValid, setIsBlikCodeValid] = useState(false);
     const [notification, setNotification] = useState(false);
+    
 
 
     async function handleSubmit(event)

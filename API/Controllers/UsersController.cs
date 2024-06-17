@@ -134,4 +134,18 @@ public class UsersController : ControllerBase
 
         return Ok("Options changed successful");
     }
+
+        [HttpPatch("ChangeProdPromotion"), Authorize]
+    public ActionResult ChangeProdPromotion(UserInfoDto userInfo)
+    {
+        var email = User?.FindFirstValue(ClaimTypes.Email);
+        var user = _repo.GetByEmail(email);
+
+        if (user != null)
+            _repo.ChangeProdPromotion(user, userInfo);
+        else
+            return BadRequest("User dont exist");
+
+        return Ok("Options changed successful");
+    }
 }

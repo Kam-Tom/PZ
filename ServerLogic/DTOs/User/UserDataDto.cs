@@ -26,4 +26,8 @@ public class UserDataDto
     public string? Currency { get; set; }
 
     public string? NumOfProductOnPage { get; set; }
+
+    public string? ProdPromotion { get; set; }
+    public string? ProdDatePromotion { get; set; }
+    public string? ProdValuePromotion { get; set; }
 }

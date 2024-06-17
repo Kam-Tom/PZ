@@ -5,11 +5,17 @@ import "./ShoppingCart.css";
 import OrderTile from "./OrderTile";
 
 const ShoppingCart = ({ cartItems, setCartItems, currencyRate, currency }) => {
+
+    const [prodPromotion, setProdPromotion] = useState([]);
+    const [userInfo, setUserInfo] = useState(null);
     async function fetchFromDatabase() {
+        let user = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
+        setUserInfo(user); 
         let items = await getAll(`https://localhost:7248/api/Shop/GetBasket`);
         let vatRates = await getAll("https://localhost:7248/Vat");
         let bruttoCost = 0;
         const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
+        console.log(items.items);
         for (const item of items.items)
         {
             const vatRate = vatRates.find(v => v.Name === item.vatType).Rate;
@@ -24,10 +30,18 @@ const ShoppingCart = ({ cartItems, setCartItems, currencyRate, currency }) => {
                 item.price = item.netto;
                 item.promotionPrice = item.promotionNetto !== undefined ? item.promotionNetto : null;
             }
-
+            if (item.id == Number(user.prodPromotion)) {
+                setProdPromotion(item);
+                prodPromotion.id = 0;
+                console.log('--------------------------------');
+                console.log(prodPromotion);
+                console.log(item);
+                //item.quantity -=1;
+            }
             bruttoCost += item.promotionPrice !== null ? item.promotionPrice * item.quantity : item.price * item.quantity;
         }
         items.bruttoCost = bruttoCost;
+        console.log(items);
         setCartItems(items);
     }
     useEffect(() => {
@@ -50,7 +64,7 @@ const ShoppingCart = ({ cartItems, setCartItems, currencyRate, currency }) => {
             {cartItems && cartItems.length === 0 ? (
                 <p>Your cart is empty.</p>
             ) : (
-                <>
+                <>  
                     <ul className="cart-items-list"> 
                         {cartItems?.items && cartItems.items.map((item,key) => (
                             <OrderTile key={key} item={item} currencyRate={currencyRate} currency={currency} removeFromCart={removeFromCart} removeAllFromCart={() => removeAllFromCart(item.id, item.quantity)} />

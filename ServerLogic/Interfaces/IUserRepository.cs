@@ -15,6 +15,7 @@ public interface IUserRepository
     public void Delete(User user);
     public void UpdateNewslatter(User user);
     public void ChangeOptions(User user,UserInfoDto userInfo);
+    public void ChangeProdPromotion(User user,UserInfoDto userInfo);
     public IEnumerable<UserDataDto> GetAllUsersData();
     public IEnumerable<EmailSubscriptionDto> GetAllEmailSubscriptions();
     public JwtService.UserRole GetUserRole(User user);

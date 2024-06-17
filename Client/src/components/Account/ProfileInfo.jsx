@@ -1,23 +1,39 @@
 import { useEffect, useState } from 'react';
 import { getAll, update } from '../../axios';
 import { changeSubscribe } from '../../axios';
+import ProductTile from "../Product/ProductTile";
 import './ProfileInfo.css';
+import { on } from 'form-data';
+import { Link } from "react-router-dom";
 
-function UserProfileInfo({ onSettingChange }) {
+function UserProfileInfo({ onSettingChange, listProduct, rate }) {
     const [userInfo, setUserInfo] = useState(null);
     const [newsletter, setNewsletter] = useState(null);
     const [confirmUnsubscribe, setConfirmUnsubscribe] = useState(false);
+    const [products, setProducts] = useState(null);
+    const [isPromotion, setIsPromotion] = useState(true);
+    const [product, setProduct] = useState(null);
 
     async function fetchFromDatabase() {
         let user = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
         setUserInfo(user);
         setNewsletter(user.newsletterSubscription);
+        setProducts(listProduct);
+        if (user.prodDatePromotion === new Date().toISOString().split('T')[0]) {
+            setIsPromotion(false);
+            let product = listProduct.find(p => p.id === Number(user.prodPromotion));
+            setProduct(product);
+            console.log(product);
+        }
     }
 
     useEffect(() => {
         fetchFromDatabase();
     }, []);
 
+
+    
+    
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setUserInfo((prevUserInfo) => ({
@@ -50,11 +66,37 @@ function UserProfileInfo({ onSettingChange }) {
         await update('https://localhost:7248/api/Users/ChangeOptions',userInfo);
         await fetchFromDatabase();
         onSettingChange();
+        console.log(userInfo);
+    };
+
+    const handleProdPromotion = async () => {
+        console.log(userInfo);
+        if (!products || products.length === 0) {
+            return;
+        }
+        let randomNumber = Math.floor(Math.random() * 9) + 2;
+        //prodDatePromotion, prodPromotion, prodValuePromotion
+        let randomProduct = products[Math.floor(Math.random() * products.length)];
+        setProduct(randomProduct);
+        userInfo.prodPromotion = String(randomProduct.id);
+        userInfo.prodDatePromotion = new Date().toISOString().split('T')[0];
+        userInfo.prodValuePromotion = String(randomNumber);
+        setIsPromotion(false);
+        await fetchFromDatabase();
+        await update('https://localhost:7248/api/Users/ChangeProdPromotion',userInfo);
+        await fetchFromDatabase();
+        onSettingChange();
+        console.log(userInfo);
+        console.log(products);
     };
 
     if (!userInfo) {
         return <div>Loading...</div>;
     }
+
+    const handleAddToCart = async (product) => {
+    };
+    
 
     return (
         <div className="user-profile">
@@ -108,6 +150,33 @@ function UserProfileInfo({ onSettingChange }) {
                     </select>
                 </div>
                 <button onClick={handleSubmitClick}>Save</button>
+            </div>
+            <div className="selectboxes">
+                {isPromotion && (
+                    <button onClick={handleProdPromotion}>Promotion</button>
+                )}
+                {!isPromotion && (
+                    <div className="product-tile">
+                    <img className="product-image" src={`https://localhost:7248/Files/${product.thumbnailUrl}`} alt={product.name} />
+                    <div className="product-info">
+                        <div className="price-stock-container">
+                                <div className="price-price-container">
+                                    
+                                    <p className="price">Price: <del>{(product.price / rate).toFixed(2)} {userInfo.currency}</del></p>
+                                    <p className="price">{((product.price * ((100 - userInfo.prodValuePromotion)/100)) / rate).toFixed(2)} {userInfo.currency}
+                                        {userInfo.isNetto == 'netto' && <span>+Vat</span>}
+                                        </p>
+                                </div>
+    
+                            <p className="stock">Stock: {product.quantity}</p>
+                        </div>
+                        <h3 className="product-name">{product.name}</h3>
+                        <div className="buttons-container">
+                            <Link to={`/product/${product.id}`} className="view-more-btn">View more</Link>
+                        </div>
+                    </div>
+                </div>
+                )}
             </div>
         </div>
     );
