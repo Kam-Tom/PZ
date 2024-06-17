@@ -5,7 +5,7 @@ import "./OrderTile.css";
 
 const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, currency }) => {
     const [isItemAvailable, setIsItemAvailable] = useState(true);
-    const isDiscounted = item.promotionNetto !== null && item.promotionNetto < item.netto;
+    const isDiscounted = item.promotionNetto !== null && item.promotionNetto < item.netto && item.promotionNetto != 0;
     const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
     const [isPromotion, setIsPromotion] = useState(0);
     const [user, setUser] = useState(null);
@@ -27,7 +27,7 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
     }, []);
     return (
         <div>
-            {isPromotion && (
+            {isPromotion == 1 && (
             <li key={item.id} className="order-tile">
             <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
             <div className="product-info">
@@ -36,7 +36,7 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
                         <div className="price-price-container">
                             <p className="price">Price: <del>{(item.netto / currencyRate).toFixed(2)} {currency}</del></p>
    
-                            <p className="price">{(((item.netto * ((100 - Number(userInfo.prodValuePromotion))/100)) / currencyRate)).toFixed(2)} {currency}
+                            <p className="price">{(((item.netto * ((100 - Number(user.prodValuePromotion))/100)) / currencyRate)).toFixed(2)} {currency}
                                 {isNetto && <span>+Vat</span>}
                             </p>
 
@@ -70,7 +70,7 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
         </li>
         )
         }
-        <li key={item.id} className="order-tile">
+        {(item.quantity - isPromotion) != 0 && (<li key={item.id} className="order-tile">
             <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
             <div className="product-info">
                 <div className="price-stock-container">
@@ -109,7 +109,7 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
                 )}   
             </div>
         </li>
-        
+        )}
         </div>
     );
 };

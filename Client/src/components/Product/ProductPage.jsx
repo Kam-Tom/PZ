@@ -39,7 +39,7 @@ const ProductPage = ({ currencyRate, currency }) => {
 
             };
             setProduct(mappedProduct);
-            let pDiscount = mappedProduct.promotionPrice !== null;
+            let pDiscount = mappedProduct.promotionPrice !== null && mappedProduct.promotionPrice != 0;
             setIsDiscounted(pDiscount);
         }
         fetchFromDatabase();

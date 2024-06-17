@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 
 const ProductTile = ({ product, addToCart, currencyRate, currency }) => {
-    const isDiscounted = product.promotionPrice !== null;
+    const isDiscounted = product.promotionPrice !== null && product.promotionPrice != 0;
     const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
 
     return (
