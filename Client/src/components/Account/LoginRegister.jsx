@@ -37,12 +37,10 @@ function LoginRegister({ onLogin }) {
     async function checkCaptcha(captchaRef) {
         const captchaValue = captchaRef.current.getValue();
         if (!captchaValue || isValidate()) {
-            console.log("nie weszlo");
             confirm("Wrong captcha or invalid data!");
             event.preventDefault();
         } else {
             // make form submission
-            console.log("weszlo");
             if (captchaRef == ReCAPTCHA1) {
                 if (!loginFormData.email || !loginFormData.password) {
                     confirm("Fill all fields");
@@ -81,22 +79,14 @@ function LoginRegister({ onLogin }) {
         event.preventDefault();
         const captchaValue = captchaRef.current.getValue();
         if (captchaValue && resetFormData.email != undefined) {
-            //console.log("TO JE EMAAAAAAAILLL" + resetFormData.email.toString());
             await postResetPassword(resetFormData.email);
-
-            
+            alert("Message with password reset link has just been sent to your email.");
         }
         else {
             confirm("Wrong captcha or invalid data!");
         }
 
     }
-    //obsluga przyciskow
-    //przy sign in
-    // checkCaptcha(ReCAPTCHA1);
-
-    //przy sign up
-    // checkCaptcha(ReCAPTCHA2);
 
     function handlePasswordReset() {
         setIsPasswordReset(true);

@@ -35,6 +35,18 @@ public class UsersController : ControllerBase
         else
             return BadRequest("User dont exist" + email);
     }
+
+    [HttpGet("GetByGivenEmail")]
+    public ActionResult GetByGivenEmail(string email)
+    {
+        var user = _repo.GetByEmail(email);
+
+        if (user != null)
+            return Ok(user);
+        else
+            return BadRequest("User dont exist" + email);
+    }
+
     [HttpDelete, Authorize(Roles = "Admin")]
     public ActionResult Delete(int userId)
     {
