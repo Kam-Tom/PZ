@@ -158,6 +158,8 @@ export async function postLogin(user) {
         data: data
     };
 
+    let errorResponse = null;
+
     await axios("https://localhost:7248/Auth/login", options)
         .then(response => {
             localStorage.setItem("loginToken", response.data.token);
@@ -165,9 +167,14 @@ export async function postLogin(user) {
             localStorage.setItem("role", role);
             console.log(localStorage.getItem("loginToken"));
         })
-        .catch(error => localStorage.setItem("loginToken", 'wrong'));
+        .catch(error => {
+            localStorage.setItem("loginToken", 'wrong')
+            errorResponse = error;
+        }
+        );
 
     console.log(localStorage.getItem("loginToken"))
+    return errorResponse;
 }
 
 export function getRole() {
@@ -402,4 +409,29 @@ export async function getByEmail(email) {
         .catch(error => console.log('error', error));
 
     return results
+}
+
+export async function verifyEmail(frontData) {
+
+    let data = {
+        Email: frontData.email,
+        Token: frontData.token
+    }
+
+    const options = getOptions('POST');
+
+    let resultsError = null;
+
+    const url = 'https://localhost:7248/Auth/VerifyEmail';
+
+    await axios.post(url, data, options)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.log('error', error);
+            resultsError = error;
+        });
+
+    return resultsError
 }

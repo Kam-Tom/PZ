@@ -48,7 +48,7 @@ function LoginRegister({ onLogin }) {
                 }
                 else {
                     console.log("Dane do logowania", loginFormData);
-                    await postLogin(loginFormData);
+                    let errorResponse = await postLogin(loginFormData);
                     const loginToken = localStorage.getItem("loginToken");
                     if (loginToken != 'wrong') {
                         alert("Form submission successful!");
@@ -56,7 +56,7 @@ function LoginRegister({ onLogin }) {
                         navigate("/");
                     }
                     else {
-                        confirm("Wrong email or password!");
+                        confirm("Wrong email or password!\n" + "Details: " + errorResponse.response.data.toString());
                         event.preventDefault();
                     }
                 }

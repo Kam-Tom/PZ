@@ -38,10 +38,21 @@ public class AuthController : ControllerBase
         string emailVerificationToken = _jwtService.CreateRandomToken();
         _repo.Create(request, emailVerificationToken);
 
-        //Send emailVerificationToken
+        MailService mailService = new MailService();
+        MailData mailData = new MailData();
 
-        //return Ok("User Registered");
-        return Ok(emailVerificationToken);
+        string url = String.Format("https://localhost:5173/emailverification/?email={0}&token={1}", request.Email, emailVerificationToken);
+
+        mailData.EmailReceiver = request.Email;
+        mailData.EmailName = "Verification Email";
+        mailData.EmailSubject = "Welcome to DreamyGadget!";
+        mailData.EmailBody = "Hello, welcome to our site.\n" +
+            "Here is your verification token:\n" +
+            url;
+
+        mailService.SendMail(mailData);
+
+        return Ok("User Registered");
     }
 
     [HttpPost("login")]
@@ -51,8 +62,8 @@ public class AuthController : ControllerBase
 
         if (user == null)
             return BadRequest("User not found");
-        //if (!user.EmailVerified)
-        //    return BadRequest("Not verified");
+        if (!user.EmailVerified)
+            return BadRequest("Not verified");
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             return BadRequest("Wrong password");
 
@@ -74,7 +85,7 @@ public class AuthController : ControllerBase
         return Ok(new {token, role});
     }
 
-    [HttpPost("verifyEmail")]
+    [HttpPost("VerifyEmail")]
     public ActionResult VerifyEmail(VerifyEmailDto request)
     {
         User? user = _repo.GetByEmail(request.Email);

@@ -19,7 +19,6 @@ function ResetPassword() {
     async function fetchFromDatabase() {
         var user = await getByEmail(email);
         setUser(user);
-        console.log("Czas usera - " + user.resetPasswordTokenExpires  + " i obecny " + Date.now());
     }
 
     async function sendNewPassword() {
