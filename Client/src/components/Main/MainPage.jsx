@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import PropTypes, { func } from 'prop-types';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Navbar from "./Navbar";
 import LoginRegister from "../Account/LoginRegister";
@@ -35,6 +37,7 @@ function MainPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [notification, setNotification] = useState({ show: false, message: '' });
     const [minPrice, setMinPrice] = useState(null);
     const [maxPrice, setMaxPrice] = useState(null);
@@ -52,13 +55,22 @@ function MainPage() {
     async function fetchData() {
         await fetchUserData();
         await fetchProducts();
+        // checkCartItemsAvailability();
     }
     async function fetchProducts() {
         const vatRates = await getAll("https://localhost:7248/Vat");
 
         let productData = await getAll("https://localhost:7248/Product");
 
-
+        let cart = await getAll("https://localhost:7248/api/Shop/GetBasket");
+        let cost = cart.cost;
+        cart.items.map((item) => {
+            const product = productData.find((p) => p.id === item.id);
+            if (!product || product.quantity < item.quantity) {
+                cost -= item.netto * item.quantity;
+            }
+        });
+        cart.cost = cost;
 
         for (const product of productData) {
             product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
@@ -83,8 +95,7 @@ function MainPage() {
             }
         });
         setProducts(productData);
-        
-        setCartItems(await getAll("https://localhost:7248/api/Shop/GetBasket"));
+        setCartItems(cart);
     }
     async function fetchUserData() {
         userInfo = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
@@ -111,10 +122,26 @@ function MainPage() {
         }
     }
 
+    async function fetchOrders() {
+        const orders = await getAll("https://localhost:7248/api/Shop/GetAll");
+        const sessionOrders = JSON.parse(sessionStorage.getItem("orders"));
+        if(!sessionStorage.getItem("orders") || sessionOrders.length !== orders.length) {
+            sessionStorage.setItem("orders", JSON.stringify(orders));
+            return;
+        }
+        for (let i = 0; i < sessionOrders.length; i++) {
+            if(orders[i].status !== sessionOrders[i].status) {
+                toast.success('Status zamówienia został zmieniony z ' + sessionOrders[i].status + ' na ' + orders[i].status, { position: "top-center"});
+            }
+        }
+        sessionStorage.setItem("orders", JSON.stringify(orders));
+    }
 
     useEffect(() => {
         fetchData();
-    }, []);
+        const interval = setInterval(fetchOrders, 5000);
+        return () => clearInterval(interval);
+    }, [cartItems.cost]);
 
     const handleCategorySelect = (category) => {
         setFilteredCategory(category);
@@ -342,6 +369,7 @@ function MainPage() {
                 />
 
             </Routes>
+            <ToastContainer />
         </div>
     );
 }

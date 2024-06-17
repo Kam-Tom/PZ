@@ -1,10 +1,22 @@
 import React from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { getAll } from "../../axios";
 import "./OrderTile.css";
 
 const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, currency }) => {
-    const isDiscounted = item.promotionPrice !== null && item.promotionPrice < item.price;
+    const [isItemAvailable, setIsItemAvailable] = useState(true);
+    const isDiscounted = item.promotionNetto !== null && item.promotionNetto < item.netto;
     const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
+
+    useEffect( () => {
+        const checkItemAvailability = async () => {
+        const itemInDataBase = await getAll(`https://localhost:7248/Product/${item.id}`);
+        if (itemInDataBase.quantity < item.quantity) {
+            setIsItemAvailable(false);
+        }
+    };
+    checkItemAvailability();
+    }, []);
     return (
         <li key={item.id} className="order-tile">
             <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
@@ -12,9 +24,9 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
                 <div className="price-stock-container">
                     {isDiscounted ? (
                         <div className="price-price-container">
-                            <p className="price">Price: <del>{(item.price / currencyRate).toFixed(2)} {currency}</del></p>
+                            <p className="price">Price: <del>{(item.netto / currencyRate).toFixed(2)} {currency}</del></p>
    
-                            <p className="price">{((item.promotionPrice / currencyRate)).toFixed(2)} {currency}
+                            <p className="price">{((item.promotionNetto / currencyRate)).toFixed(2)} {currency}
                                 {isNetto && <span>+Vat</span>}
                             </p>
 
@@ -22,7 +34,7 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
                         </div>
                     ) : (
                         <>
-                                <p className="price">Price: {(item.price / currencyRate).toFixed(2)} {currency}
+                                <p className="price">Price: {(item.netto / currencyRate).toFixed(2)} {currency}
                                     {isNetto && <span>+Vat</span>}</p>
                         </>
                     )}
@@ -31,8 +43,17 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
                 <h3 className="product-name">{item.name}</h3>
             </div>
             <div className="buttons-container">
-                <button onClick={() => removeFromCart(item.id)}>Remove</button>
-                {item.quantity > 1 && <button onClick={() => removeAllFromCart(item.id)}>Remove All</button>}
+                {!isItemAvailable ? (
+                    <>
+                        <p style={{ color: 'red' }} >Product quantity exceeds available stock</p>
+                        <button onClick={() => removeAllFromCart(item.id)}>Remove</button>
+                    </>
+                ) : (
+                    <>
+                    <button onClick={() => removeFromCart(item.id)}>Remove</button>
+                    {item.quantity > 1 && <button onClick={() => removeAllFromCart(item.id)}>Remove All</button>}
+                    </>
+                )}   
             </div>
         </li>
     );
