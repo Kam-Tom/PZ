@@ -322,7 +322,7 @@ export async function changeSubscribe(userId) {
 export async function putNewsletter(newsletter) {
 
     const data = {
-        EmailSubject: newsletter.title,
+        EmailSubject: newsletter.subject,
         EmailBody: newsletter.body,
         emailReceiver: "admin@admin.com",
         emailName: "irrelevant"
@@ -332,9 +332,16 @@ export async function putNewsletter(newsletter) {
 
     const options = getOptions('PUT');
 
+    let errorRespone = null;
+
     await axios.put(url, data, options)
         .then(response => console.log(response.data))
-        .catch(error => console.log('error', error));
+        .catch(error => {
+            console.log('error', error)
+            errorRespone = error
+        }
+    );
+    return errorRespone;
 }
 export async function changeOptions(currency, numOfProductOnPage) {
     const url = `https://localhost:7248/api/Users/ChangeOptions?currency=${currency}&numOfProductOnPage=${numOfProductOnPage}`;
@@ -358,9 +365,16 @@ export async function postQuestionMail(mail) {
 
     const options = getOptions('POST');
 
+    let errorRespone = null;
+
     await axios.post(url, data, options)
         .then(response => console.log(response.data))
-        .catch(error => console.log('error', error));
+        .catch(error => {
+            console.log('error', error)
+            errorRespone = error
+        }
+    );
+    return errorRespone;
 }
 
 export async function putNewPassword(DTOResetPassword) {

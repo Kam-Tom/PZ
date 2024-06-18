@@ -1,11 +1,14 @@
 import React, { useEffect,useState } from "react";
-import { postQuestionMail } from "../../axios.js";
-import { getAll} from '../../axios';
+import { postQuestionMail, putNewsletter } from "../../axios.js";
+import { getAll } from '../../axios';
+import "./MailPage.css"
+
 function MailPage() {
 
     const [body, setBody] = useState("");
     const [subject, setSubject] = useState("");
     const [email, setUserEmail] = useState("");
+    const [errorResponse, setErrorResponse] = useState();
 
     async function fetchFromDatabase() {
         let items = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
@@ -22,11 +25,27 @@ function MailPage() {
             alert("You need to fill both Subject and Body of mail");
 
         } else {
-            postQuestionMail({
-                subject: subject + " " + email,
-                body: body
-            });
-            alert("Email has been sent");
+            let splittedEmail = email.split("@");
+
+            if (splittedEmail[splittedEmail.length - 1] != "admin.com") {
+                setErrorResponse(postQuestionMail({
+                    subject: subject + " " + email,
+                    body: body
+                }));
+            }
+            else {
+                setErrorResponse(putNewsletter({
+                    subject: subject,
+                    body: body
+                }));
+            }
+            
+            if (errorResponse == null) {
+                alert("Email has been sent");
+            } else {
+                alert("There was an error while sending email:\n" + errorResponse);
+            }
+
         }
     };
 
