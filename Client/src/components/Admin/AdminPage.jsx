@@ -40,6 +40,14 @@ function AdminPage({ onAddProduct }) {
         setShowStats(true);
     };
 
+    const handleAddPromotionSuccess = () => {
+        setShowStats(true);
+    };
+
+    const handleAddShippingMethodSuccess = () => {
+        setShowStats(true);
+    };
+
     const handleAddPromotion = (newPromotionData) => {
         setShowAddPromotionForm(false);
     };
@@ -206,8 +214,8 @@ function AdminPage({ onAddProduct }) {
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
             {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} onAddCategorySuccess={handleAddCategorySuccess} />}
-            {showAddPromotionForm && <AddPromotionForm onAddPromotion={handleAddPromotion} onClose={handleCloseAddPromotionForm} />}
-            {showAddShippingMethodForm && <AddShippingMethodForm onAddShippingMethod={handleAddShippingMethod} onClose={handleCloseAddShippingMethodForm} />}
+            {showAddPromotionForm && <AddPromotionForm onAddPromotion={handleAddPromotion} onClose={handleCloseAddPromotionForm} onAddPromotionSuccess={handleAddPromotionSuccess} />}
+            {showAddShippingMethodForm && <AddShippingMethodForm onAddShippingMethod={handleAddShippingMethod} onClose={handleCloseAddShippingMethodForm} onAddShippingMethodSuccess={handleAddShippingMethodSuccess} />}
             {showList && (
                 <ProductList
                     // products={products}

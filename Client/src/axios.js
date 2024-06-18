@@ -33,9 +33,16 @@ export async function postNewPromotion(productName, amount, productId) {
 
     await axios("https://localhost:7248/api/Promotion", options)
         .then(response => promotionId = response.data)
-        .catch(error => console.log('error', error));
+        .catch(error => {
+            toast.error('Failed to create promotion', { position: 'top-center' });
+            console.error('error', error);
+        });
 
-    await axios(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, options);
+    await axios(`https://localhost:7248/api/Promotion/${promotionId}/Add/${productId}`, options)
+        .catch(error => {
+            toast.error('Failed to add product to promotion', { position: 'top-center' });
+            console.error('error', error);
+        });
 
     let emailBody = "Nowa promocja na " + productName + " o " + data.discount +"% taniej!"
         + "\nPromocja od " + data.start + " do " + data.end
@@ -46,7 +53,11 @@ export async function postNewPromotion(productName, amount, productId) {
         body: emailBody
     }
 
-    putNewsletter(newsletter);
+    putNewsletter(newsletter)
+        .catch(error => {
+            toast.error('Failed to send newsletter', { position: 'top-center' });
+            console.error('error', error);
+        });
 }
 
 export async function postNewCategory(category, subCategories) {
@@ -124,9 +135,16 @@ export async function postNewShippingMethod(name, cost) {
         data: data
     };
 
-    await axios("https://localhost:7248/ShippingMethod", options)
-        .then(response => console.log(response.data))
-        .catch(error => console.log('error', error));
+    try {
+        await axios("https://localhost:7248/ShippingMethod", options);
+        console.log('Shipping method created successfully');
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            throw new Error('Shipping method already exists');
+        } else {
+            throw error;
+        }
+    }
 }
 
 export async function postNewUser(user) {

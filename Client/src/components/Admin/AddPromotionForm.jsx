@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import "./AddPromotionForm.css";
 import { postNewPromotion } from "../../axios.js";
 import ValidationError from "../Main/ValidNotification.jsx";
+import { toast } from "react-toastify";
 
-function AddPromotionForm({ onAddPromotion, onClose }) {
+function AddPromotionForm({ onAddPromotion, onClose, onAddPromotionSuccess }) {
     const [productName, setProductName] = useState("");
     const [productNetto, setProductNetto] = useState(0);
     const [productId, setProductId] = useState();
@@ -63,17 +64,24 @@ function AddPromotionForm({ onAddPromotion, onClose }) {
 
     };
 
-    const handleSubmit = (e) => {
-        console.log(productId);
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if(discountAmountError || productNameError){
-            alert("Invalid discount or product name");
-        }else{
-            postNewPromotion(productName, discountAmount, productId);
-            onAddPromotion(productName, discountAmount, productId);
-            setProductName("");
-            setDiscountAmount("");
-            onClose();
+            toast.error('Invalid discount or product name', { position: 'top-center' });
+        } else {
+            try {
+                await postNewPromotion(productName, discountAmount, productId);
+                onAddPromotion(productName, discountAmount, productId);
+                setProductName("");
+                setDiscountAmount("");
+                onClose();
+                toast.success('Promotion added successfully', { position: 'top-center' });
+                setTimeout(() => {
+                    onAddPromotionSuccess();
+                }, 1000);
+            } catch (error) {
+                toast.error('Failed to add promotion', { position: 'top-center' });
+            }
         }
     };
 
