@@ -68,7 +68,7 @@ const ProductFilter = ({ categories, subCategory, onSelectCategory, onSelectSubC
             <button onClick={handleAllToggle} className={!isDiscounted ? 'active' : ''}>All</button>
             <button onClick={handleDiscountedToggle} className={isDiscounted ? 'active' : ''}>Discounted</button>
             <h2>Filter by category</h2>
-            <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : ''}>All</button>
+            <button onClick={() => handleCategoryChange(null)} className={selectedCategory === null ? 'active' : '' }>All</button>
             {categories.map((category, index) => (
     <div key={index}>
         <button onClick={() => handleCategoryChange(category)} className={selectedCategory === category ? 'active' : ''}>{category}</button>

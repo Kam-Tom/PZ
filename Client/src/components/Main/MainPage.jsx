@@ -161,9 +161,11 @@ function MainPage() {
     const handleCategorySelect = (category) => {
         const filteredSubcategories = filteredCategoriesBase.find(filteredCategory => filteredCategory.name === category)?.subcategories.map(subcategory => subcategory.name);
         setFilteredCategory(filteredSubcategories);
+        setCurrentPage(1);
     };
     const handleSubCategorySelect = (subcategory) => {
         setFilteredCategory([subcategory]);
+        setCurrentPage(1);
     };
 
     const handleDiscountedToggle = (isDiscounted) => {
@@ -293,19 +295,20 @@ function MainPage() {
                                 />
                                 <ProductSorter onSort={handleSort} />
                             </div>
-                            <div>
+                            <div className="www">
                                 <div className="product-list-container">
                                     {productRows.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage).map((row, rowIndex) => (
                                         <div key={rowIndex} className="product-list-row">
-                                            {row.map((product) => (
+                                            {row.map((product) => ( console.log(currentPage * productsPerPage ,productRows.slice((currentPage - 1) * productsPerPage).length ),
                                                 <ProductTile key={product.id} product={product} addToCart={handleAddToCart} isDiscounted={product.promotionPrice !== null} currencyRate={rate} currency={currency} />
                                             ))}
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="pagination" style={{ position: 'absolute', bottom: '0', width: '100%' }}>
-                                    {currentPage > 1 && <button style={{ fontSize: '15px', padding: '10px', margin: '5px' }} onClick={() => handlePageChange(currentPage - 1)}>{"<"}</button>}
+                                <div className="pagination"  style={{ position: 'absolute', bottom: `${(productRows.slice((currentPage - 1) * productsPerPage).length) < (currentPage * productsPerPage) ?((productRows.slice((currentPage - 1) * productsPerPage).length == 1 )? '100px' : (productRows.slice((currentPage - 1) * productsPerPage).length == 2) ? '-10%': (productRows.slice((currentPage - 1) * productsPerPage).length == 3) ? '-55%' : '-103%') : (currentPage * productsPerPage) == 2 ? '-10%' : (currentPage * productsPerPage) == 3 ? '-55%' : '-103%'}`, width: '100%' }}>
+                    
+                                    {currentPage > 1 && <button style={{ fontSize: '15px', padding: '10px', margin: '5px' }} onClick={() => handlePageChange(currentPage - 1)}>{"<"}</button>} 
                                     {[...Array(totalPages)].map((_, i) => (
                                         <button style={{ fontSize: '15px', padding: '10px', margin: '5px' }} key={i} onClick={() => handlePageChange(i + 1)}>{i + 1}</button>
                                     ))}
