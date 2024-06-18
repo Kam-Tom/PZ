@@ -40,7 +40,6 @@ function MainPage() {
     const [products, setProducts] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
-    const [notification, setNotification] = useState({ show: false, message: '' });
     const [minPrice, setMinPrice] = useState(null);
     const [maxPrice, setMaxPrice] = useState(null);
     const [inStock, setInStock] = useState(false);
@@ -144,7 +143,7 @@ function MainPage() {
         }
         for (let i = 0; i < sessionOrders.length; i++) {
             if(orders[i].status !== sessionOrders[i].status) {
-                toast.success('Status zamówienia został zmieniony z ' + sessionOrders[i].status + ' na ' + orders[i].status, { position: "top-center"});
+                toast.success('Order status changed from ' + sessionOrders[i].status + ' to ' + orders[i].status, { position: "top-center"});
             }
         }
         sessionStorage.setItem("orders", JSON.stringify(orders));
@@ -152,7 +151,7 @@ function MainPage() {
 
     useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchOrders, 5000);
+        const interval = setInterval(fetchOrders, 2500);
         return () => clearInterval(interval);
     }, [cartItems.cost]);
 
@@ -228,7 +227,7 @@ function MainPage() {
     const handleAddToCart = (productId) => {
         addToCart(productId)
             .then(() => {
-                setNotification({ show: true, message: 'Product added to cart' });
+                toast.success('Product added to cart', { position: "top-center"});
             })
             .catch((error) => {
             });
@@ -261,8 +260,6 @@ function MainPage() {
                         <>
                             <Navbar 
                             onSearch={handleSearch} 
-                            notification={notification} 
-                            setNotification={setNotification} 
                             />
                             <div className="filter-and-product-container">
                                 <ProductFilter
@@ -304,8 +301,6 @@ function MainPage() {
                         <>
                             <Navbar 
                             onSearch={handleSearch} 
-                            notification={notification} 
-                            setNotification={setNotification} 
                             />
                             <ProductPage products={products}  currencyRate={rate} currency={currency} />
                         </>
@@ -336,8 +331,6 @@ function MainPage() {
                         <>
                             <Navbar 
                             onSearch={handleSearch} 
-                            notification={notification} 
-                            setNotification={setNotification} 
                             />
                             <div className="checkout-container">
                                 <ShoppingCart 
@@ -371,8 +364,6 @@ function MainPage() {
                         <>
                             <Navbar
                                 onSearch={handleSearch}
-                                notification={notification}
-                                setNotification={setNotification}
                             />
                             <div className="mail-page-container">
                                 <MailPage></MailPage>

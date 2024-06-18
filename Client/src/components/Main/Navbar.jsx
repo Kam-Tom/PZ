@@ -3,12 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import "../../ThemeStyle.css";
 import "./Navbar.css";
-import AppNotification from "./AppNotification";
-import "./AppNotification.css";
 import { getRole } from "../../axios";
 import { ThemeContext } from "../../ThemeContext.jsx";
 
-function Navbar({ onSearch, notification, setNotification }) {
+function Navbar({ onSearch }) {
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
     const { theme, setTheme } = useContext(ThemeContext);
@@ -65,12 +63,6 @@ function Navbar({ onSearch, notification, setNotification }) {
                 <Link to="/order">
                     <ion-icon name="cart-outline"></ion-icon>
                 </Link>
-                {notification.show && 
-                    <AppNotification 
-                        message={notification.message} 
-                        onClose={() => setNotification({ show: false, message: '' })} 
-                    />
-                }
                 {getRole() &&
                     <Link to="/" onClick={handleLogout}>
                             <ion-icon name="log-out-outline"></ion-icon>

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { getAll, buy } from "../../axios";
 import PropTypes from 'prop-types';
 import "./PaymentForm.css";
-import "../Main/AppNotification.css";
-import AppNotification from "../Main/AppNotification";
 
 const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, currency }) => {
     const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
@@ -18,10 +16,7 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
     const [isEmailValid, setIsEmailValid] = useState(false);
     const [blikCode, setBlikCode] = useState("");
     const [isBlikCodeValid, setIsBlikCodeValid] = useState(false);
-    const [notification, setNotification] = useState(false);
     
-
-
     async function handleSubmit(event)
     {
         event.preventDefault();
@@ -34,9 +29,6 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
         setCvc("");
         setEmail("");
         setBlikCode("");
-        if (isCardNumberValid && isExpiryDateValid && isCvcValid && isEmailValid) {
-            setNotification(true);
-        }
     };
 
     const handleCardNumberChange = (e) => {
@@ -202,7 +194,6 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                     )}
                 </form>
             )}
-            {notification && <AppNotification message="Purchase successful!" onClose={() => setNotification(false)} />}
         </div>
     );
 };

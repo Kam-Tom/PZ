@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./ProductPage.css";
 import { getAll, addToCart } from "../../axios";
 import PropTypes from 'prop-types';
-import AppNotification from "../Main/AppNotification";
 import ReviewsProduct from "./ReviewsProduct";
+import { toast } from "react-toastify";
 
 const ProductPage = ({ currencyRate, currency }) => {
     const { id } = useParams();
@@ -14,7 +14,6 @@ const ProductPage = ({ currencyRate, currency }) => {
 
     const [product, setProduct] = useState(null);
     const [isDiscounted, setIsDiscounted] = useState(false);
-    const [notification, setNotification] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [imageFade, setImageFade] = useState(""); // State to control the fade-in class
 
@@ -52,7 +51,7 @@ const ProductPage = ({ currencyRate, currency }) => {
 
     const handleAddToCart = async () => {
         await addToCart(parseInt(id));
-        setNotification(true);
+        toast.success('Product added to cart', { position: "top-center"});
     };
 
     const nextImage = () => {
@@ -109,10 +108,6 @@ const ProductPage = ({ currencyRate, currency }) => {
                         <button disabled>Out of stock</button>
                     )}
                 </div>
-                
-
-                {notification && <AppNotification message="Product added to cart" onClose={() => setNotification(false)} />}
-
             </div>
             <div className="reviews">
                 <ReviewsProduct />
