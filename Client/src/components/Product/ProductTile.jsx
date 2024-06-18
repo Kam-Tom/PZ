@@ -50,8 +50,8 @@ ProductTile.propTypes = {
     product: PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
-        price: PropTypes.string.isRequired,
-        promotionPrice: PropTypes.number,
+      //  price: PropTypes.number.isRequired,
+       // promotionPrice: PropTypes.string,
         quantity: PropTypes.number.isRequired,
         thumbnailUrl: PropTypes.string.isRequired,
     }).isRequired,

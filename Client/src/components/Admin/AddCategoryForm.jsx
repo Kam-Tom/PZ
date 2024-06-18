@@ -7,9 +7,9 @@ import { toast } from "react-toastify";
 
 function AddCategoryForm({ onAddCategory, onClose, onAddCategorySuccess}) {
     const [category, setCategory] = useState("");
-    const [subCategories, setSubCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState([""]);
     const [categoryError, setCategoryErorr] = useState('Invalid categoty. Its must be at least 3 characters');
-    const [subCategoriesErorr, setSubCategoriesErorr] = useState([]);
+    const [subCategoriesErorr, setSubCategoriesErorr] = useState([`Invalid subcategory ${subCategories.length}. It must be at least 3 characters`]);
 
     const handleAddSubCategory = () => {
         setSubCategories([...subCategories, ""]);
@@ -19,12 +19,14 @@ function AddCategoryForm({ onAddCategory, onClose, onAddCategorySuccess}) {
     };
 
     const handleRemoveSubCategory = () => {
-        const updatedSubCategories = [...subCategories];
-        updatedSubCategories.pop();
-        setSubCategories(updatedSubCategories);
-        const error = [...subCategoriesErorr];
-        error.pop();
-        setSubCategoriesErorr(error);
+        if (subCategories.length > 1) { // Only allow removal if there's more than one subcategory
+            const updatedSubCategories = [...subCategories];
+            updatedSubCategories.pop();
+            setSubCategories(updatedSubCategories);
+            const error = [...subCategoriesErorr];
+            error.pop();
+            setSubCategoriesErorr(error);
+        }
     };
 
     const handleSubmit = async (e) => {

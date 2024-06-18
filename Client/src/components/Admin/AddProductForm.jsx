@@ -22,11 +22,13 @@ function AddProductForm({ onAddProduct }) {
         quantity: "",
     });
     const [errors, setErrors] = useState({});
+    const [ebe, setebe] = useState([]);
 
     useEffect(() => {
         // Fetch categories from the server API
-        getAll('https://localhost:7248/categories/List').then((result) => setCategories(result));
+        getAll('https://localhost:7248/categories').then((result) => setCategories(result));
         getAll("https://localhost:7248/Vat").then((result) => setVatTypes(result));
+        
     }, []);
 
     const validateForm = () => {
@@ -53,7 +55,6 @@ function AddProductForm({ onAddProduct }) {
         if (!product.thumbnail) {
             errors.quantity = "Thumbnail image is required.";
         }
-
         return errors;
     };
 
@@ -82,6 +83,10 @@ function AddProductForm({ onAddProduct }) {
         return "";
     };
 
+    const handleInputChange2 = (field, value) => {
+        setebe(categories.find(category => category.id == value).subcategories);
+    }
+
     return (
         <div className="parent-container">
 
@@ -89,13 +94,21 @@ function AddProductForm({ onAddProduct }) {
                 <h1 className="p-title">Add New Product</h1>
                 <input className="p-name" type="text" name="name" placeholder="Product Name" onChange={(e) => { handleInputChange('name', e.target.value) }} />
 
-                <select name="category" className="p-category" onChange={(e) => { handleInputChange('category', e.target.value) }} value={product.category}>
+                <select name="category" className="p-category" onChange={(e) => { handleInputChange2('category', e.target.value) }}>
                     <option value="" disabled>Select Category</option>
                     {categories.map((category) => (
                         <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
+                    ))}
                 </select>
-                <textarea name="description" className="p-desc" placeholder="Description" onChange={(e) => { handleInputChange('description', e.target.value) }} ></textarea>
+                {Array.isArray(ebe) && (
+                    <select name="subcategory" className="p-subcategory" onChange={(e) => { handleInputChange('category', e.target.value) }} value={product.category}>
+                        <option value="" disabled>Select Subcategory</option>
+                        {ebe.map((category) => (
+                            <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
+                    </select>
+                )}
+                <textarea name="description" className="p-desc" placeholder="Description" onChange={(e) => { handleInputChange('description', e.target.value) }}></textarea>
                 <InputThumbnail className="p-thumbnail" onChange={(data) => { handleInputChange('thumbnail',data) }} />
 
                 <input type="number" name="netto" className="p-netto" placeholder="Netto" onChange={(e) => { handleInputChange('netto', e.target.value) }} />

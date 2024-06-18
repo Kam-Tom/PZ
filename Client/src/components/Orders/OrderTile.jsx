@@ -28,15 +28,15 @@ const OrderTile = ({ item, removeFromCart, removeAllFromCart, currencyRate, curr
     return (
         <div>
             {isPromotion == 1 && (
-            <li key={item.id} className="order-tile">
+            <li key={`${item.id}_${Math.random()}`} className="order-tile">
             <img className="product-image" src={`https://localhost:7248/Files/${item.imageUrl}`} alt={item.name} />
             <div className="product-info">
                 <div className="price-stock-container">
                     {isDiscounted ? (
                         <div className="price-price-container">
-                            <p className="price">Price: <del>{(item.netto / currencyRate).toFixed(2)} {currency}</del></p>
+                            <p className="price">Price: <del>{(item.promotionNetto / currencyRate).toFixed(2)} {currency}</del></p>
    
-                            <p className="price">{(((item.netto * ((100 - Number(user.prodValuePromotion))/100)) / currencyRate)).toFixed(2)} {currency}
+                            <p className="price">{(((item.promotionNetto * ((100 - Number(user.prodValuePromotion))/100)) / currencyRate)).toFixed(2)} {currency}
                                 {isNetto && <span>+Vat</span>}
                             </p>
 

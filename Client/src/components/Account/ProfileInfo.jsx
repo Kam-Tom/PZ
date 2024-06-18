@@ -13,6 +13,8 @@ function UserProfileInfo({ onSettingChange, listProduct, rate }) {
     const [products, setProducts] = useState(null);
     const [isPromotion, setIsPromotion] = useState(true);
     const [product, setProduct] = useState(null);
+    const [currency, setCurrency] = useState('zł');
+    const [isNetto, setIsNetto] = useState('brutto');
 
     async function fetchFromDatabase() {
         let user = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
@@ -23,14 +25,16 @@ function UserProfileInfo({ onSettingChange, listProduct, rate }) {
             setIsPromotion(false);
             let product = listProduct.find(p => p.id === Number(user.prodPromotion));
             setProduct(product);
-            console.log(product);
+            setIsNetto(user.bruttoNetto);
         }
     }
 
     useEffect(() => {
         fetchFromDatabase();
+        
     }, []);
 
+    
 
     
     
@@ -63,14 +67,14 @@ function UserProfileInfo({ onSettingChange, listProduct, rate }) {
         userInfo.currency = document.getElementById('selectbox1').value;
         userInfo.numOfProductOnPage = document.getElementById('selectbox2').value;
         userInfo.bruttoNetto = document.getElementById('selectbox3').value;
+        setIsNetto(document.getElementById('selectbox3').value);
+        setCurrency(document.getElementById('selectbox1').value);
         await update('https://localhost:7248/api/Users/ChangeOptions',userInfo);
         await fetchFromDatabase();
         onSettingChange();
-        console.log(userInfo);
     };
 
     const handleProdPromotion = async () => {
-        console.log(userInfo);
         if (!products || products.length === 0) {
             return;
         }
@@ -86,8 +90,6 @@ function UserProfileInfo({ onSettingChange, listProduct, rate }) {
         await update('https://localhost:7248/api/Users/ChangeProdPromotion',userInfo);
         await fetchFromDatabase();
         onSettingChange();
-        console.log(userInfo);
-        console.log(products);
     };
 
     if (!userInfo) {
@@ -160,13 +162,22 @@ function UserProfileInfo({ onSettingChange, listProduct, rate }) {
                     <img className="product-image" src={`https://localhost:7248/Files/${product.thumbnailUrl}`} alt={product.name} />
                     <div className="product-info">
                         <div className="price-stock-container">
+                            {(product.promotionPrice == null || product.promotionPrice == 0 ) ? (
                                 <div className="price-price-container">
-                                    
-                                    <p className="price">Price: <del>{(product.price / rate).toFixed(2)} {userInfo.currency}</del></p>
-                                    <p className="price">{((product.price * ((100 - userInfo.prodValuePromotion)/100)) / rate).toFixed(2)} {userInfo.currency}
-                                        {userInfo.isNetto == 'netto' && <span>+Vat</span>}
+                                    <p className="price">Price: <del>{(product.price / rate).toFixed(2)} {currency}</del></p>
+                                    <p className="price">{((product.price * ((100 - userInfo.prodValuePromotion)/100)) / rate).toFixed(2)} {currency}
+                                        {isNetto == 'netto' && <span>+Vat</span>}
                                         </p>
                                 </div>
+                            ) : (
+                                <div className="price-price-container">
+                                    
+                                    <p className="price">Price: <del>{(product.promotionPrice / rate).toFixed(2)} {currency}</del></p>
+                                    <p className="price">{((product.promotionPrice * ((100 - userInfo.prodValuePromotion)/100)) / rate).toFixed(2)} {currency}
+                                        {isNetto == 'netto' && <span>+Vat</span>}
+                                        </p>
+                                </div>
+                            )}
     
                             <p className="stock">Stock: {product.quantity}</p>
                         </div>

@@ -49,6 +49,7 @@ function MainPage() {
     const [currency, setCurrency] = useState("zł"); 
     const [productsPerPage, setProductsPerPage] = useState(2);
     const [prodPromotion, setProdPromotion] = useState([]);
+    const [categoriesBase, setCategoriesBase] = useState([]);
 
     let userInfo;
 
@@ -66,6 +67,7 @@ function MainPage() {
         let productData = await getAll("https://localhost:7248/Product");
 
         let cart = await getAll("https://localhost:7248/api/Shop/GetBasket");
+        getAll('https://localhost:7248/categories').then((result) => setCategoriesBase(result));
 
         for (const product of productData) {
             product.reviews = await getAll(`https://localhost:7248/api/Review/${product.id}`);
@@ -93,6 +95,7 @@ function MainPage() {
         setProducts(productData);
 
         let cost = cart.cost;
+        if(!cart.items) {
         cart.items.map((item) => {
             const product = productData.find((p) => p.id === item.id);
             if (!product || product.quantity < item.quantity) {
@@ -100,12 +103,12 @@ function MainPage() {
             }
             if(product.id == Number(userInfo.prodPromotion)) {
                 cost -= item.netto - (item.netto * ((100 - Number(userInfo.prodValuePromotion))/100));
-                console.log(item.netto - (item.netto * ((100 - Number(userInfo.prodValuePromotion))/100)));
             }
         });
         cart.cost = cost;
         
         setCartItems(cart);
+        }
     }
     async function fetchUserData() {
         userInfo = await getAll(`https://localhost:7248/api/Users/GetByEmail`);
@@ -156,7 +159,11 @@ function MainPage() {
     }, [cartItems.cost]);
 
     const handleCategorySelect = (category) => {
-        setFilteredCategory(category);
+        const filteredSubcategories = filteredCategoriesBase.find(filteredCategory => filteredCategory.name === category)?.subcategories.map(subcategory => subcategory.name);
+        setFilteredCategory(filteredSubcategories);
+    };
+    const handleSubCategorySelect = (subcategory) => {
+        setFilteredCategory([subcategory]);
     };
 
     const handleDiscountedToggle = (isDiscounted) => {
@@ -193,7 +200,7 @@ function MainPage() {
     }
 
     const filteredAndSortedProducts = products
-        .filter((product) => !filteredCategory || product.category === filteredCategory)
+        .filter((product) => !filteredCategory || filteredCategory.includes(product.category))
         .filter((product) => !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase()))
         .filter((product) => {
             const finalPrice = product.promotionPrice !== null
@@ -224,6 +231,17 @@ function MainPage() {
 
     const categories = Array.from(new Set(products.map((product) => product.category)));
 
+    const filteredCategoriesBase = categoriesBase.filter(category => category.subcategories.some(subcategory => categories.includes(subcategory.name)));
+    const filteredCategoryNames = filteredCategoriesBase.map(category => category.name);
+    const categoryDictionary = {};
+
+    filteredCategoriesBase.forEach(category => {
+      const subcategories = category.subcategories
+        .filter(subcategory => categories.includes(subcategory.name))
+        .map(subcategory => subcategory.name);
+      categoryDictionary[category.name] = subcategories;
+    });
+
     const handleAddToCart = (productId) => {
         addToCart(productId)
             .then(() => {
@@ -239,6 +257,7 @@ function MainPage() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
+
 
     const handlePriceRangeFilter = ([min, max]) => {
         setMinPrice(min* rate);
@@ -263,7 +282,9 @@ function MainPage() {
                             />
                             <div className="filter-and-product-container">
                                 <ProductFilter
-                                    categories={categories}
+                                    categories={filteredCategoryNames}
+                                    subCategory={categoryDictionary}
+                                    onSelectSubCategory={handleSubCategorySelect}
                                     onSelectCategory={handleCategorySelect}
                                     onFilterDiscounted={handleDiscountedToggle}
                                     onFilterPriceRange={handlePriceRangeFilter}

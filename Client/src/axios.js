@@ -101,7 +101,6 @@ export async function update(url, data, method="PATCH") {
 
     try {
         const response = await axios(url, options);
-        console.log(response);
     } catch (error) {
         console.error('Error:', error);
     }
