@@ -11,4 +11,6 @@ public class UserInfoDto
     public string? ProdDatePromotion { get; set; }
     public string? ProdValuePromotion { get; set; }
 
+    public string? ShippingAddress { get; set; }
+
 }

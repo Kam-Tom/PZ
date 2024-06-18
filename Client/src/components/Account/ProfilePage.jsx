@@ -37,7 +37,7 @@ function ProfilePage({ onSettingChange, listProduct, rate }) {
         <div className="userprofilecontainer">
             <ProfileMenu onShowProfileInfoFn={showProfileInfoFn} onShowOrderListFn={showOrderListFn} onShowAddressFn={showAddressFn} />
             {showOrderList && <OrderList />}
-            {showProfileInfo && <ProfileInfo onSettingChange={onSettingChange} listProduct = {listProduct} rate = {rate} />}
+            {showProfileInfo && <ProfileInfo onSettingChange={onSettingChange} listProduct={listProduct} rate={rate} />}
             {showAddress && <AddressInfo />}
         </div>
     );

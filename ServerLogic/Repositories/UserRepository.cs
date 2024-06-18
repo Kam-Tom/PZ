@@ -139,6 +139,9 @@ public class UserRepository : IUserRepository
         user.NumOfProductOnPage = userInfo.NumOfProductOnPage;
         user.BruttoNetto = userInfo.BruttoNetto;
 
+        if(userInfo.ShippingAddress != null)
+            user.ShippingAddress = userInfo.ShippingAddress;
+
 
         _ctx.SaveChanges();
     }
