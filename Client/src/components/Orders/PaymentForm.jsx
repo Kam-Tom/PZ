@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAll, buy } from "../../axios";
 import PropTypes from 'prop-types';
 import "./PaymentForm.css";
+import AddressInfo from "../Account/AddressInfo";
 
 const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, currency }) => {
     const isNetto = sessionStorage.getItem("bruttoNetto") === "netto";
@@ -16,6 +17,29 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
     const [isEmailValid, setIsEmailValid] = useState(false);
     const [blikCode, setBlikCode] = useState("");
     const [isBlikCodeValid, setIsBlikCodeValid] = useState(false);
+    const [address, setAddress] = useState(null);
+
+    const AddressDisplay = ({ address }) => (
+        <button className="address-display-button">
+            <p>Street: {address.street}</p>
+            <p>House Number: {address.houseNumber}</p>
+            <p>Apartment Number: {address.apartmentNumber}</p>
+            <p>City: {address.city}</p>
+            <p>Postal Code: {address.postalCode}</p>
+        </button>
+    );
+
+    useEffect(() => {
+        const savedAddress = sessionStorage.getItem('address');
+        if (savedAddress) {
+            setAddress(JSON.parse(savedAddress));
+        }
+    }, []);
+
+    const handleAddressChange = (updatedAddress) => {
+        setAddress(updatedAddress);
+        sessionStorage.setItem('address', JSON.stringify(updatedAddress));
+    };
     
     async function handleSubmit(event)
     {
@@ -154,6 +178,8 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                                     <div className="error-message">Invalid email</div>
                                 )}
                             </label>
+                                <AddressInfo onChange={handleAddressChange} />
+                                {address && <AddressDisplay address={address} />}
                                 <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency} {isNetto && "+VAT" }</button>
                         </div>
                     )}
@@ -189,6 +215,8 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                                     <div className="error-message">Invalid Blik code</div>
                                 )}
                             </label>
+                                <AddressInfo onChange={handleAddressChange} />
+                                {address && <AddressDisplay address={address} />}
                                 <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency}  {isNetto && "+VAT"}</button>
                         </div>
                     )}

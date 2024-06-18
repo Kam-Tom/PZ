@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ProfileMenu.css";
 
-function ProfileMenu({ onShowProfileInfoFn, onShowOrderListFn}) {
+function ProfileMenu({ onShowProfileInfoFn, onShowOrderListFn, onShowAddressFn}) {
     return (
         <div className="profile-menu">
             <Link to="/" className="menu-item">
@@ -13,6 +13,9 @@ function ProfileMenu({ onShowProfileInfoFn, onShowOrderListFn}) {
             </Link>
             <Link to="/profile" className="menu-item" onClick={onShowOrderListFn}>
                 <ion-icon name="bag-check-outline"></ion-icon>
+            </Link>
+            <Link to="/profile" className="menu-item" onClick={onShowAddressFn}>
+                <ion-icon name="home-outline"></ion-icon>
             </Link>
         </div>
     );
