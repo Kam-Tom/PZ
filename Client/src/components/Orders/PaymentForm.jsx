@@ -18,6 +18,8 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
     const [blikCode, setBlikCode] = useState("");
     const [isBlikCodeValid, setIsBlikCodeValid] = useState(false);
     const [address, setAddress] = useState(null);
+    const [shippingMethod, setShippingMethod] = useState(null);
+    const [choosenShippingMethod, setChoosenShippingMethod] = useState(null);
 
     const AddressDisplay = ({ address }) => (
         <button className="address-display-button">
@@ -29,7 +31,17 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
         </button>
     );
 
+    async function getShippingMethod() {
+        const response = await getAll("https://localhost:7248/ShippingMethod");
+        console.log(response);
+        setShippingMethod(response);
+        if (response.length > 0) {
+            setChoosenShippingMethod(response[0].id);
+        }
+    }
+
     useEffect(() => {
+        getShippingMethod();
         const savedAddress = sessionStorage.getItem('address');
         if (savedAddress) {
             setAddress(JSON.parse(savedAddress));
@@ -178,9 +190,21 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                                     <div className="error-message">Invalid email</div>
                                 )}
                             </label>
+                            <label>
+                                Shipping Method:
+                                <select className="select-shipping-method" value={choosenShippingMethod} onChange={(e) => {setChoosenShippingMethod(e.target.value)}}>
+                                    {shippingMethod.map((method) => (
+                                        <option key={method.id} value={method.id}>
+                                            {method.name} - {method.cost} {currency}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
                                 <AddressInfo onChange={handleAddressChange} />
                                 {address && <AddressDisplay address={address} />}
-                                <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency} {isNetto && "+VAT" }</button>
+                                <button type="submit">
+                                    Pay: {((cartTotal / currencyRate) + (shippingMethod[choosenShippingMethod-1].cost || 0)).toFixed(2)} {currency} {isNetto && "+VAT"}
+                                </button>
                         </div>
                     )}
                     {paymentMethod === "blik" && (
@@ -215,9 +239,21 @@ const PaymentForm = ({ cartTotal, setProducts, setCartItems, currencyRate, curre
                                     <div className="error-message">Invalid Blik code</div>
                                 )}
                             </label>
+                            <label>
+                                Shipping Method:
+                                <select className="select-shipping-method"  value={choosenShippingMethod} onChange={(e) => {setChoosenShippingMethod(e.target.value)}}>
+                                    {shippingMethod.map((method) => (
+                                        <option key={method.id} value={method.id}>
+                                            {method.name} - {method.cost} {currency}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
                                 <AddressInfo onChange={handleAddressChange} />
                                 {address && <AddressDisplay address={address} />}
-                                <button type="submit">Pay: {(cartTotal / currencyRate).toFixed(2)} {currency}  {isNetto && "+VAT"}</button>
+                                <button type="submit">
+                                    Pay: {((cartTotal / currencyRate) + (shippingMethod[choosenShippingMethod-1].cost || 0)).toFixed(2)} {currency} {isNetto && "+VAT"}
+                                </button>
                         </div>
                     )}
                 </form>
