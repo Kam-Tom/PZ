@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import "./AdminPage.css"
+import "./AdminPage.css";
 import AddProductForm from "./AddProductForm";
 import AddCategoryForm from "./AddCategoryForm";
 import AddPromotionForm from "./AddPromotionForm";
@@ -34,6 +34,10 @@ function AdminPage({ onAddProduct }) {
 
     const handleAddCategory = (newCategoryData) => {
         setShowAddCategoryForm(false);
+    };
+
+    const handleAddCategorySuccess = () => {
+        setShowStats(true);
     };
 
     const handleAddPromotion = (newPromotionData) => {
@@ -201,7 +205,7 @@ function AdminPage({ onAddProduct }) {
                 onShowStats={showStatsfn}
             />
             {showAddProductForm && <AddProductForm onAddProduct={handleAddProduct} />}
-            {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} />}
+            {showAddCategoryForm && <AddCategoryForm onAddCategory={handleAddCategory} onClose={handleCloseAddCategoryForm} onAddCategorySuccess={handleAddCategorySuccess} />}
             {showAddPromotionForm && <AddPromotionForm onAddPromotion={handleAddPromotion} onClose={handleCloseAddPromotionForm} />}
             {showAddShippingMethodForm && <AddShippingMethodForm onAddShippingMethod={handleAddShippingMethod} onClose={handleCloseAddShippingMethodForm} />}
             {showList && (

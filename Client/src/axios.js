@@ -68,12 +68,20 @@ export async function postNewCategory(category, subCategories) {
         .replaceAll("%2C", "&Subcategories=");
     const url = `https://localhost:7248/categories?${params}`;
 
-    const options = getOptions('PUT');
+    const options = getOptions('POST');
 
-    await axios.put(url, null, options)
-        .then(response => console.log(response.data))
-        .catch(error => console.log('error', error));
+    try {
+        await axios.post(url, null, options);
+        console.log('Category created successfully');
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            throw new Error('Category already exists');
+        } else {
+            throw error;
+        }
+    }
 }
+
 export async function updateOrderStatus(orderId, statusId) {
     const url = `https://localhost:7248/api/Shop/UpdateStatus?id=${orderId}&status=${statusId}`;
 

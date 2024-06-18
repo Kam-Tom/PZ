@@ -13,17 +13,16 @@ public class CategoryController : ControllerBase
     private readonly ICategoryRepository _repo;
     public CategoryController(ICategoryRepository repo) { _repo = repo; }
 
-    [HttpPut,Authorize(Roles = "Admin")]
-    public ActionResult Put(AddCategoryDto request)
+    [HttpPost,Authorize(Roles = "Admin")]
+    public ActionResult Post(AddCategoryDto request)
     {
-        Category? category = _repo.GetByName(request.Name,true);
-        if (category == null)
-            category = _repo.Create(request.Name);
-
+        Category? existingCategory = _repo.GetByName(request.Name, false);
+        if (existingCategory != null)
+            return Conflict("Category already exists");
+        Category newCategory = _repo.Create(request.Name);
         if(request.Subcategories != null)
-            _repo.Update(category,request.Subcategories);
-
-        return Ok("Category updated");
+            _repo.Update(newCategory,request.Subcategories);
+        return Ok("Category created");
     }
 
     [HttpDelete,Authorize(Roles = "Admin")]
